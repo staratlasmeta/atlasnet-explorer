@@ -55,7 +55,7 @@ export function clusterUrl (cluster: Cluster, customUrl: string): string {
       return url
     }
     else {
-      return url.replace('api', 'explorer-api')
+      return url
     }
   }
 
