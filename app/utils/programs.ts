@@ -88,9 +88,9 @@ export enum PROGRAM_NAMES {
     FINTERNET_TOKEN_MANAGER = 'Finternet - Token manager',
 }
 
-const ALL_CLUSTERS = [Cluster.Custom, Cluster.Devnet, Cluster.Testnet, Cluster.MainnetBeta];
+const ALL_CLUSTERS = [Cluster.Custom, Cluster.Devnet, Cluster.Testnet, Cluster.MainnetBeta, Cluster.Atlasnet];
 
-const LIVE_CLUSTERS = [Cluster.Devnet, Cluster.Testnet, Cluster.MainnetBeta];
+const LIVE_CLUSTERS = [Cluster.Devnet, Cluster.Testnet, Cluster.MainnetBeta, Cluster.Atlasnet];
 
 export const LOADER_IDS: { [key: string]: string } = {
     BPFLoader1111111111111111111111111111111111: 'BPF Loader',

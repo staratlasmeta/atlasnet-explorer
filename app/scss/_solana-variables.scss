@@ -25,10 +25,10 @@ $rainbow-1: #fa62fc;
 $rainbow-2: #be84e8;
 $rainbow-3: #79abd2;
 $rainbow-4: #38d0bd;
-$rainbow-5: #1dd79b;
+$rainbow-5: #32feff;
 
-$primary: #42ba96 !default;
-$primary-dark: #33a382 !default;
+$primary: #32feff !default;
+$primary-dark: #32feff !default;
 $success: #19be56 !default;
 $secondary: $gray-700;
 $danger: #b45be1;
@@ -54,14 +54,14 @@ $link-color: $primary-dark;
 }
 
 .text-rainbow {
-    background: linear-gradient(0.3turn, #e400ff, #00ffbd);
+    background: linear-gradient(0.3turn, #e400ff, #32feff);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 .bg-rainbow {
-    background: linear-gradient(0.3turn, #e400ff, #00ffbd);
+    background: linear-gradient(0.3turn, #e400ff, #32feff);
 }
 
 .bg-rainbow-1 {
@@ -77,7 +77,7 @@ $link-color: $primary-dark;
     background: #38d0bd;
 }
 .bg-rainbow-5 {
-    background: #1dd79b;
+    background: #32feff;
 }
 
 .text-rainbow-1 {
@@ -93,5 +93,5 @@ $link-color: $primary-dark;
     color: #38d0bd;
 }
 .text-rainbow-5 {
-    color: #1dd79b;
+    color: #32feff;
 }

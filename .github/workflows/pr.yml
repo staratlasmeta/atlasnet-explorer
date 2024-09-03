@@ -1,0 +1,47 @@
+name: build-lint-test
+
+on:
+  merge_group:
+  pull_request:
+    branches: ['main']
+    types: [synchronize, opened, reopened]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/build-install
+        with:
+          build: true
+          npm-token: ${{ secrets.NPM_TOKEN }}
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/build-install
+        with:
+          npm-token: ${{ secrets.NPM_TOKEN }}
+      - run: pnpm run lint
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/build-install
+        with:
+          npm-token: ${{ secrets.NPM_TOKEN }}
+      - run: pnpm test:ci
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/release
+        with:
+          repository: 'artifacts-0'
+          project-name: 'atlasnet'
+          app-name: 'explorer'
+          gcp-auth-key: ${{ secrets.GCP_AUTH_KEY }}
+          npm-token: ${{ secrets.NPM_TOKEN }}

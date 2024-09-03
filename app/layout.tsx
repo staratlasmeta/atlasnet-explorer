@@ -12,9 +12,9 @@ import { Rubik } from 'next/font/google';
 import { Metadata } from 'next/types';
 
 export const metadata: Metadata = {
-    description: 'Inspect transactions, accounts, blocks, and more on the Solana blockchain',
+    description: 'Inspect transactions, accounts, blocks, and more on Atlasnet',
     manifest: '/manifest.json',
-    title: 'Explorer | Solana',
+    title: 'Explorer | Atlasnet',
 };
 
 export const viewport: Viewport = {

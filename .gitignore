@@ -36,3 +36,5 @@ next-env.d.ts
 
 # Speedy Web Compiler
 .swc/
+
+.idea/
