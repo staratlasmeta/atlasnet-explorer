@@ -25,9 +25,6 @@ inputs:
   image-name:
     required: true
     description: 'Name of the Docker image'
-  vault-token:
-    required: true
-    description: 'Vault token for authentication'
   deploy-type:
     required: true
     default: service

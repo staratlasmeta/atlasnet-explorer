@@ -25,7 +25,6 @@ jobs:
           environment: ${{ inputs.environment }}
           gcp-project-id: starcomm-${{ inputs.environment }}
           gcp-auth-key: ${{ secrets.GCP_AUTH_KEY }}
-          vault-token: ${{ secrets.VAULT_TOKEN }}
           repository: "artifacts-0"
           project-name: "atlasnet"
           app-name: "explorer"
