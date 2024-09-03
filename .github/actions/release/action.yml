@@ -48,7 +48,7 @@ runs:
     - uses: int128/kaniko-action@v1
       with:
         push: true
-        file: ./docker/Dockerfile
+        file: Dockerfile
         tags: ${{ steps.metadata.outputs.tags }}
         labels: ${{ steps.metadata.outputs.labels }}
         cache: true
