@@ -83,4 +83,4 @@ export function clusterUrl (cluster: Cluster, customUrl: string): string {
   }
 }
 
-export const DEFAULT_CLUSTER = process.env.NEXT_PUBLIC_FLAVOR === 'universe' ? Cluster.Universe ?? Cluster.Atlasnet
+export const DEFAULT_CLUSTER = process.env.NEXT_PUBLIC_FLAVOR === 'universe' ? Cluster.Universe : Cluster.Atlasnet
