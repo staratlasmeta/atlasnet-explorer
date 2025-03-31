@@ -8,7 +8,7 @@ import { create } from 'superstruct';
 import useSWR from 'swr';
 
 import { useCluster } from '@/app/providers/cluster';
-import { Cluster } from '@/app/utils/cluster';
+import { Cluster } from '@utils/cluster';
 import { TOKEN_IDS } from '@/app/utils/programs';
 import { getTokenInfo, getTokenInfoSwrKey } from '@/app/utils/token-info';
 
