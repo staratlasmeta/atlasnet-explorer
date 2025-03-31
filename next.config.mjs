@@ -1,7 +1,12 @@
+import path from 'node:path'
+
 const ADDRESS_ALIASES = ["account", "accounts", "addresses"];
 const TX_ALIASES = ["txs", "txn", "txns", "transaction", "transactions"];
 const SUPPLY_ALIASES = ['accounts', 'accounts/top'];
 
+import { fileURLToPath } from 'node:url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const flavor = process.env.NEXT_PUBLIC_FLAVOR || 'default';
 
 /** @type {import('next').NextConfig} */
@@ -55,8 +60,9 @@ const nextConfig = {
       config.resolve.fallback.fs = false;
     }
 
-    config.resolve.alias['@utils/cluster'] = require.resolve(
-      `./app/flavors/${flavor}/cluster.ts`
+    config.resolve.alias['@utils/cluster'] = path.resolve(
+      __dirname,
+      `app/flavors/${flavor}/cluster.ts`
     );
 
     return config;
