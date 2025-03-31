@@ -4,7 +4,7 @@ import pLimit from 'p-limit';
 import { useEffect,useState } from 'react';
 
 import { useCluster } from '../providers/cluster';
-import { Cluster } from './cluster';
+import { Cluster } from '@utils/cluster';
 import { DomainInfo } from './domain-info';
 
 

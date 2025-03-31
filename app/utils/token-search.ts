@@ -8,7 +8,7 @@
 
 import { Address } from 'web3js-experimental';
 
-import { Cluster } from './cluster';
+import { Cluster } from '@utils/cluster';
 
 type TokenSearchApiResponseToken = {
     address: Address;

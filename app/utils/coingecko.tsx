@@ -2,7 +2,7 @@ import React from 'react';
 import useTabVisibility from 'use-tab-visibility';
 
 import { useCluster } from '../providers/cluster';
-import { Cluster } from './cluster';
+import { Cluster } from '@utils/cluster';
 
 const PRICE_REFRESH = 10000;
 

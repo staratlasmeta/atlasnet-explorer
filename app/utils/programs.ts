@@ -1,4 +1,4 @@
-import { Cluster } from './cluster';
+import { Cluster } from '@utils/cluster';
 
 export enum PROGRAM_NAMES {
     // native built-ins
