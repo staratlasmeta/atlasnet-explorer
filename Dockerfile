@@ -1,5 +1,7 @@
 FROM node:20-alpine AS base
 ENV NEXT_TELEMETRY_DISABLED 1
+ARG FLAVOR
+ENV FLAVOR $FLAVOR
 
 FROM base AS deps
 RUN apk add --no-cache libc6-compat git
@@ -24,7 +26,7 @@ WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN pnpm build
+RUN NEXT_PUBLIC_FLAVOR=$FLAVOR pnpm build
 
 
 FROM base AS runner
