@@ -26,9 +26,10 @@
             "@img/*": ["./app/img/*"],
             "@providers/*": ["./app/providers/*"],
             "@utils/*": ["./app/utils/*"],
-            "@validators/*": ["./app/validators/*"]
+            "@validators/*": ["./app/validators/*"],
+            "@utils/cluster": ["app/flavors/*/cluster.ts"]
         }
     },
-    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/types"],
     "exclude": ["node_modules"]
 }

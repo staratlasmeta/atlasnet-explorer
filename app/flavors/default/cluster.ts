@@ -1,3 +1,5 @@
+import * as process from 'node:process'
+
 export enum ClusterStatus {
   Connected,
   Connecting,
@@ -13,7 +15,7 @@ export enum Cluster {
   Universe,
 }
 
-export const CLUSTERS = [Cluster.Atlasnet]
+export const CLUSTERS = [Cluster.Atlasnet, Cluster.Universe]
 
 export function clusterSlug (cluster: Cluster): string {
   switch (cluster) {
@@ -81,4 +83,4 @@ export function clusterUrl (cluster: Cluster, customUrl: string): string {
   }
 }
 
-export const DEFAULT_CLUSTER = Cluster.Atlasnet
+export const DEFAULT_CLUSTER = process.env.NEXT_PUBLIC_FLAVOR === 'universe' ? Cluster.Universe ?? Cluster.Atlasnet

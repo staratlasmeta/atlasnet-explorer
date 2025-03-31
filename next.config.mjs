@@ -10,7 +10,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const flavor = process.env.NEXT_PUBLIC_FLAVOR || 'default';
 
 console.log('Building with flavor:', flavor);
-
+console.log('NEXT_PUBLIC_FLAVOR (from env):', process.env.NEXT_PUBLIC_FLAVOR);
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {

@@ -4,6 +4,7 @@ import { Cluster, clusterName, ClusterStatus, clusterUrl, DEFAULT_CLUSTER } from
 import { EpochSchedule } from '@utils/epoch-schedule'
 import { localStorageIsAvailable } from '@utils/local-storage'
 import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from 'next/navigation'
+import * as process from 'node:process'
 import React, { createContext, useContext, useEffect, useReducer, useState } from 'react'
 import { createSolanaRpc } from 'web3js-experimental'
 
@@ -64,7 +65,7 @@ function parseQuery (searchParams: ReadonlyURLSearchParams | null): Cluster {
       return Cluster.Universe
     case 'mainnet-beta':
     default:
-      return Cluster.Atlasnet
+      return DEFAULT_CLUSTER
   }
 }
 
