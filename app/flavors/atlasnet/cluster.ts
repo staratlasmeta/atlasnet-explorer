@@ -10,6 +10,7 @@ export enum Cluster {
   Testnet,
   Devnet,
   Custom,
+  Universe,
 }
 
 export const CLUSTERS = [Cluster.Atlasnet]
@@ -18,6 +19,8 @@ export function clusterSlug (cluster: Cluster): string {
   switch (cluster) {
     case Cluster.Atlasnet:
       return 'atlasnet'
+    case Cluster.Universe:
+      return 'universe'
     case Cluster.MainnetBeta:
       return 'mainnet-beta'
     case Cluster.Testnet:
@@ -33,6 +36,8 @@ export function clusterName (cluster: Cluster): string {
   switch (cluster) {
     case Cluster.Atlasnet:
       return 'Atlasnet'
+    case Cluster.Universe:
+      return 'Universe'
     case Cluster.MainnetBeta:
       return 'Mainnet Beta'
     case Cluster.Testnet:
@@ -48,6 +53,7 @@ export const MAINNET_BETA_URL = 'https://api.mainnet-beta.solana.com'
 export const TESTNET_URL = 'https://api.testnet.solana.com'
 export const DEVNET_URL = 'https://api.devnet.solana.com'
 export const ATLASNET_URL = 'https://rpc.ironforge.network/devnet?apiKey=01JDDJZNRFY6DZZK6GBSSQC5F5'
+export const UNIVERSE_URL = 'http://localhost:48899'
 
 export function clusterUrl (cluster: Cluster, customUrl: string): string {
   const modifyUrl = (url: string): string => {
@@ -62,6 +68,8 @@ export function clusterUrl (cluster: Cluster, customUrl: string): string {
   switch (cluster) {
     case Cluster.Atlasnet:
       return process.env.NEXT_PUBLIC_ATLASNET_RPC_URL ?? modifyUrl(ATLASNET_URL)
+    case Cluster.Universe:
+      return process.env.NEXT_PUBLIC_ATLASNET_RPC_URL ?? modifyUrl(UNIVERSE_URL)
     case Cluster.Devnet:
       return process.env.NEXT_PUBLIC_DEVNET_RPC_URL ?? modifyUrl(DEVNET_URL)
     case Cluster.MainnetBeta:
