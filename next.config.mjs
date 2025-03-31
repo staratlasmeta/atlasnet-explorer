@@ -9,6 +9,8 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const flavor = process.env.NEXT_PUBLIC_FLAVOR || 'default';
 
+console.log('Building with flavor:', flavor);
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
