@@ -6,9 +6,8 @@
  * So to avoid pulling in extra dependencies we just use the public API directly for search
  */
 
-import { Address } from 'web3js-experimental';
-
 import { Cluster } from '@utils/cluster';
+import { Address } from 'web3js-experimental';
 
 type TokenSearchApiResponseToken = {
     address: Address;
