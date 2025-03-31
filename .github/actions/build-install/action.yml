@@ -13,6 +13,9 @@ inputs:
   npm-token:
     description: 'NPM token'
     required: true
+  flavor:
+    description: 'Flavor of the application'
+    required: true
 
 runs:
   using: 'composite'
@@ -53,7 +56,7 @@ runs:
     - name: Build App
       if: ${{ inputs.build == 'true' }}
       shell: bash
-      run: pnpm run build
+      run: NEXT_PUBLIC_FLAVOR=${{ inputs.flavor }} pnpm run build
 
     - name: Strip Dev Dependencies
       if: ${{ inputs.production == 'true' }}

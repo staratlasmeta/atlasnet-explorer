@@ -2,9 +2,10 @@ const ADDRESS_ALIASES = ["account", "accounts", "addresses"];
 const TX_ALIASES = ["txs", "txn", "txns", "transaction", "transactions"];
 const SUPPLY_ALIASES = ['accounts', 'accounts/top'];
 
+const flavor = process.env.NEXT_PUBLIC_FLAVOR || 'default';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
   experimental: {
     // FIXME: https://nextjs.org/docs/messages/missing-suspense-with-csr-bailout
     missingSuspenseWithCSRBailout: false,
@@ -19,6 +20,7 @@ const nextConfig = {
       },
     ],
   },
+  output: 'standalone',
   async redirects() {
     return [
       // Leave this above `ADDRESS_ALIASES`, since it also provides an alias for `/accounts`.
@@ -47,13 +49,19 @@ const nextConfig = {
       }
     ]
   },
+
   webpack: (config, { isServer }) => {
     if (!isServer) {
-      // Fixes npm packages that depend on `fs` module like `@project-serum/anchor`.
       config.resolve.fallback.fs = false;
     }
+
+    config.resolve.alias['@utils/cluster'] = require.resolve(
+      `./app/flavors/${flavor}/cluster.ts`
+    );
+
     return config;
-  },
+  }
+
 };
 
 

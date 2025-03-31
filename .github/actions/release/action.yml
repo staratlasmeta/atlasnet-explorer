@@ -20,6 +20,9 @@ inputs:
   npm-token:
     description: 'NPM token'
     required: true
+  flavor:
+    description: 'Flavor of the application'
+    required: true
 
 runs:
   using: 'composite'
@@ -28,6 +31,7 @@ runs:
       with:
         build: true
         production: true
+        flavor: ${{ inputs.flavor }}
         npm-token: ${{ inputs.npm-token }}
     - uses: docker/metadata-action@v5
       id: metadata
