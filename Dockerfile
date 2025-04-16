@@ -13,7 +13,7 @@ RUN corepack prepare pnpm --activate
 
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml .pnpmfile.cjs ./
 RUN pnpm install --frozen-lockfile --prefer-frozen-lockfile
 
 # Builder
