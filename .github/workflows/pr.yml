@@ -15,6 +15,7 @@ jobs:
         with:
           build: true
           npm-token: ${{ secrets.NPM_TOKEN }}
+          flavor: "atlasnet"
 
   lint:
     runs-on: ubuntu-latest
@@ -23,6 +24,7 @@ jobs:
       - uses: ./.github/actions/build-install
         with:
           npm-token: ${{ secrets.NPM_TOKEN }}
+          flavor: "atlasnet"
       - run: pnpm run lint
 
   test:
@@ -32,16 +34,20 @@ jobs:
       - uses: ./.github/actions/build-install
         with:
           npm-token: ${{ secrets.NPM_TOKEN }}
+          flavor: "atlasnet"
       - run: pnpm test:ci
 
   docker:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/release
+      - uses: ./.github/actions/docker-buildx
         with:
           repository: 'artifacts-0'
           project-name: 'atlasnet'
           app-name: 'explorer'
           gcp-auth-key: ${{ secrets.GCP_AUTH_KEY }}
-          npm-token: ${{ secrets.NPM_TOKEN }}
+          build-args: |
+            FLAVOR=atlasnet
+          extra-secrets: |
+            npmrc=//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}

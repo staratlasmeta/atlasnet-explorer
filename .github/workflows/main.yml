@@ -9,27 +9,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/release
+      - uses: ./.github/actions/docker-buildx
         with:
-          flavor: "atlasnet"
-          repository: "artifacts-0"
-          project-name: "atlasnet"
-          app-name: "explorer"
+          repository: 'artifacts-0'
+          project-name: 'atlasnet'
+          app-name: 'explorer'
           gcp-auth-key: ${{ secrets.GCP_AUTH_KEY }}
-          npm-token: ${{ secrets.NPM_TOKEN }}
+          build-args: |
+            FLAVOR=atlasnet
+          extra-secrets: |
+            npmrc=//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}
 
   release-universe:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/release
+      - uses: ./.github/actions/docker-buildx
         with:
-          flavor: "universe"
           repository: "artifacts-0"
           project-name: "universe"
           app-name: "explorer"
           gcp-auth-key: ${{ secrets.GCP_AUTH_KEY }}
-          npm-token: ${{ secrets.NPM_TOKEN }}
+          build-args: |
+            FLAVOR=universe
+          extra-secrets: |
+            npmrc=//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}
 
   deploy-test:
     needs: [ release-atlasnet ]
