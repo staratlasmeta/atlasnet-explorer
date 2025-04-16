@@ -1,10 +1,10 @@
 import { PublicKey } from '@solana/web3.js';
+import { Cluster, clusterName } from '@utils/cluster';
 import Link from 'next/link';
 
 import { Address } from '@/app/components/common/Address';
 import { useCluster } from '@/app/providers/cluster';
 
-import { Cluster, clusterName } from '../cluster';
 import FEATURES from './featureGates.json';
 import { FeatureInfoType } from './types';
 

@@ -8,9 +8,9 @@
             "type": "image/png"
         },
         {
-            "src": "apple-icon.png",
+            "src": "favicon.ico",
             "type": "image/png",
-            "sizes": "512x512"
+            "sizes": "32x32"
         }
     ],
     "start_url": ".",

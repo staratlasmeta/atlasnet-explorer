@@ -9,6 +9,7 @@ import { TableCardBody } from '@components/common/TableCardBody';
 import { Account, useFetchAccountInfo } from '@providers/accounts';
 import { useCluster } from '@providers/cluster';
 import { PublicKey } from '@solana/web3.js';
+import { Cluster } from '@utils/cluster';
 import { addressLabel } from '@utils/tx';
 import {
     ProgramAccountInfo,
@@ -21,7 +22,6 @@ import React from 'react';
 import { ExternalLink, RefreshCw } from 'react-feather';
 
 import { useSquadsMultisigLookup } from '@/app/providers/squadsMultisig';
-import { Cluster } from '@/app/utils/cluster';
 import { useClusterPath } from '@/app/utils/url';
 
 import { VerifiedProgramBadge } from '../common/VerifiedProgramBadge';

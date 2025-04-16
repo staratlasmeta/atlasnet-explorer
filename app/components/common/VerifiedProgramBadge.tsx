@@ -1,8 +1,8 @@
 import { PublicKey } from '@solana/web3.js';
+import { Cluster } from '@utils/cluster';
 import Link from 'next/link';
 
 import { useCluster } from '@/app/providers/cluster';
-import { Cluster } from '@/app/utils/cluster';
 import { useClusterPath } from '@/app/utils/url';
 import { useVerifiedProgram } from '@/app/utils/verified-builds';
 import { ProgramDataAccountInfo } from '@/app/validators/accounts/upgradeable-program';
@@ -35,8 +35,8 @@ export function VerifiedProgramBadge({
             </h3>
         );
     } else if (registryInfo) {
-        let badgeClass = '';
-        let badgeText = '';
+        let badgeClass;
+        let badgeText;
 
         if (registryInfo.is_verified) {
             badgeClass = 'bg-success-soft';

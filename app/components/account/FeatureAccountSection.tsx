@@ -3,6 +3,7 @@ import { Slot } from '@components/common/Slot';
 import { TableCardBody } from '@components/common/TableCardBody';
 import { Account } from '@providers/accounts';
 import { PublicKey } from '@solana/web3.js';
+import { Cluster } from '@utils/cluster';
 import { parseFeatureAccount, useFeatureAccount } from '@utils/parseFeatureAccount';
 import Link from 'next/link';
 import { useMemo } from 'react';
@@ -10,7 +11,6 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { ExternalLink as ExternalLinkIcon } from 'react-feather';
 
 import { useCluster } from '@/app/providers/cluster';
-import { Cluster } from '@/app/utils/cluster';
 import { FeatureInfoType } from '@/app/utils/feature-gate/types';
 import { getFeatureInfo } from '@/app/utils/feature-gate/utils';
 

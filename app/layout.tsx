@@ -1,5 +1,7 @@
-import './scss/theme-dark.scss'
+import './scss/theme-dark.scss';
 
+import { ClusterModal } from '@components/ClusterModal';
+import { ClusterStatusButton } from '@components/ClusterStatusButton';
 import { MessageBanner } from '@components/MessageBanner';
 import { Navbar } from '@components/Navbar';
 import { ClusterProvider } from '@providers/cluster';
@@ -11,7 +13,7 @@ import { Metadata } from 'next/types';
 const SearchBar = dynamic(() => import('@components/SearchBar'), {
     ssr: false,
 });
-const flavor = process.env.NEXT_PUBLIC_FLAVOR
+const flavor = process.env.NEXT_PUBLIC_FLAVOR;
 
 export const metadata: Metadata = {
   description:
@@ -23,20 +25,20 @@ export const metadata: Metadata = {
     flavor === 'universe'
       ? 'Explorer | Universe'
       : 'Explorer | Atlasnet'
-}
+};
 
 export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   width: 'device-width'
-}
+};
 
 const rubikFont = Rubik({
   display: 'swap',
   subsets: ['latin'],
   variable: '--explorer-default-font',
   weight: ['300', '400', '700']
-})
+});
 
 export default function RootLayout ({
                                       analytics,
@@ -73,5 +75,5 @@ export default function RootLayout ({
     {analytics}
     </body>
     </html>
-  )
+  );
 }
