@@ -1,7 +1,16 @@
+import path from 'node:path'
+
 const ADDRESS_ALIASES = ["account", "accounts", "addresses"];
 const TX_ALIASES = ["txs", "txn", "txns", "transaction", "transactions"];
 const SUPPLY_ALIASES = ['accounts', 'accounts/top'];
 
+import { fileURLToPath } from 'node:url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const flavor = process.env.NEXT_PUBLIC_FLAVOR || 'default';
+
+console.log('Building with flavor:', flavor);
+console.log('NEXT_PUBLIC_FLAVOR (from env):', process.env.NEXT_PUBLIC_FLAVOR);
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
@@ -18,6 +27,7 @@ const nextConfig = {
       },
     ],
   },
+  output: 'standalone',
   async redirects() {
     return [
       // Leave this above `ADDRESS_ALIASES`, since it also provides an alias for `/accounts`.
@@ -46,13 +56,20 @@ const nextConfig = {
       }
     ]
   },
+
   webpack: (config, { isServer }) => {
     if (!isServer) {
-      // Fixes npm packages that depend on `fs` module like `@project-serum/anchor`.
       config.resolve.fallback.fs = false;
     }
+
+    config.resolve.alias['@utils/cluster'] = path.resolve(
+      __dirname,
+      `app/flavors/${flavor}/cluster.ts`
+    );
+
     return config;
-  },
+  }
+
 };
 
 

@@ -1,0 +1,66 @@
+name: 'Install cached modules'
+description: 'Run pnpm install with cached modules'
+
+inputs:
+  production:
+    description: 'Install only production dependencies'
+    required: false
+    default: 'false'
+  build:
+    description: 'Build App'
+    required: false
+    default: 'false'
+  npm-token:
+    description: 'NPM token'
+    required: true
+  flavor:
+    description: 'Flavor of the application'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        registry-url: 'https://registry.npmjs.org'
+        scope: '@staratlas'
+        node-version-file: '.nvmrc'
+        always-auth: true
+
+    - name: Install pnpm
+      uses: pnpm/action-setup@v3
+      id: pnpm-install
+      with:
+        run_install: false
+
+    - name: Get pnpm store directory
+      id: pnpm-cache
+      shell: bash
+      run: |
+        echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+    - name: Setup pnpm cache
+      uses: actions/cache@v4
+      with:
+        path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+        key: pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          pnpm-store-
+
+    - name: Install dependencies
+      shell: bash
+      run: pnpm install --frozen-lockfile
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.npm-token }}
+
+    - name: Build App
+      if: ${{ inputs.build == 'true' }}
+      shell: bash
+      run: rm -rf .next && NEXT_PUBLIC_FLAVOR=${{ inputs.flavor }} pnpm run build
+
+    - name: Strip Dev Dependencies
+      if: ${{ inputs.production == 'true' }}
+      shell: bash
+      run: pnpm install --frozen-lockfile --ignore-scripts --prod
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.npm-token }}

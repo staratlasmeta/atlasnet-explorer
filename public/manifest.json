@@ -1,11 +1,11 @@
 {
-    "short_name": "Solana Explorer",
-    "name": "Inspect transactions, accounts, blocks, and more on the Solana blockchain",
+    "short_name": "Atlasnet Explorer",
+    "name": "Inspect transactions, accounts, blocks, and more on Atlasnet",
     "icons": [
         {
-            "src": "favicon.ico",
+            "src": "icon-small.png",
             "sizes": "64x64 32x32 24x24 16x16",
-            "type": "image/x-icon"
+            "type": "image/png"
         },
         {
             "src": "apple-icon.png",
@@ -15,6 +15,6 @@
     ],
     "start_url": ".",
     "display": "standalone",
-    "theme_color": "#1dd79b",
+    "theme_color": "#32feff",
     "background_color": "#ffffff"
 }

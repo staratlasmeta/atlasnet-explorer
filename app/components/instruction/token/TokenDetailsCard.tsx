@@ -1,6 +1,7 @@
 import { Address } from '@components/common/Address';
 import { useFetchAccountInfo, useMintAccountInfo, useTokenAccountInfo } from '@providers/accounts';
 import { ParsedInstruction, ParsedTransaction, PublicKey, SignatureResult } from '@solana/web3.js';
+import { Cluster } from '@utils/cluster';
 import { normalizeTokenAmount } from '@utils/index';
 import { ParsedInfo } from '@validators/index';
 import React from 'react';
@@ -8,7 +9,6 @@ import { create } from 'superstruct';
 import useSWR from 'swr';
 
 import { useCluster } from '@/app/providers/cluster';
-import { Cluster } from '@/app/utils/cluster';
 import { TOKEN_IDS } from '@/app/utils/programs';
 import { getTokenInfo, getTokenInfoSwrKey } from '@/app/utils/token-info';
 

@@ -1,0 +1,39 @@
+name: deploy
+
+on:
+  push:
+    branches: [ 'main' ]
+
+jobs:
+  release-atlasnet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/release
+        with:
+          flavor: "atlasnet"
+          repository: "artifacts-0"
+          project-name: "atlasnet"
+          app-name: "explorer"
+          gcp-auth-key: ${{ secrets.GCP_AUTH_KEY }}
+          npm-token: ${{ secrets.NPM_TOKEN }}
+
+  release-universe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/release
+        with:
+          flavor: "universe"
+          repository: "artifacts-0"
+          project-name: "universe"
+          app-name: "explorer"
+          gcp-auth-key: ${{ secrets.GCP_AUTH_KEY }}
+          npm-token: ${{ secrets.NPM_TOKEN }}
+
+  deploy-test:
+    needs: [ release-atlasnet ]
+    uses: ./.github/workflows/deploy-app.yml
+    with:
+      environment: 'test'
+    secrets: inherit

@@ -16,7 +16,7 @@ function getPingUrl(cluster: Cluster) {
         return undefined;
     }
 
-    return `https://ping.solana.com/${slug}/last6hours`;
+    return `https://ping.atlasnet.staratlas.cloud/${slug}/last6hours`;
 }
 
 export type PingMetric = {
