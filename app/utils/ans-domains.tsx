@@ -1,10 +1,10 @@
 import { NameRecordHeader, TldParser } from '@onsol/tldparser';
 import { Connection } from '@solana/web3.js';
+import { Cluster } from '@utils/cluster';
 import pLimit from 'p-limit';
 import { useEffect, useState } from 'react';
 
 import { useCluster } from '../providers/cluster';
-import { Cluster } from './cluster';
 import { DomainInfo } from './domain-info';
 
 export const useUserANSDomains = (userAddress: string): [DomainInfo[] | null, boolean] => {

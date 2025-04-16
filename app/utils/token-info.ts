@@ -1,7 +1,6 @@
 import { Connection, PublicKey } from '@solana/web3.js';
 import { ChainId, Client, Token, UtlConfig } from '@solflare-wallet/utl-sdk';
-
-import { Cluster } from './cluster';
+import { Cluster } from '@utils/cluster';
 
 type TokenExtensions = {
     readonly website?: string;
