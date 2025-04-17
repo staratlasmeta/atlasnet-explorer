@@ -14,11 +14,11 @@ import { StatsProvider } from '@providers/stats';
 import { ClusterStatsStatus, useDashboardInfo, usePerformanceInfo, useStatsProvider } from '@providers/stats/solanaClusterStats';
 import { Status, SupplyProvider, useFetchSupply, useSupply } from '@providers/supply';
 import { ClusterStatus } from '@utils/cluster';
-import { abbreviatedNumber, lamportsToSol, slotsToHumanString } from '@/app/utils';
+import { UpcomingFeatures } from '@utils/feature-gate/UpcomingFeatures';
 import { percentage } from '@utils/math';
 import React from 'react';
 
-import { UpcomingFeatures } from '@utils/feature-gate/UpcomingFeatures';export default function Page () {
+import { abbreviatedNumber, lamportsToSol, slotsToHumanString } from '@/app/utils';export default function Page () {
   return (
     <StatsProvider>
       <SupplyProvider>

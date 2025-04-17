@@ -1,11 +1,10 @@
 import { sha256 } from '@noble/hashes/sha256';
-import { Connection, PublicKey } from '@solana/web3.js';
-import { Cluster } from '@utils/cluster';
-import useSWRImmutable from 'swr/immutable';
-
 import { useAnchorProgram } from '@providers/anchor';
 import { useCluster } from '@providers/cluster';
+import { Connection, PublicKey } from '@solana/web3.js';
+import { Cluster } from '@utils/cluster';
 import { ProgramDataAccountInfo } from '@validators/accounts/upgradeable-program';
+import useSWRImmutable from 'swr/immutable';
 
 const OSEC_REGISTRY_URL = 'https://verify.osec.io';
 const VERIFY_PROGRAM_ID = 'verifycLy8mB96wd9wqq3WDXQwM4oU6r42Th37Db9fC';
