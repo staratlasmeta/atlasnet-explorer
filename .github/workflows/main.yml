@@ -35,7 +35,7 @@ jobs:
           extra-secrets: |
             npmrc=//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}
 
-  deploy-test:
+  deploy-dev:
     needs: [ release-atlasnet ]
     uses: ./.github/workflows/deploy-app.yml
     with:
