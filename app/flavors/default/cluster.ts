@@ -13,7 +13,7 @@ export enum Cluster {
   Universe,
 }
 
-export const CLUSTERS = [Cluster.Atlasnet, Cluster.Universe];
+export const CLUSTERS = [Cluster.Atlasnet];
 
 export function clusterSlug (cluster: Cluster): string {
   switch (cluster) {

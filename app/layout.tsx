@@ -6,26 +6,46 @@ import { MessageBanner } from '@components/MessageBanner';
 import { Navbar } from '@components/Navbar';
 import { ClusterProvider } from '@providers/cluster';
 import { ScrollAnchorProvider } from '@providers/scroll-anchor';
+// Flavor config now resolved dynamically in app/utils/cluster.ts
 import type { Viewport } from 'next';
 import dynamic from 'next/dynamic';
 import { Rubik } from 'next/font/google';
 import { Metadata } from 'next/types';
+
 const SearchBar = dynamic(() => import('@components/SearchBar'), {
     ssr: false,
 });
-const flavor = process.env.NEXT_PUBLIC_FLAVOR;
 
-export const metadata: Metadata = {
-  description:
-    flavor === 'universe'
-      ? 'Inspect transactions, accounts, blocks, and more on Universe'
-      : 'Inspect transactions, accounts, blocks, and more on Atlasnet',
-  manifest: '/manifest.json',
-  title:
-    flavor === 'universe'
-      ? 'Explorer | Universe'
-      : 'Explorer | Atlasnet'
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const flavor = process.env.FLAVOR || process.env.NEXT_PUBLIC_FLAVOR || 'default';
+  
+  let title, description;
+  switch (flavor) {
+    case 'atlasnet':
+      title = 'Explorer | Atlasnet';
+      description = 'Inspect transactions, accounts, blocks, and more on Atlasnet';
+      break;
+    case 'universe':
+      title = 'Explorer | Universe';
+      description = 'Inspect transactions, accounts, blocks, and more on Universe';
+      break;
+    case 'zink':
+      title = 'Explorer | Zink';
+      description = 'Inspect transactions, accounts, blocks, and more on Zink';
+      break;
+    case 'default':
+    default:
+      title = 'Explorer | Solana';
+      description = 'Inspect transactions, accounts, blocks, and more on Solana';
+      break;
+  }
+  
+  return {
+    description,
+    manifest: '/manifest.json',
+    title,
+  };
+}
 
 export const viewport: Viewport = {
   initialScale: 1,

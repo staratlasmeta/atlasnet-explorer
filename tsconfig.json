@@ -25,6 +25,7 @@
             "@components/*": ["./app/components/*"],
             "@img/*": ["./app/img/*"],
             "@providers/*": ["./app/providers/*"],
+            "@utils/cluster": ["./app/flavors/default/cluster.ts"],
             "@utils/*": ["./app/utils/*"],
             "@validators/*": ["./app/validators/*"]
         }
