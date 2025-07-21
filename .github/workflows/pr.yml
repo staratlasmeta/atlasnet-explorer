@@ -34,7 +34,7 @@ jobs:
       - uses: ./.github/actions/build-install
         with:
           npm-token: ${{ secrets.NPM_TOKEN }}
-          flavor: "atlasnet"
+          flavor: "localnet"
       - run: pnpm test:ci
 
   docker:

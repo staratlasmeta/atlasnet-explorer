@@ -5,38 +5,36 @@ on:
     branches: [ 'main' ]
 
 jobs:
-  release-atlasnet:
+  release:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - flavor: atlasnet
+            project-name: atlasnet
+          - flavor: zink
+            project-name: atlasnet
+          - flavor: universe
+            project-name: universe
+          - flavor: universe-local
+            project-name: universe
+          - flavor: localnet
+            project-name: universe
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/docker-buildx
         with:
           repository: 'artifacts-0'
-          project-name: 'atlasnet'
-          app-name: 'explorer'
+          project-name: ${{ matrix.project-name }}
+          app-name: '${{ matrix.flavor }}-explorer'
           gcp-auth-key: ${{ secrets.GCP_AUTH_KEY }}
           build-args: |
-            FLAVOR=atlasnet
-          extra-secrets: |
-            npmrc=//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}
-
-  release-universe:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/docker-buildx
-        with:
-          repository: "artifacts-0"
-          project-name: "universe"
-          app-name: "explorer"
-          gcp-auth-key: ${{ secrets.GCP_AUTH_KEY }}
-          build-args: |
-            FLAVOR=universe
+            FLAVOR=${{ matrix.flavor }}
           extra-secrets: |
             npmrc=//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}
 
   deploy-dev:
-    needs: [ release-atlasnet ]
+    needs: [ release ]
     uses: ./.github/workflows/deploy-app.yml
     with:
       environment: 'dev'
