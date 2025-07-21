@@ -3,9 +3,8 @@
 // Use this to overwrite Bootstrap and Dashkit variables
 //
 
-// Example of a variable override to change Dashkit's background color
-// Remove the "//" to comment it in and see it in action!
-$body-bg: #f9fdfc !default;
+// Import flavor-specific colors (generated at build time)
+@import 'flavor-colors';
 
 // Colors
 
@@ -21,19 +20,8 @@ $gray-800: #387462;
 $gray-900: #1b4e3f;
 $black: #232323;
 
-$rainbow-1: #fa62fc;
-$rainbow-2: #be84e8;
-$rainbow-3: #79abd2;
-$rainbow-4: #38d0bd;
-$rainbow-5: #32feff;
-
-$primary: #32feff !default;
-$primary-dark: #32feff !default;
-$success: #19be56 !default;
+// Theme colors using flavor-specific values
 $secondary: $gray-700;
-$danger: #b45be1;
-$warning: #d83aeb !default;
-$info: #43b5c5 !default;
 $light: $gray-100;
 $dark: $gray-900;
 
@@ -42,7 +30,6 @@ $theme-colors: (
     'gray': $gray-900,
 ) !default;
 
-$card-border-color: $gray-300 !default;
 $input-group-addon-color: $gray-900 !default;
 $navbar-light-active-color: $primary-dark;
 $link-color: $primary-dark;
@@ -53,45 +40,4 @@ $link-color: $primary-dark;
     font-family: Saira, Helvetica, sans-serif;
 }
 
-.text-rainbow {
-    background: linear-gradient(0.3turn, #e400ff, #32feff);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.bg-rainbow {
-    background: linear-gradient(0.3turn, #e400ff, #32feff);
-}
-
-.bg-rainbow-1 {
-    background: #fa62fc;
-}
-.bg-rainbow-2 {
-    background: #be84e8;
-}
-.bg-rainbow-3 {
-    background: #79abd2;
-}
-.bg-rainbow-4 {
-    background: #38d0bd;
-}
-.bg-rainbow-5 {
-    background: #32feff;
-}
-
-.text-rainbow-1 {
-    color: #fa62fc;
-}
-.text-rainbow-2 {
-    color: #be84e8;
-}
-.text-rainbow-3 {
-    color: #79abd2;
-}
-.text-rainbow-4 {
-    color: #38d0bd;
-}
-.text-rainbow-5 {
-    color: #32feff;
-}
+// Note: Rainbow utility classes are now defined in _flavor-colors.scss

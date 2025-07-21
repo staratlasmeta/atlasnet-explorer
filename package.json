@@ -3,6 +3,9 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
+        "generate-colors": "node app/utils/build-colors.mjs",
+        "prebuild": "npm run generate-colors",
+        "predev": "npm run generate-colors", 
         "dev": "next dev",
         "build": "next build",
         "start": "next start",

@@ -10,6 +10,8 @@ import React from 'react';
 import { Bar } from 'react-chartjs-2';
 import CountUp from 'react-countup';
 
+import { useFlavorColors } from '@/app/hooks/useFlavorColors';
+
 Chart.register(BarElement, CategoryScale, LinearScale, Tooltip);
 
 type Series = 'short' | 'medium' | 'long';
@@ -150,6 +152,7 @@ type TpsBarChartProps = {
     setSeries: SetSeries;
 };
 function TpsBarChart({ performanceInfo, series, setSeries }: TpsBarChartProps) {
+    const colors = useFlavorColors();
     const { perfHistory, avgTps, historyMaxTps } = performanceInfo;
     const averageTps = Math.round(avgTps).toLocaleString('en-US');
     const transactionCount = <AnimatedTransactionCount info={performanceInfo} />;
@@ -160,10 +163,10 @@ function TpsBarChart({ performanceInfo, series, setSeries }: TpsBarChartProps) {
     const chartData: ChartData<'bar'> = {
         datasets: [
             {
-                backgroundColor: '#32feff',
+                backgroundColor: colors.primary,
                 borderWidth: 0,
                 data: seriesData.map(val => val || 0),
-                hoverBackgroundColor: '#32feff',
+                hoverBackgroundColor: colors.primary,
             },
         ],
         labels: seriesData.map((val, i) => {
