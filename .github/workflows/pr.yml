@@ -15,7 +15,7 @@ jobs:
         with:
           build: true
           npm-token: ${{ secrets.NPM_TOKEN }}
-          flavor: "atlasnet"
+          flavor: "localnet"
 
   lint:
     runs-on: ubuntu-latest

@@ -16,7 +16,7 @@ export enum Cluster {
   Localnet,
 }
 
-export const CLUSTERS = [Cluster.Universe];
+export const CLUSTERS = [Cluster.Localnet];
 
 export function clusterSlug (cluster: Cluster): string {
   switch (cluster) {
@@ -105,4 +105,4 @@ export function clusterUrl (cluster: Cluster, customUrl: string): string {
   }
 }
 
-export const DEFAULT_CLUSTER = Cluster.Universe;
+export const DEFAULT_CLUSTER = Cluster.Localnet; 
