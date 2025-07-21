@@ -40,7 +40,7 @@ runs:
         echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
     - name: Setup pnpm cache
-      uses: actions/cache@v4
+      uses: WarpBuilds/cache@v1
       with:
         path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
         key: pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
