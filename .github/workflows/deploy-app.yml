@@ -12,7 +12,7 @@ on:
 jobs:
 
 
-  deploy-explorer:
+  deploy-atlasnet-explorer:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     steps:
@@ -25,5 +25,21 @@ jobs:
           gcp-auth-key: ${{ secrets.GCP_AUTH_KEY }}
           repository: "artifacts-0"
           project-name: "atlasnet"
-          app-name: "explorer"
-          image-name: "explorer"
+          app-name: "atlasnet-explorer"
+          image-name: "atlasnet-explorer"
+
+  deploy-zink-explorer:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/deploy
+        with:
+          deploy-type: service
+          environment: ${{ inputs.environment }}
+          gcp-project-id: fuzzy-lemur-${{ inputs.environment }}
+          gcp-auth-key: ${{ secrets.GCP_AUTH_KEY }}
+          repository: "artifacts-0"
+          project-name: "atlasnet"
+          app-name: "zink-explorer"
+          image-name: "zink-explorer"
