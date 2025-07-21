@@ -1,11 +1,10 @@
 //
-// solana-variables.scss
-// Use this to overwrite Bootstrap and Dashkit variables
+// solana-variables-dark.scss
+// Use this to overwrite Bootstrap and Dashkit dark theme variables
 //
 
-// Example of a variable override to change Dashkit's background color
-// Remove the "//" to comment it in and see it in action!
-$body-bg: #161b19 !default;
+// Import flavor-specific colors (generated at build time)
+@import 'flavor-colors';
 
 $black: #232323;
 $white: #fff !default;
@@ -16,10 +15,10 @@ $gray-800-dark: #1e2423 !default;
 $black-dark: #141816 !default;
 $input-placeholder-color: #ccc !default;
 
-$primary: #32feff !default;
-$success: #26e97e !default;
-$warning: #fa62fc !default;
-$card-border-color: $gray-700-dark !default;
+// Override body background to use flavor-specific dark background
+// This must override the default dashkit dark background
+$body-bg: $body-bg-dark;
+$card-border-color: $card-border-color-dark;
 $card-outline-color: #111 !default;
 
 $input-bg: transparent !default;

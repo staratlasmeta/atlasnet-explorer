@@ -66,6 +66,11 @@ const nextConfig = {
       __dirname,
       `app/flavors/${flavor}/cluster.ts`
     );
+    
+    config.resolve.alias['@utils/colors'] = path.resolve(
+      __dirname,
+      `app/flavors/${flavor}/colors.ts`
+    );
 
     return config;
   }
