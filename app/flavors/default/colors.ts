@@ -1,4 +1,20 @@
 export const FLAVOR_COLORS = {
+  // Theme colors for light mode
+  bodyBg: '#f0fdf4',
+  
+  // Theme colors for dark mode
+  bodyBgDark: '#0c1910',
+  
+  // Theme colors for light mode
+  cardBorderColor: '#bbf7d0',
+  
+  // Theme colors for dark mode
+  cardBorderColorDark: '#1a2e23',
+  
+  // Status colors
+  danger: '#ef4444',
+  info: '#06b6d4',
+  
   // Primary brand colors - Default green theme (matching screenshot)
   primary: '#00d97e',
   primaryDark: '#00c76b',
@@ -13,16 +29,6 @@ export const FLAVOR_COLORS = {
   // Status colors
   success: '#00d97e',
   warning: '#f59e0b',
-  danger: '#ef4444',
-  info: '#06b6d4',
-  
-  // Theme colors for light mode
-  bodyBg: '#f0fdf4',
-  cardBorderColor: '#bbf7d0',
-  
-  // Theme colors for dark mode
-  bodyBgDark: '#0c1910',
-  cardBorderColorDark: '#1a2e23',
 } as const;
 
 export type FlavorColors = typeof FLAVOR_COLORS; 

@@ -1,4 +1,20 @@
 export const FLAVOR_COLORS = {
+  // Theme colors for light mode
+  bodyBg: '#f0fffb',
+  
+  // Theme colors for dark mode
+  bodyBgDark: '#001a0f',
+  
+  // Theme colors for light mode
+  cardBorderColor: '#ccffee',
+  
+  // Theme colors for dark mode
+  cardBorderColorDark: '#003322',
+  
+  // Status colors
+  danger: '#ef4444',
+  info: '#06b6d4',
+  
   // Primary brand colors - Zink bright green/cyan theme (matching screenshot)
   primary: '#00ff88',
   primaryDark: '#00e67a',
@@ -13,16 +29,6 @@ export const FLAVOR_COLORS = {
   // Status colors
   success: '#00ff88',
   warning: '#f59e0b',
-  danger: '#ef4444',
-  info: '#06b6d4',
-  
-  // Theme colors for light mode
-  bodyBg: '#f0fffb',
-  cardBorderColor: '#ccffee',
-  
-  // Theme colors for dark mode
-  bodyBgDark: '#001a0f',
-  cardBorderColorDark: '#003322',
 } as const;
 
 export type FlavorColors = typeof FLAVOR_COLORS; 

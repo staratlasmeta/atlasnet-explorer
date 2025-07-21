@@ -1,4 +1,20 @@
 export const FLAVOR_COLORS = {
+  // Theme colors for light mode
+  bodyBg: '#eff6ff',
+  
+  // Theme colors for dark mode
+  bodyBgDark: '#0f1629',
+  
+  // Theme colors for light mode
+  cardBorderColor: '#bfdbfe',
+  
+  // Theme colors for dark mode
+  cardBorderColorDark: '#1e3a8a',
+  
+  // Status colors
+  danger: '#ef4444',
+  info: '#06b6d4',
+  
   // Primary brand colors - Localnet dark blue theme
   primary: '#1e40af',
   primaryDark: '#1e3a8a',
@@ -13,16 +29,6 @@ export const FLAVOR_COLORS = {
   // Status colors
   success: '#16a34a',
   warning: '#f59e0b',
-  danger: '#ef4444',
-  info: '#06b6d4',
-  
-  // Theme colors for light mode
-  bodyBg: '#eff6ff',
-  cardBorderColor: '#bfdbfe',
-  
-  // Theme colors for dark mode
-  bodyBgDark: '#0f1629',
-  cardBorderColorDark: '#1e3a8a',
 } as const;
 
 export type FlavorColors = typeof FLAVOR_COLORS; 
