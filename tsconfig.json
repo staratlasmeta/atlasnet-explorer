@@ -26,8 +26,7 @@
             "@img/*": ["./app/img/*"],
             "@providers/*": ["./app/providers/*"],
             "@utils/*": ["./app/utils/*"],
-            "@validators/*": ["./app/validators/*"],
-            "@utils/cluster": ["app/flavors/default/cluster.ts"]
+            "@validators/*": ["./app/validators/*"]
         }
     },
     "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/types"],
