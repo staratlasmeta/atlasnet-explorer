@@ -69,7 +69,7 @@ export const TESTNET_URL = 'https://api.testnet.solana.com';
 export const DEVNET_URL = 'https://api.devnet.solana.com';
 export const ATLASNET_URL = 'https://rpc.ironforge.network/devnet?apiKey=01JDDJZNRFY6DZZK6GBSSQC5F5';
 export const UNIVERSE_URL = 'http://universe:48899';
-export const ZINK_URL = 'https://sa1.z.ink';
+export const ZINK_URL = 'https://rpc1.z.ink';
 export const UNIVERSE_LOCAL_URL = 'http://localhost:48899';
 export const LOCALNET_URL = 'http://localhost:8899';
 
