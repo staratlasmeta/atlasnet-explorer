@@ -11,6 +11,7 @@ import {
     parseSetComputeUnitPriceInstruction,
     parseSetLoadedAccountsDataSizeLimitInstruction,
 } from '@solana-program/compute-budget';
+import { NATIVE_TOKEN_SYMBOL } from '@utils/cluster';
 import { microLamportsToLamportsString } from '@utils/index';
 import React from 'react';
 import { address } from 'web3js-experimental';
@@ -68,7 +69,7 @@ export function ComputeBudgetDetailsCard({
                         </tr>
 
                         <tr>
-                            <td>Additional Fee (SOL)</td>
+                            <td>Additional Fee ({NATIVE_TOKEN_SYMBOL})</td>
                             <td className="text-lg-end">
                                 <SolBalance lamports={additionalFee} />
                             </td>

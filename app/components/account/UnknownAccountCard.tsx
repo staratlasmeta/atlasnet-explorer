@@ -3,6 +3,7 @@ import { SolBalance } from '@components/common/SolBalance';
 import { TableCardBody } from '@components/common/TableCardBody';
 import { Account } from '@providers/accounts';
 import { useCluster } from '@providers/cluster';
+import { NATIVE_TOKEN_SYMBOL } from '@utils/cluster';
 import { addressLabel } from '@utils/tx';
 import React from 'react';
 
@@ -30,7 +31,7 @@ export function UnknownAccountCard({ account }: { account: Account }) {
                     </tr>
                 )}
                 <tr>
-                    <td>Balance (SOL)</td>
+                    <td>Balance ({NATIVE_TOKEN_SYMBOL})</td>
                     <td className="text-lg-end">
                         {account.lamports === 0 ? 'Account does not exist' : <SolBalance lamports={account.lamports} />}
                     </td>

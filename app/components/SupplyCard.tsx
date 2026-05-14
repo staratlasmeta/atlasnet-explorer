@@ -3,6 +3,7 @@ import { LoadingCard } from '@components/common/LoadingCard';
 import { SolBalance } from '@components/common/SolBalance';
 import { TableCardBody } from '@components/common/TableCardBody';
 import { Status, useFetchSupply, useSupply } from '@providers/supply';
+import { NATIVE_TOKEN_SYMBOL } from '@utils/cluster';
 import React from 'react';
 
 export function SupplyCard() {
@@ -30,21 +31,21 @@ export function SupplyCard() {
 
             <TableCardBody>
                 <tr>
-                    <td className="w-100">Total Supply (SOL)</td>
+                    <td className="w-100">Total Supply ({NATIVE_TOKEN_SYMBOL})</td>
                     <td className="text-lg-end">
                         <SolBalance lamports={supply.total} maximumFractionDigits={0} />
                     </td>
                 </tr>
 
                 <tr>
-                    <td className="w-100">Circulating Supply (SOL)</td>
+                    <td className="w-100">Circulating Supply ({NATIVE_TOKEN_SYMBOL})</td>
                     <td className="text-lg-end">
                         <SolBalance lamports={supply.circulating} maximumFractionDigits={0} />
                     </td>
                 </tr>
 
                 <tr>
-                    <td className="w-100">Non-Circulating Supply (SOL)</td>
+                    <td className="w-100">Non-Circulating Supply ({NATIVE_TOKEN_SYMBOL})</td>
                     <td className="text-lg-end">
                         <SolBalance lamports={supply.nonCirculating} maximumFractionDigits={0} />
                     </td>

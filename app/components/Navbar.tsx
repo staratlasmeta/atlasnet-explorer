@@ -2,6 +2,7 @@
 
 import Logo from '@img/logos-solana/dark-explorer-logo.svg';
 import { useDisclosure } from '@mantine/hooks';
+import { explorerAppName } from '@utils/network';
 import { useClusterPath } from '@utils/url';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -25,7 +26,7 @@ export function Navbar({ children }: INavbarProps) {
         <nav className="navbar navbar-expand-lg navbar-light">
             <div className="container px-4">
                 <Link href={homePath}>
-                    <Image alt="Solana Explorer" height={22} src={Logo} width={214} />
+                    <Image alt={explorerAppName()} height={22} src={Logo} width={214} />
                 </Link>
 
                 <button className="navbar-toggler" type="button" onClick={navHandlers.toggle}>

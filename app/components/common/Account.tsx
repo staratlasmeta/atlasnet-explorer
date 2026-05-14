@@ -1,5 +1,6 @@
 import { SolBalance } from '@components/common/SolBalance';
 import { Account } from '@providers/accounts';
+import { NATIVE_TOKEN_SYMBOL } from '@utils/cluster';
 import React from 'react';
 import { RefreshCw } from 'react-feather';
 
@@ -41,7 +42,7 @@ export function AccountBalanceRow({ account }: AccountProps) {
     const { lamports } = account;
     return (
         <tr>
-            <td>Balance (SOL)</td>
+            <td>Balance ({NATIVE_TOKEN_SYMBOL})</td>
             <td className="text-lg-end text-uppercase">
                 <SolBalance lamports={lamports} />
             </td>

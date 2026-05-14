@@ -5,6 +5,7 @@ import { SolBalance } from '@components/common/SolBalance';
 import { Status, useFetchRichList, useRichList } from '@providers/richList';
 import { useSupply } from '@providers/supply';
 import { AccountBalancePair } from '@solana/web3.js';
+import { NATIVE_TOKEN_SYMBOL } from '@utils/cluster';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import React, { createRef, useMemo } from 'react';
@@ -92,7 +93,7 @@ export function TopAccountsCard() {
                                 <tr>
                                     <th className="text-muted">Rank</th>
                                     <th className="text-muted">Address</th>
-                                    <th className="text-muted text-end">Balance (SOL)</th>
+                                    <th className="text-muted text-end">Balance ({NATIVE_TOKEN_SYMBOL})</th>
                                     <th className="text-muted text-end">% of {header} Supply</th>
                                 </tr>
                             </thead>

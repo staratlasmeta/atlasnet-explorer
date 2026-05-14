@@ -6,6 +6,7 @@ import { MessageBanner } from '@components/MessageBanner';
 import { Navbar } from '@components/Navbar';
 import { ClusterProvider } from '@providers/cluster';
 import { ScrollAnchorProvider } from '@providers/scroll-anchor';
+import { explorerNetworkDescriptionName, explorerNetworkName } from '@utils/network';
 import type { Viewport } from 'next';
 import dynamic from 'next/dynamic';
 import { Rubik } from 'next/font/google';
@@ -13,18 +14,10 @@ import { Metadata } from 'next/types';
 const SearchBar = dynamic(() => import('@components/SearchBar'), {
     ssr: false,
 });
-const flavor = process.env.NEXT_PUBLIC_FLAVOR;
-
 export const metadata: Metadata = {
-  description:
-    flavor === 'universe'
-      ? 'Inspect transactions, accounts, blocks, and more on Universe'
-      : 'Inspect transactions, accounts, blocks, and more on Atlasnet',
-  manifest: '/manifest.json',
-  title:
-    flavor === 'universe'
-      ? 'Explorer | Universe'
-      : 'Explorer | Atlasnet'
+  description: `Inspect transactions, accounts, blocks, and more on ${explorerNetworkDescriptionName()}`,
+  manifest: '/manifest.webmanifest',
+  title: `Explorer | ${explorerNetworkName()}`
 };
 
 export const viewport: Viewport = {

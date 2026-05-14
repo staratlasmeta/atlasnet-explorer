@@ -16,6 +16,8 @@ export enum Cluster {
   Localnet,
 }
 
+export const NATIVE_TOKEN_SYMBOL = 'ZINK';
+
 export const CLUSTERS = [Cluster.Zink];
 
 export function clusterSlug (cluster: Cluster): string {
@@ -48,7 +50,7 @@ export function clusterName (cluster: Cluster): string {
     case Cluster.Universe:
       return 'Universe';
     case Cluster.Zink:
-      return 'Zink';
+      return 'Zink Network';
     case Cluster.UniverseLocal:
       return 'Universe Local';
     case Cluster.Localnet:

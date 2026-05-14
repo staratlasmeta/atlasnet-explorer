@@ -2,6 +2,8 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import { defineConfig } from 'vitest/config';
 
+const flavor = process.env.NEXT_PUBLIC_FLAVOR || 'default';
+
 export default defineConfig({
     plugins: [react()],
     resolve: {
@@ -18,6 +20,7 @@ export default defineConfig({
             '@app': path.resolve(__dirname, './app'),
             '@components': path.resolve(__dirname, './app/components'),
             '@providers': path.resolve(__dirname, './app/providers'),
+            '@utils/cluster': path.resolve(__dirname, `./app/flavors/${flavor}/cluster.ts`),
             '@utils': path.resolve(__dirname, './app/utils'),
             '@validators': path.resolve(__dirname, './app/validators'),
         }

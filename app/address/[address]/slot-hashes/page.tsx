@@ -1,3 +1,5 @@
+import { explorerNetworkDescriptionName, explorerNetworkName } from '@utils/network';
+
 import SlotHashesPageClient from './page-client';
 
 type Props = Readonly<{
@@ -7,8 +9,8 @@ type Props = Readonly<{
 }>;
 
 export const metadata = {
-    description: `Hashes of each slot on Solana`,
-    title: `Slot Hashes | Solana`,
+    description: `Hashes of each slot on ${explorerNetworkDescriptionName()}`,
+    title: `Slot Hashes | ${explorerNetworkName()}`,
 };
 
 export default function SlotHashesPage(props: Props) {

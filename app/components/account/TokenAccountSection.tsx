@@ -7,7 +7,7 @@ import { TOKEN_2022_PROGRAM_ID } from '@providers/accounts/tokens';
 import isMetaplexNFT from '@providers/accounts/utils/isMetaplexNFT';
 import { useCluster } from '@providers/cluster';
 import { PublicKey } from '@solana/web3.js';
-import { Cluster } from '@utils/cluster';
+import { Cluster, NATIVE_TOKEN_SYMBOL } from '@utils/cluster';
 import { CoingeckoStatus, useCoinGecko } from '@utils/coingecko';
 import { displayTimestamp, displayTimestampWithoutDate } from '@utils/date';
 import { abbreviatedNumber, normalizeTokenAmount } from '@utils/index';
@@ -408,10 +408,11 @@ function TokenAccountCard({ account, info }: { account: Account; info: TokenAcco
     const [symbol, setSymbol] = useState<string | undefined>(undefined);
     const accountExtensions = info.extensions?.slice();
     accountExtensions?.sort(cmpExtension);
+    const nativeTokenPrefix = NATIVE_TOKEN_SYMBOL === 'SOL' ? '\u25ce' : `${NATIVE_TOKEN_SYMBOL} `;
 
     const balance = info.isNative ? (
         <>
-            {'\u25ce'}
+            {nativeTokenPrefix}
             <span className="font-monospace">{new BigNumber(info.tokenAmount.uiAmountString).toFormat(9)}</span>
         </>
     ) : (
@@ -420,7 +421,7 @@ function TokenAccountCard({ account, info }: { account: Account; info: TokenAcco
 
     useEffect(() => {
         if (info.isNative) {
-            setSymbol('SOL');
+            setSymbol(NATIVE_TOKEN_SYMBOL);
         } else {
             setSymbol(tokenInfo?.symbol);
         }
@@ -474,10 +475,10 @@ function TokenAccountCard({ account, info }: { account: Account; info: TokenAcco
                 </tr>
                 {info.rentExemptReserve && (
                     <tr>
-                        <td>Rent-exempt reserve (SOL)</td>
+                        <td>Rent-exempt reserve ({NATIVE_TOKEN_SYMBOL})</td>
                         <td className="text-lg-end">
                             <>
-                                ◎
+                                {nativeTokenPrefix}
                                 <span className="font-monospace">
                                     {new BigNumber(info.rentExemptReserve.uiAmountString).toFormat(9)}
                                 </span>
@@ -498,7 +499,7 @@ function TokenAccountCard({ account, info }: { account: Account; info: TokenAcco
                             <td className="text-lg-end">
                                 {info.isNative ? (
                                     <>
-                                        {'\u25ce'}
+                                        {nativeTokenPrefix}
                                         <span className="font-monospace">
                                             {new BigNumber(
                                                 info.delegatedAmount ? info.delegatedAmount.uiAmountString : '0'

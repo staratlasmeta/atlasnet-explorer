@@ -1,5 +1,6 @@
 import { DomainsCard } from '@components/account/DomainsCard';
 import getReadableTitleFromAddress, { AddressPageMetadataProps } from '@utils/get-readable-title-from-address';
+import { explorerNetworkDescriptionName, explorerNetworkName } from '@utils/network';
 import { Metadata } from 'next/types';
 
 type Props = Readonly<{
@@ -10,8 +11,8 @@ type Props = Readonly<{
 
 export async function generateMetadata(props: AddressPageMetadataProps): Promise<Metadata> {
     return {
-        description: `Domain names owned by the address ${props.params.address} on Solana`,
-        title: `Domains | ${await getReadableTitleFromAddress(props)} | Solana`,
+        description: `Domain names owned by the address ${props.params.address} on ${explorerNetworkDescriptionName()}`,
+        title: `Domains | ${await getReadableTitleFromAddress(props)} | ${explorerNetworkName()}`,
     };
 }
 

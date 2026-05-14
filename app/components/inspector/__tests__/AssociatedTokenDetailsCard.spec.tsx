@@ -1,5 +1,5 @@
 import * as spl from '@solana/spl-token';
-import { AddressLookupTableAccount, clusterApiUrl, Connection, TransactionMessage } from '@solana/web3.js';
+import { TransactionMessage } from '@solana/web3.js';
 import { render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
 
@@ -16,15 +16,8 @@ describe('inspector::AssociatedTokenDetailsCard', () => {
     test('should render "CreateIdempotent" card', async () => {
         const index = 1;
         const m = mock.deserializeMessageV0(stubs.aTokenCreateIdempotentMsg);
-        const connection = new Connection(clusterApiUrl('mainnet-beta'));
-        const lookups = await Promise.all(
-            m.addressTableLookups.map(lookup =>
-                connection.getAddressLookupTable(lookup.accountKey).then(val => val.value)
-            )
-        );
-        const ti = TransactionMessage.decompile(m, {
-            addressLookupTableAccounts: lookups.filter(x => x !== null) as AddressLookupTableAccount[],
-        }).instructions[index];
+        const lookups = mock.createAddressLookupTableAccountsForMessage(m);
+        const ti = TransactionMessage.decompile(m, { addressLookupTableAccounts: lookups }).instructions[index];
         expect(ti.programId.equals(spl.ASSOCIATED_TOKEN_PROGRAM_ID)).toBeTruthy();
 
         const ix = intoParsedInstruction(ti);
@@ -56,15 +49,8 @@ describe('inspector::AssociatedTokenDetailsCard', () => {
     test('should render "Create" card', async () => {
         const index = 2;
         const m = mock.deserializeMessage(stubs.aTokenCreateMsgWithInnerCards);
-        const connection = new Connection(clusterApiUrl('mainnet-beta'));
-        const lookups = await Promise.all(
-            m.addressTableLookups.map(lookup =>
-                connection.getAddressLookupTable(lookup.accountKey).then(val => val.value)
-            )
-        );
-        const ti = TransactionMessage.decompile(m, {
-            addressLookupTableAccounts: lookups.filter(x => x !== null) as AddressLookupTableAccount[],
-        }).instructions[index];
+        const lookups = mock.createAddressLookupTableAccountsForMessage(m);
+        const ti = TransactionMessage.decompile(m, { addressLookupTableAccounts: lookups }).instructions[index];
         expect(ti.programId.equals(spl.ASSOCIATED_TOKEN_PROGRAM_ID)).toBeTruthy();
 
         const ix = intoParsedInstruction(ti);
@@ -90,15 +76,8 @@ describe('inspector::AssociatedTokenDetailsCard', () => {
     test('should render "RecoverNested" card', async () => {
         const index = 0;
         const m = mock.deserializeMessage(stubs.aTokenRecoverNestedMsg);
-        const connection = new Connection(clusterApiUrl('mainnet-beta'));
-        const lookups = await Promise.all(
-            m.addressTableLookups.map(lookup =>
-                connection.getAddressLookupTable(lookup.accountKey).then(val => val.value)
-            )
-        );
-        const ti = TransactionMessage.decompile(m, {
-            addressLookupTableAccounts: lookups.filter(x => x !== null) as AddressLookupTableAccount[],
-        }).instructions[index];
+        const lookups = mock.createAddressLookupTableAccountsForMessage(m);
+        const ti = TransactionMessage.decompile(m, { addressLookupTableAccounts: lookups }).instructions[index];
         expect(ti.programId.equals(spl.ASSOCIATED_TOKEN_PROGRAM_ID)).toBeTruthy();
 
         const ix = intoParsedInstruction(ti);
@@ -125,15 +104,8 @@ describe('inspector::AssociatedTokenDetailsCard with inner cards', () => {
     test('should render "CreateIdempotentDetailsCard"', async () => {
         const index = 1;
         const m = mock.deserializeMessageV0(stubs.aTokenCreateIdempotentMsgWithInnerCards);
-        const connection = new Connection(clusterApiUrl('mainnet-beta'));
-        const lookups = await Promise.all(
-            m.addressTableLookups.map(lookup =>
-                connection.getAddressLookupTable(lookup.accountKey).then(val => val.value)
-            )
-        );
-        const ti = TransactionMessage.decompile(m, {
-            addressLookupTableAccounts: lookups.filter(x => x !== null) as AddressLookupTableAccount[],
-        }).instructions[index];
+        const lookups = mock.createAddressLookupTableAccountsForMessage(m);
+        const ti = TransactionMessage.decompile(m, { addressLookupTableAccounts: lookups }).instructions[index];
 
         expect(ti.programId.equals(spl.ASSOCIATED_TOKEN_PROGRAM_ID)).toBeTruthy();
 

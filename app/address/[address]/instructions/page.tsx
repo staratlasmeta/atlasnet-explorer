@@ -1,5 +1,6 @@
 import { TokenInstructionsCard } from '@components/account/history/TokenInstructionsCard';
 import getReadableTitleFromAddress, { AddressPageMetadataProps } from '@utils/get-readable-title-from-address';
+import { explorerNetworkDescriptionName, explorerNetworkName } from '@utils/network';
 import { Metadata } from 'next/types';
 
 type Props = Readonly<{
@@ -10,8 +11,10 @@ type Props = Readonly<{
 
 export async function generateMetadata(props: AddressPageMetadataProps): Promise<Metadata> {
     return {
-        description: `A list of transactions that include an instruction involving the token with address ${props.params.address} on Solana`,
-        title: `Token Instructions | ${await getReadableTitleFromAddress(props)} | Solana`,
+        description: `A list of transactions that include an instruction involving the token with address ${
+            props.params.address
+        } on ${explorerNetworkDescriptionName()}`,
+        title: `Token Instructions | ${await getReadableTitleFromAddress(props)} | ${explorerNetworkName()}`,
     };
 }
 

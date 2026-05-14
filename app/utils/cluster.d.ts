@@ -19,6 +19,7 @@ export enum Cluster {
   Localnet,
 }
 
+export declare const NATIVE_TOKEN_SYMBOL: string;
 export declare const CLUSTERS: Cluster[];
 export declare function clusterSlug(cluster: Cluster): string;
 export declare function clusterName(cluster: Cluster): string;

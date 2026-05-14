@@ -13,7 +13,7 @@ import { useCluster } from '@providers/cluster';
 import { StatsProvider } from '@providers/stats';
 import { ClusterStatsStatus, useDashboardInfo, usePerformanceInfo, useStatsProvider } from '@providers/stats/solanaClusterStats';
 import { Status, SupplyProvider, useFetchSupply, useSupply } from '@providers/supply';
-import { ClusterStatus } from '@utils/cluster';
+import { ClusterStatus, NATIVE_TOKEN_SYMBOL } from '@utils/cluster';
 import { UpcomingFeatures } from '@utils/feature-gate/UpcomingFeatures';
 import { percentage } from '@utils/math';
 import React from 'react';
@@ -134,7 +134,7 @@ function StakingComponent () {
 }
 
 function displayLamports (value: number | bigint) {
-  return abbreviatedNumber(lamportsToSol(value));
+  return `${abbreviatedNumber(lamportsToSol(value))} ${NATIVE_TOKEN_SYMBOL}`;
 }
 
 function StatsCardBody () {

@@ -1,4 +1,5 @@
 import { SignatureProps } from '@utils/index';
+import { explorerNetworkDescriptionName, explorerNetworkName } from '@utils/network';
 import { Metadata } from 'next/types';
 import React from 'react';
 
@@ -10,8 +11,8 @@ type Props = Readonly<{
 
 export async function generateMetadata({ params: { signature } }: Props): Promise<Metadata> {
     return {
-        description: `Details of the Solana transaction with signature ${signature}`,
-        title: `Transaction | ${signature} | Solana`,
+        description: `Details of the transaction with signature ${signature} on ${explorerNetworkDescriptionName()}`,
+        title: `Transaction | ${signature} | ${explorerNetworkName()}`,
     };
 }
 
