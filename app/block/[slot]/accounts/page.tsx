@@ -1,3 +1,4 @@
+import { explorerNetworkDescriptionName, explorerNetworkName } from '@utils/network';
 import { Metadata } from 'next/types';
 
 import BlockAccountsTabClient from './page-client';
@@ -10,8 +11,8 @@ type Props = Readonly<{
 
 export async function generateMetadata({ params: { slot } }: Props): Promise<Metadata> {
     return {
-        description: `Statistics pertaining to accounts which were accessed or written to during block ${slot} on Solana`,
-        title: `Accounts Active In Block | ${slot} | Solana`,
+        description: `Statistics pertaining to accounts which were accessed or written to during block ${slot} on ${explorerNetworkDescriptionName()}`,
+        title: `Accounts Active In Block | ${slot} | ${explorerNetworkName()}`,
     };
 }
 

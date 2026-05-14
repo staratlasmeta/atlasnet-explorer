@@ -3,6 +3,7 @@ import { Account, useAccountInfo, useAddressLookupTable, useFetchAccountInfo } f
 import { useCluster } from '@providers/cluster';
 import { PublicKey, SystemProgram } from '@solana/web3.js';
 import { ClusterStatus } from '@utils/cluster';
+import { NATIVE_TOKEN_SYMBOL } from '@utils/cluster';
 import { lamportsToSolString } from '@utils/index';
 import { addressLabel } from '@utils/tx';
 import React from 'react';
@@ -111,7 +112,7 @@ function AccountInfo({ pubkey, validator }: { pubkey: PublicKey; validator?: Acc
     return (
         <span className="text-muted">
             {`Owned by ${ownerLabel || ownerAddress}.`}
-            {` Balance is ${lamportsToSolString(account.lamports)} SOL.`}
+            {` Balance is ${lamportsToSolString(account.lamports)} ${NATIVE_TOKEN_SYMBOL}.`}
             {account.space !== undefined && ` Size is ${new Intl.NumberFormat('en-US').format(account.space)} byte(s).`}
         </span>
     );

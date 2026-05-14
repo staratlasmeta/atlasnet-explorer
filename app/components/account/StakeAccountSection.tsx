@@ -4,6 +4,7 @@ import { SolBalance } from '@components/common/SolBalance';
 import { TableCardBody } from '@components/common/TableCardBody';
 import { Account, useFetchAccountInfo } from '@providers/accounts';
 import { StakeActivationData } from '@solana/web3.js';
+import { NATIVE_TOKEN_SYMBOL } from '@utils/cluster';
 import { displayTimestampUtc } from '@utils/date';
 import { StakeAccountInfo, StakeAccountType, StakeMeta } from '@validators/accounts/stake';
 import React from 'react';
@@ -110,13 +111,13 @@ function OverviewCard({
                     </td>
                 </tr>
                 <tr>
-                    <td>Balance (SOL)</td>
+                    <td>Balance ({NATIVE_TOKEN_SYMBOL})</td>
                     <td className="text-lg-end text-uppercase">
                         <SolBalance lamports={account.lamports} />
                     </td>
                 </tr>
                 <tr>
-                    <td>Rent Reserve (SOL)</td>
+                    <td>Rent Reserve ({NATIVE_TOKEN_SYMBOL})</td>
                     <td className="text-lg-end">
                         <SolBalance lamports={stakeAccount.meta.rentExemptReserve} />
                     </td>
@@ -171,7 +172,7 @@ function DelegationCard({
                 {stake && (
                     <>
                         <tr>
-                            <td>Delegated Stake (SOL)</td>
+                            <td>Delegated Stake ({NATIVE_TOKEN_SYMBOL})</td>
                             <td className="text-lg-end">
                                 <SolBalance lamports={stake.delegation.stake} />
                             </td>
@@ -180,14 +181,14 @@ function DelegationCard({
                         {activation && (
                             <>
                                 <tr>
-                                    <td>Active Stake (SOL)</td>
+                                    <td>Active Stake ({NATIVE_TOKEN_SYMBOL})</td>
                                     <td className="text-lg-end">
                                         <SolBalance lamports={activation.active} />
                                     </td>
                                 </tr>
 
                                 <tr>
-                                    <td>Inactive Stake (SOL)</td>
+                                    <td>Inactive Stake ({NATIVE_TOKEN_SYMBOL})</td>
                                     <td className="text-lg-end">
                                         <SolBalance lamports={activation.inactive} />
                                     </td>

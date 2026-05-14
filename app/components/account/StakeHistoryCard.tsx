@@ -1,5 +1,6 @@
 import { Epoch } from '@components/common/Epoch';
 import { SolBalance } from '@components/common/SolBalance';
+import { NATIVE_TOKEN_SYMBOL } from '@utils/cluster';
 import { StakeHistoryEntry, StakeHistoryInfo, SysvarAccount } from '@validators/accounts/sysvar';
 import React from 'react';
 
@@ -21,9 +22,9 @@ export function StakeHistoryCard({ sysvarAccount }: { sysvarAccount: SysvarAccou
                         <thead>
                             <tr>
                                 <th className="w-1 text-muted">Epoch</th>
-                                <th className="text-muted">Effective (SOL)</th>
-                                <th className="text-muted">Activating (SOL)</th>
-                                <th className="text-muted">Deactivating (SOL)</th>
+                                <th className="text-muted">Effective ({NATIVE_TOKEN_SYMBOL})</th>
+                                <th className="text-muted">Activating ({NATIVE_TOKEN_SYMBOL})</th>
+                                <th className="text-muted">Deactivating ({NATIVE_TOKEN_SYMBOL})</th>
                             </tr>
                         </thead>
                         <tbody className="list">

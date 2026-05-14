@@ -1,5 +1,6 @@
 import { FeatureGateCard } from '@components/account/FeatureGateCard';
 import getReadableTitleFromAddress, { AddressPageMetadataProps } from '@utils/get-readable-title-from-address';
+import { explorerNetworkDescriptionName, explorerNetworkName } from '@utils/network';
 import { Metadata } from 'next/types';
 import ReactMarkdown from 'react-markdown';
 import remarkFrontmatter from 'remark-frontmatter';
@@ -16,8 +17,8 @@ type Props = Readonly<{
 
 export async function generateMetadata(props: AddressPageMetadataProps): Promise<Metadata> {
     return {
-        description: `Feature information for address ${props.params.address} on Solana`,
-        title: `Feature Gate | ${await getReadableTitleFromAddress(props)} | Solana`,
+        description: `Feature information for address ${props.params.address} on ${explorerNetworkDescriptionName()}`,
+        title: `Feature Gate | ${await getReadableTitleFromAddress(props)} | ${explorerNetworkName()}`,
     };
 }
 

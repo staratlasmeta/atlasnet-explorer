@@ -23,7 +23,7 @@ import {
 } from '@providers/transactions';
 import { useFetchTransactionDetails } from '@providers/transactions/parsed';
 import { ParsedTransaction, SystemInstruction, SystemProgram, TransactionSignature } from '@solana/web3.js';
-import { Cluster, ClusterStatus } from '@utils/cluster';
+import { Cluster, ClusterStatus, NATIVE_TOKEN_SYMBOL } from '@utils/cluster';
 import { displayTimestamp } from '@utils/date';
 import { SignatureProps } from '@utils/index';
 import { getTransactionInstructionError } from '@utils/program-err';
@@ -321,7 +321,7 @@ function StatusCard({ signature, autoRefresh }: SignatureProps & AutoRefreshProp
 
                 {fee !== undefined && (
                     <tr>
-                        <td>Fee (SOL)</td>
+                        <td>Fee ({NATIVE_TOKEN_SYMBOL})</td>
                         <td className="text-lg-end">
                             <SolBalance lamports={fee} />
                         </td>
@@ -443,8 +443,8 @@ function AccountsCard({ signature }: SignatureProps) {
                         <tr>
                             <th className="text-muted">#</th>
                             <th className="text-muted">Address</th>
-                            <th className="text-muted">Change (SOL)</th>
-                            <th className="text-muted">Post Balance (SOL)</th>
+                            <th className="text-muted">Change ({NATIVE_TOKEN_SYMBOL})</th>
+                            <th className="text-muted">Post Balance ({NATIVE_TOKEN_SYMBOL})</th>
                             <th className="text-muted">Details</th>
                         </tr>
                     </thead>

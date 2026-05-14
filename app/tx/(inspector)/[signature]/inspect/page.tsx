@@ -1,4 +1,5 @@
 import { TransactionInspectorPage } from '@components/inspector/InspectorPage';
+import { explorerNetworkDescriptionName, explorerNetworkName } from '@utils/network';
 import { Metadata } from 'next/types';
 
 type Props = Readonly<{
@@ -9,8 +10,8 @@ type Props = Readonly<{
 
 export async function generateMetadata({ params: { signature } }: Props): Promise<Metadata> {
     return {
-        description: `Interactively inspect the transaction with signature ${signature} on Solana`,
-        title: `Transaction Inspector | ${signature} | Solana`,
+        description: `Interactively inspect the transaction with signature ${signature} on ${explorerNetworkDescriptionName()}`,
+        title: `Transaction Inspector | ${signature} | ${explorerNetworkName()}`,
     };
 }
 

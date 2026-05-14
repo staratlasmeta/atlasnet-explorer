@@ -4,11 +4,12 @@ import { Epoch } from '@components/common/Epoch';
 import { ErrorCard } from '@components/common/ErrorCard';
 import { LoadingCard } from '@components/common/LoadingCard';
 import { Slot } from '@components/common/Slot';
+import { SolBalance } from '@components/common/SolBalance';
 import { useAccountInfo } from '@providers/accounts';
 import { useFetchRewards, useRewards } from '@providers/accounts/rewards';
 import { FetchStatus } from '@providers/cache';
 import { PublicKey } from '@solana/web3.js';
-import { lamportsToSolString } from '@utils/index';
+import { NATIVE_TOKEN_SYMBOL } from '@utils/cluster';
 import React from 'react';
 
 const U64_MAX = BigInt('0xffffffffffffffff');
@@ -63,8 +64,12 @@ export function RewardsCard({ address }: { address: string }) {
                 <td>
                     <Slot slot={reward.effectiveSlot} link />
                 </td>
-                <td>{lamportsToSolString(reward.amount)}</td>
-                <td>{lamportsToSolString(reward.postBalance)}</td>
+                <td>
+                    <SolBalance lamports={reward.amount} />
+                </td>
+                <td>
+                    <SolBalance lamports={reward.postBalance} />
+                </td>
             </tr>
         );
     });
@@ -90,8 +95,8 @@ export function RewardsCard({ address }: { address: string }) {
                                 <tr>
                                     <th className="w-1 text-muted">Epoch</th>
                                     <th className="text-muted">Effective Slot</th>
-                                    <th className="text-muted">Reward Amount</th>
-                                    <th className="text-muted">Post Balance</th>
+                                    <th className="text-muted">Reward Amount ({NATIVE_TOKEN_SYMBOL})</th>
+                                    <th className="text-muted">Post Balance ({NATIVE_TOKEN_SYMBOL})</th>
                                 </tr>
                             </thead>
                             <tbody className="list">{rewardsList}</tbody>

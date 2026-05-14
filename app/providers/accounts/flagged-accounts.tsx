@@ -1,3 +1,4 @@
+import { NATIVE_TOKEN_SYMBOL } from '@utils/cluster';
 import Link from 'next/link';
 import React from 'react';
 
@@ -59,8 +60,8 @@ const INCIDENTS: Record<IncidentId, IncidentDescription> = {
     'known-scam': (
         <>
             <div className="alert alert-danger alert-scam" role="alert">
-                Warning! This account has been flagged by the community as a scam account. Please be cautious sending
-                SOL to this account.
+                Warning! This account has been flagged by the community as a scam account. Please be cautious sending{' '}
+                {NATIVE_TOKEN_SYMBOL} to this account.
             </div>
         </>
     ),

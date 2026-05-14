@@ -1,3 +1,5 @@
+import { explorerNetworkDescriptionName, explorerNetworkName } from '@utils/network';
+
 import RecentBlockhashesPageClient from './page-client';
 
 type Props = Readonly<{
@@ -7,8 +9,8 @@ type Props = Readonly<{
 }>;
 
 export const metadata = {
-    description: `Recent blockhashes on Solana`,
-    title: `Recent Blockhashes | Solana`,
+    description: `Recent blockhashes on ${explorerNetworkDescriptionName()}`,
+    title: `Recent Blockhashes | ${explorerNetworkName()}`,
 };
 
 export default function RecentBlockhashesPage(props: Props) {

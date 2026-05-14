@@ -1,6 +1,6 @@
 {
-    "short_name": "Atlasnet Explorer",
-    "name": "Inspect transactions, accounts, blocks, and more on Atlasnet",
+    "short_name": "Explorer",
+    "name": "Inspect transactions, accounts, blocks, and more",
     "icons": [
         {
             "src": "icon-small.png",

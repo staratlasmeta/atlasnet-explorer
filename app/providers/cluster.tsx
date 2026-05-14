@@ -62,6 +62,12 @@ function parseQuery (searchParams: ReadonlyURLSearchParams | null): Cluster {
       return Cluster.Atlasnet;
     case 'universe':
       return Cluster.Universe;
+    case 'zink':
+      return Cluster.Zink;
+    case 'universe-local':
+      return Cluster.UniverseLocal;
+    case 'localnet':
+      return Cluster.Localnet;
     case 'mainnet-beta':
     default:
       return DEFAULT_CLUSTER;

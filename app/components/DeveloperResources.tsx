@@ -1,11 +1,13 @@
 'use client';
 
+import { explorerNetworkDescriptionName } from '@utils/network';
+
 export function DeveloperResources() {
     return (
         <div className="card">
             <div className="card-body">
                 <div className="card-title d-flex justify-content-between border-bottom border-gray-300 pb-2">
-                    <div className="me-4">Kickstart your development journey on Solana</div>
+                    <div className="me-4">Kickstart your development journey on {explorerNetworkDescriptionName()}</div>
                     <div>
                         Find more on{' '}
                         <a href="https://solana.com/developers" target="_blank" rel="noreferrer">
@@ -15,26 +17,26 @@ export function DeveloperResources() {
                 </div>
                 <div className="d-flex gap-4 pb-3 overflow-auto">
                     <ResourceCard
-                        title="Setup Your Solana Environment"
-                        description="Get started in 5 minutes or less!"
+                        title="Setup Your SVM Environment"
+                        description={`Get started building for ${explorerNetworkDescriptionName()} in 5 minutes or less!`}
                         image="https://solana.com/opengraph/developers/docs/intro/installation"
                         link="https://solana.com/docs/intro/installation"
                     />
                     <ResourceCard
                         title="Quick Start Guide"
-                        description="Hands-on guide to the core concepts for building on Solana"
+                        description={`Hands-on guide to core concepts that also apply to ${explorerNetworkDescriptionName()}`}
                         image="https://solana.com/_next/image?url=%2Fassets%2Fdocs%2Fintro%2Fquickstart%2Fpg-not-connected.png&w=1920&q=75"
                         link="https://solana.com/docs/intro/quick-start"
                     />
                     <ResourceCard
-                        title="Solana Developer Bootcamp"
-                        description="11 hours of video lessons on Solana Development"
+                        title="SVM Developer Bootcamp"
+                        description="11 hours of video lessons on SVM-compatible development"
                         image="https://i.ytimg.com/vi/amAq-WHAFs8/maxresdefault.jpg"
                         link="https://www.youtube.com/watch?v=amAq-WHAFs8"
                     />
                     <ResourceCard
-                        title="60 Days of Solana"
-                        description="A course designed for EVM developers to learn Solana"
+                        title="60 Days of SVM"
+                        description="A course designed for EVM developers to learn SVM development"
                         image="https://www.rareskills.io/wp-content/uploads/2024/08/og-image-rareskills.png"
                         imageBackground="white"
                         link="https://www.rareskills.io/solana-tutorial"

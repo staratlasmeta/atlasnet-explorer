@@ -16,6 +16,8 @@ export enum Cluster {
   Localnet,
 }
 
+export const NATIVE_TOKEN_SYMBOL = 'SOL';
+
 export const CLUSTERS = [Cluster.UniverseLocal];
 
 export function clusterSlug (cluster: Cluster): string {

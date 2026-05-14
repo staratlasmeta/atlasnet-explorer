@@ -97,9 +97,28 @@ export enum PROGRAM_NAMES {
     LIGHTHOUSE_PROGRAM = 'Lighthouse Program',
 }
 
-const ALL_CLUSTERS = [Cluster.Custom, Cluster.Devnet, Cluster.Testnet, Cluster.MainnetBeta, Cluster.Atlasnet, Cluster.Universe];
+const ALL_CLUSTERS = [
+    Cluster.Custom,
+    Cluster.Devnet,
+    Cluster.Testnet,
+    Cluster.MainnetBeta,
+    Cluster.Atlasnet,
+    Cluster.Universe,
+    Cluster.Zink,
+    Cluster.UniverseLocal,
+    Cluster.Localnet,
+];
 
-const LIVE_CLUSTERS = [Cluster.Devnet, Cluster.Testnet, Cluster.MainnetBeta, Cluster.Atlasnet, Cluster.Universe];
+const LIVE_CLUSTERS = [
+    Cluster.Devnet,
+    Cluster.Testnet,
+    Cluster.MainnetBeta,
+    Cluster.Atlasnet,
+    Cluster.Universe,
+    Cluster.Zink,
+    Cluster.UniverseLocal,
+    Cluster.Localnet,
+];
 
 export const LOADER_IDS: { [key: string]: string } = {
     BPFLoader1111111111111111111111111111111111: 'BPF Loader',

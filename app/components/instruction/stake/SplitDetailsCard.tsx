@@ -1,6 +1,7 @@
 import { Address } from '@components/common/Address';
 import { SolBalance } from '@components/common/SolBalance';
 import { ParsedInstruction, SignatureResult, StakeProgram } from '@solana/web3.js';
+import { NATIVE_TOKEN_SYMBOL } from '@utils/cluster';
 import React from 'react';
 
 import { InstructionCard } from '../InstructionCard';
@@ -54,7 +55,7 @@ export function SplitDetailsCard(props: {
             </tr>
 
             <tr>
-                <td>Split Amount (SOL)</td>
+                <td>Split Amount ({NATIVE_TOKEN_SYMBOL})</td>
                 <td className="text-lg-end">
                     <SolBalance lamports={info.lamports} />
                 </td>

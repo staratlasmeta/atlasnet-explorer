@@ -1,3 +1,4 @@
+import { explorerNetworkDescriptionName, explorerNetworkName } from '@utils/network';
 import { Metadata } from 'next/types';
 
 import EpochDetailsPageClient from './page-client';
@@ -10,8 +11,8 @@ type Props = Readonly<{
 
 export async function generateMetadata({ params: { epoch } }: Props): Promise<Metadata> {
     return {
-        description: `Summary of ${epoch} on Solana`,
-        title: `Epoch | ${epoch} | Solana`,
+        description: `Summary of ${epoch} on ${explorerNetworkDescriptionName()}`,
+        title: `Epoch | ${epoch} | ${explorerNetworkName()}`,
     };
 }
 

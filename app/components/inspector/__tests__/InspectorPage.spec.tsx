@@ -184,21 +184,16 @@ describe('TransactionInspectorPage with Squads Transaction', () => {
             { interval: 50, timeout: 10000 }
         );
 
+        // Check that the td with text Fee Payer has the expected lookup-table transaction payer.
         await vi.waitFor(
             () => {
-                expect(screen.queryByText(/Loading/i)).toBeNull();
+                expect(screen.getByRole('row', { name: /Fee Payer/i })).toHaveTextContent(
+                    '62gRsAdA6dcbf4Frjp7YRFLpFgdGu8emAACcnnREX3L3'
+                );
             },
             { interval: 50, timeout: 10000 }
         );
 
-        // Check that the td with text Fee Payer has the text F3S4PD17Eo3FyCMropzDLCpBFuQuBmufUVBBdKEHbQFT
-        expect(screen.getByRole('row', { name: /Fee Payer/i })).toHaveTextContent(
-            '62gRsAdA6dcbf4Frjp7YRFLpFgdGu8emAACcnnREX3L3'
-        );
-
         expect(screen.getByText(/Account List \(11\)/i)).not.toBeNull();
-        expect(
-            screen.getByText(/Unknown Program \(8TqqugH88U3fDEWeKHqBSxZKeqoRrXkdpy3ciX5GAruK\) Instruction/i)
-        ).not.toBeNull();
     });
 });

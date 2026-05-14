@@ -9,7 +9,7 @@ import { TableCardBody } from '@components/common/TableCardBody';
 import { Account, useFetchAccountInfo } from '@providers/accounts';
 import { useCluster } from '@providers/cluster';
 import { PublicKey } from '@solana/web3.js';
-import { Cluster } from '@utils/cluster';
+import { Cluster, NATIVE_TOKEN_SYMBOL } from '@utils/cluster';
 import { addressLabel } from '@utils/tx';
 import {
     ProgramAccountInfo,
@@ -98,7 +98,7 @@ export function UpgradeableProgramSection({
                     </tr>
                 )}
                 <tr>
-                    <td>Balance (SOL)</td>
+                    <td>Balance ({NATIVE_TOKEN_SYMBOL})</td>
                     <td className="text-lg-end text-uppercase">
                         <SolBalance lamports={account.lamports} />
                     </td>
@@ -224,7 +224,7 @@ export function UpgradeableProgramDataSection({
                     </td>
                 </tr>
                 <tr>
-                    <td>Balance (SOL)</td>
+                    <td>Balance ({NATIVE_TOKEN_SYMBOL})</td>
                     <td className="text-lg-end text-uppercase">
                         <SolBalance lamports={account.lamports} />
                     </td>
@@ -288,7 +288,7 @@ export function UpgradeableProgramBufferSection({
                     </td>
                 </tr>
                 <tr>
-                    <td>Balance (SOL)</td>
+                    <td>Balance ({NATIVE_TOKEN_SYMBOL})</td>
                     <td className="text-lg-end text-uppercase">
                         <SolBalance lamports={account.lamports} />
                     </td>
