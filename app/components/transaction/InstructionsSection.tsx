@@ -33,10 +33,12 @@ import {
     ParsedTransaction,
     PartiallyDecodedInstruction,
     SignatureResult,
+    TransactionInstruction,
     TransactionSignature,
 } from '@solana/web3.js';
 import { Cluster } from '@utils/cluster';
 import { INNER_INSTRUCTIONS_START_SLOT, SignatureProps } from '@utils/index';
+import { getStarFrameProgram } from '@utils/starframe';
 import { intoTransactionInstruction } from '@utils/tx';
 import React from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -47,6 +49,7 @@ import { isEd25519Instruction } from '../instruction/ed25519/types';
 import { LighthouseDetailsCard } from '../instruction/lighthouse/LighthouseDetailsCard';
 import { isLighthouseInstruction } from '../instruction/lighthouse/types';
 import { isMangoInstruction } from '../instruction/mango/types';
+import StarFrameDetailsCard from '../instruction/StarFrameDetailsCard';
 
 export type InstructionDetailsProps = {
     tx: ParsedTransaction;
@@ -165,7 +168,6 @@ function InstructionCard({
     url: string;
 }) {
     const key = `${index}-${childIndex}`;
-    const { program: anchorProgram } = useAnchorProgram(ix.programId.toString(), url);
 
     if ('parsed' in ix) {
         const props = {
@@ -238,13 +240,38 @@ function InstructionCard({
         return <ComputeBudgetDetailsCard key={key} {...props} />;
     } else if (isLighthouseInstruction(transactionIx)) {
         return <LighthouseDetailsCard key={key} {...props} />;
-    } else if (anchorProgram) {
+    } else if (getStarFrameProgram(transactionIx.programId.toBase58())) {
         return (
             <ErrorBoundary fallback={<UnknownDetailsCard {...props} />} key={key}>
-                <AnchorDetailsCard anchorProgram={anchorProgram} {...props} />
+                <StarFrameDetailsCard {...props} />
             </ErrorBoundary>
         );
     } else {
-        return <UnknownDetailsCard key={key} {...props} />;
+        return <AnchorOrUnknownDetailsCard key={key} {...props} url={url} />;
     }
+}
+
+function AnchorOrUnknownDetailsCard({
+    url,
+    ...props
+}: {
+    ix: TransactionInstruction;
+    result: SignatureResult;
+    index: number;
+    signature: TransactionSignature;
+    innerCards?: JSX.Element[];
+    childIndex?: number;
+    url: string;
+}) {
+    const { program: anchorProgram } = useAnchorProgram(props.ix.programId.toString(), url);
+
+    if (anchorProgram) {
+        return (
+            <ErrorBoundary fallback={<UnknownDetailsCard {...props} />}>
+                <AnchorDetailsCard anchorProgram={anchorProgram} {...props} />
+            </ErrorBoundary>
+        );
+    }
+
+    return <UnknownDetailsCard {...props} />;
 }

@@ -4,10 +4,12 @@ import { ASSOCIATED_TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import {
     AddressLookupTableAccount,
     ComputeBudgetProgram,
+    SignatureResult,
     TransactionInstruction,
     TransactionMessage,
     VersionedMessage,
 } from '@solana/web3.js';
+import { getStarFrameProgram } from '@utils/starframe';
 import { getProgramName } from '@utils/tx';
 import React from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -20,6 +22,7 @@ import { ErrorCard } from '../common/ErrorCard';
 import { LoadingCard } from '../common/LoadingCard';
 import AnchorDetailsCard from '../instruction/AnchorDetailsCard';
 import { ComputeBudgetDetailsCard } from '../instruction/ComputeBudgetDetailsCard';
+import StarFrameDetailsCard from '../instruction/StarFrameDetailsCard';
 import { AssociatedTokenDetailsCard } from './associated-token/AssociatedTokenDetailsCard';
 import { intoParsedInstruction } from './into-parsed-data';
 import { UnknownDetailsCard } from './UnknownDetailsCard';
@@ -76,38 +79,12 @@ function InspectorInstructionCard({
 
     const programId = ix.programId;
     const programName = getProgramName(programId.toBase58(), cluster);
-    const anchorProgram = useAnchorProgram(programId.toString(), url);
-
-    if (anchorProgram.program) {
-        return (
-            <ErrorBoundary
-                fallback={<UnknownDetailsCard key={index} index={index} ix={ix} programName="Unknown Program" />}
-            >
-                <AnchorDetailsCard
-                    anchorProgram={anchorProgram.program}
-                    index={index}
-                    // Inner cards and child are not used since we do not know what CPIs
-                    // will be called until simulation happens, and even then, all we
-                    // get is logs, not the TransactionInstructions
-                    innerCards={undefined}
-                    ix={ix}
-                    // Always display success since it is too complicated to determine
-                    // based on the simulation and pass that result here. Could be added
-                    // later if desired, possibly similar to innerCards from parsing tx
-                    // sim logs.
-                    result={{ err: null }}
-                    // Signature is not needed.
-                    signature=""
-                />
-            </ErrorBoundary>
-        );
-    }
+    const result = { err: null };
+    const signature = '';
 
     /// Handle program-specific cards here
     //  - keep signature (empty string as we do not submit anything) for backward compatibility with the data from Transaction
-    //  - result is `err: null` as at this point there should not be errors
-    const result = { err: null };
-    const signature = '';
+    //  - result is err: null as at this point there should not be errors
     switch (ix.programId.toString()) {
         case ASSOCIATED_TOKEN_PROGRAM_ID.toString(): {
             // NOTE: current limitation is that innerInstructions won't be present at the AssociatedTokenDetailsCard. For that purpose we might need to simulateTransactions to get them.
@@ -139,6 +116,65 @@ function InspectorInstructionCard({
         default: {
             // unknown program; allow to render the next card
         }
+    }
+
+    if (getStarFrameProgram(programId.toBase58())) {
+        return (
+            <ErrorBoundary
+                fallback={<UnknownDetailsCard key={index} index={index} ix={ix} programName={programName} />}
+            >
+                <StarFrameDetailsCard index={index} ix={ix} result={result} signature={signature} />
+            </ErrorBoundary>
+        );
+    }
+
+    return (
+        <InspectorAnchorOrUnknownDetailsCard
+            index={index}
+            ix={ix}
+            programName={programName}
+            result={result}
+            signature={signature}
+            url={url}
+        />
+    );
+}
+
+function InspectorAnchorOrUnknownDetailsCard({
+    index,
+    ix,
+    programName,
+    result,
+    signature,
+    url,
+}: {
+    index: number;
+    ix: TransactionInstruction;
+    programName: string;
+    result: SignatureResult;
+    signature: string;
+    url: string;
+}) {
+    const anchorProgram = useAnchorProgram(ix.programId.toString(), url);
+
+    if (anchorProgram.program) {
+        return (
+            <ErrorBoundary
+                fallback={<UnknownDetailsCard key={index} index={index} ix={ix} programName={programName} />}
+            >
+                <AnchorDetailsCard
+                    anchorProgram={anchorProgram.program}
+                    index={index}
+                    // Inner cards and child are not used since we do not know what CPIs
+                    // will be called until simulation happens, and even then, all we
+                    // get is logs, not the TransactionInstructions
+                    innerCards={undefined}
+                    ix={ix}
+                    result={result}
+                    signature={signature}
+                />
+            </ErrorBoundary>
+        );
     }
 
     return <UnknownDetailsCard key={index} index={index} ix={ix} programName={programName} />;
