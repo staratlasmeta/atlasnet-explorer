@@ -1,0 +1,1312 @@
+{
+  "kind": "programNode",
+  "name": "profileSubscriptionStarFrame",
+  "publicKey": "PSubAEkp16MhpP7AfB5kBbpWQ4cppUj9nxS5vUkHT13",
+  "version": "0.45.0",
+  "accounts": [
+    {
+      "kind": "accountNode",
+      "name": "subscriptionAccount",
+      "docs": [
+        "Stores a profile's subscription state on-chain."
+      ],
+      "data": {
+        "kind": "structTypeNode",
+        "fields": [
+          {
+            "kind": "structFieldTypeNode",
+            "name": "discriminator",
+            "defaultValueStrategy": "omitted",
+            "type": {
+              "kind": "fixedSizeTypeNode",
+              "size": 8,
+              "type": {
+                "kind": "bytesTypeNode"
+              }
+            },
+            "defaultValue": {
+              "kind": "bytesValueNode",
+              "data": "f7010648ac421880",
+              "encoding": "base16"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "version",
+            "docs": [
+              "The data version of this account."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "profile",
+            "docs": [
+              "The subscriber's profile."
+            ],
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "serviceProvider",
+            "docs": [
+              "Immutable service provider identity used in PDA seeds."
+            ],
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "tokenMint",
+            "docs": [
+              "The token mint (e.g., USDC)."
+            ],
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "amountPerPeriod",
+            "docs": [
+              "Amount in token base units per billing period."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u64",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "periodSeconds",
+            "docs": [
+              "Billing period duration in seconds."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "i64",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "createdAt",
+            "docs": [
+              "Unix timestamp when the subscription was created."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "i64",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "lastSettledAt",
+            "docs": [
+              "Unix timestamp of the last successful settlement."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "i64",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "periodsSettled",
+            "docs": [
+              "Number of periods fully settled."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u64",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "status",
+            "docs": [
+              "Current subscription status."
+            ],
+            "type": {
+              "kind": "definedTypeLinkNode",
+              "name": "subscriptionStatus"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "payoutKeyOwner",
+            "docs": [
+              "Current payout destination owner and authority that can rotate payout."
+            ],
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "crankFeeLamports",
+            "docs": [
+              "Reward for cranker (reserved, hardcoded to 0)."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u64",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "subscriptionId",
+            "docs": [
+              "Unique ID per profile+provider combination."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u64",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "metadata",
+            "docs": [
+              "Custom metadata (e.g., tier info)."
+            ],
+            "type": {
+              "kind": "arrayTypeNode",
+              "item": {
+                "kind": "numberTypeNode",
+                "format": "u8",
+                "endian": "le"
+              },
+              "count": {
+                "kind": "fixedCountNode",
+                "value": 64
+              }
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "cancelledAt",
+            "docs": [
+              "Unix timestamp when cancelled (0 if not cancelled)."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "i64",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "bump",
+            "docs": [
+              "PDA bump seed."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            }
+          }
+        ]
+      },
+      "pda": {
+        "kind": "pdaLinkNode",
+        "name": "subscriptionAccount"
+      },
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    }
+  ],
+  "instructions": [
+    {
+      "kind": "instructionNode",
+      "name": "cancelSubscription",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationSigner",
+          "isWritable": false,
+          "isSigner": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProfile",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationCertificate",
+          "isWritable": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "subscriptionAccount",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The subscription account to cancel."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The profile program."
+          ],
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+          }
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "3c8bbdf2bfd08f12",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "closeSubscription",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationSigner",
+          "isWritable": false,
+          "isSigner": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProfile",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationCertificate",
+          "isWritable": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "subscriptionAccount",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The subscription account to close."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The profile program."
+          ],
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+          }
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "21d6a987237f4e07",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "initializeFromVaultAndCharge",
+      "docs": [
+        "Creates a new vault-backed subscription and charges the first period immediately."
+      ],
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationSigner",
+          "isWritable": false,
+          "isSigner": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProfile",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationCertificate",
+          "isWritable": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profile",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The profile account used for the downstream Profile Vault CPI."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "funder",
+          "isWritable": true,
+          "isSigner": true,
+          "docs": [
+            "The wallet funding rent for the subscription account."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "subscriptionAccount",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The subscription account to initialize."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "serviceProvider",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The immutable service-provider identity and initial payout owner."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "tokenMint",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The token mint for the subscription."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "vaultAuthority",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The profile vault authority PDA."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "vaultTokenAccount",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The profile vault token account."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "destinationTokenAccount",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The destination token account (service provider's token account)."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileVaultProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The Profile Vault program."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "tokenProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The SPL Token program."
+          ],
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "systemProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The system program."
+          ],
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "11111111111111111111111111111111"
+          }
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "f785741a160fcd02",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "subscriptionId",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u64",
+            "endian": "le"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "vaultKeyIndex",
+          "docs": [
+            "Player Profile key index for the subscription PDA with Profile Vault drain permission."
+          ],
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "amountPerPeriod",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u64",
+            "endian": "le"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "periodSeconds",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "i64",
+            "endian": "le"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "metadata",
+          "type": {
+            "kind": "arrayTypeNode",
+            "item": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            },
+            "count": {
+              "kind": "fixedCountNode",
+              "value": 64
+            }
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "initializeSubscription",
+      "docs": [
+        "Creates a new subscription for a profile."
+      ],
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationSigner",
+          "isWritable": false,
+          "isSigner": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProfile",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationCertificate",
+          "isWritable": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "funder",
+          "isWritable": true,
+          "isSigner": true,
+          "docs": [
+            "The wallet funding rent for the subscription account."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "subscriptionAccount",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The subscription account to initialize."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "serviceProvider",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The service provider identity and initial payout owner."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "tokenMint",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The token mint for the subscription."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "systemProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The system program."
+          ],
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "11111111111111111111111111111111"
+          }
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "d09c902638419812",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "subscriptionId",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u64",
+            "endian": "le"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "amountPerPeriod",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u64",
+            "endian": "le"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "periodSeconds",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "i64",
+            "endian": "le"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "metadata",
+          "type": {
+            "kind": "arrayTypeNode",
+            "item": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            },
+            "count": {
+              "kind": "fixedCountNode",
+              "value": 64
+            }
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "settle",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "subscriptionAccount",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The subscription account to settle."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "sourceTokenAccount",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The source token account (subscriber's token account, delegated to subscription PDA)."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "destinationTokenAccount",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The destination token account (service provider's token account)."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "tokenProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The SPL Token program."
+          ],
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+          }
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "af2ab957908366d4",
+            "encoding": "base16"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "settleFromVault",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "profile",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The subscriber profile bound to the subscription."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "subscriptionAccount",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The subscription account to settle."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "vaultAuthority",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The profile vault authority PDA."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "vaultTokenAccount",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The profile vault token account."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "destinationTokenAccount",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The destination token account (service provider's token account)."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileVaultProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The Profile Vault program."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "tokenProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The SPL Token program."
+          ],
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+          }
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "1cae6f65d129b4f3",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "vaultKeyIndex",
+          "docs": [
+            "Player Profile key index for the subscription PDA with Profile Vault drain permission."
+          ],
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "updatePayoutKey",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "payoutKeyOwner",
+          "isWritable": false,
+          "isSigner": true,
+          "docs": [
+            "The current payout key owner (must be signer)."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "subscriptionAccount",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The subscription account to update."
+          ]
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "678b8829b560eaa8",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "newServiceProvider",
+          "type": {
+            "kind": "publicKeyTypeNode"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    }
+  ],
+  "definedTypes": [
+    {
+      "kind": "definedTypeNode",
+      "name": "subscriptionStatus",
+      "docs": [
+        "The status of a subscription."
+      ],
+      "type": {
+        "kind": "enumTypeNode",
+        "variants": [
+          {
+            "kind": "enumEmptyVariantTypeNode",
+            "name": "active",
+            "discriminator": 0
+          },
+          {
+            "kind": "enumEmptyVariantTypeNode",
+            "name": "pastDue",
+            "discriminator": 1
+          },
+          {
+            "kind": "enumEmptyVariantTypeNode",
+            "name": "cancelled",
+            "discriminator": 2
+          },
+          {
+            "kind": "enumEmptyVariantTypeNode",
+            "name": "expired",
+            "discriminator": 3
+          }
+        ],
+        "size": {
+          "kind": "numberTypeNode",
+          "format": "u8",
+          "endian": "le"
+        }
+      }
+    }
+  ],
+  "pdas": [
+    {
+      "kind": "pdaNode",
+      "name": "subscriptionAccount",
+      "docs": [
+        "Stores a profile's subscription state on-chain."
+      ],
+      "seeds": [
+        {
+          "kind": "constantPdaSeedNode",
+          "type": {
+            "kind": "bytesTypeNode"
+          },
+          "value": {
+            "kind": "bytesValueNode",
+            "data": "70726f66696c655f737562736372697074696f6e",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "variablePdaSeedNode",
+          "name": "profile",
+          "type": {
+            "kind": "publicKeyTypeNode"
+          }
+        },
+        {
+          "kind": "variablePdaSeedNode",
+          "name": "serviceProvider",
+          "type": {
+            "kind": "publicKeyTypeNode"
+          }
+        },
+        {
+          "kind": "variablePdaSeedNode",
+          "name": "subscriptionId",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u64",
+            "endian": "le"
+          }
+        }
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "kind": "errorNode",
+      "name": "invalidPeriod",
+      "code": 1367932928,
+      "message": "Period must be greater than zero",
+      "docs": [
+        "The subscription period must be greater than zero"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "invalidAmount",
+      "code": 1367932929,
+      "message": "Amount must be greater than zero",
+      "docs": [
+        "The amount per period must be greater than zero"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "invalidSubscriptionStatus",
+      "code": 1367932930,
+      "message": "Invalid subscription status",
+      "docs": [
+        "The subscription is not in the expected status"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "nothingToSettle",
+      "code": 1367932931,
+      "message": "Nothing to settle",
+      "docs": [
+        "No periods are owed for settlement"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "subscriptionCancelled",
+      "code": 1367932932,
+      "message": "Subscription is cancelled",
+      "docs": [
+        "The subscription has been cancelled"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "payoutKeyOwnerMismatch",
+      "code": 1367932933,
+      "message": "Payout key owner mismatch",
+      "docs": [
+        "The payout key owner does not match the signer"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "arithmeticOverflow",
+      "code": 1367932934,
+      "message": "Arithmetic overflow",
+      "docs": [
+        "Arithmetic overflow"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "insufficientFunds",
+      "code": 1367932935,
+      "message": "Insufficient funds",
+      "docs": [
+        "Insufficient funds for settlement"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "invalidTokenAccount",
+      "code": 1367932936,
+      "message": "Invalid token account",
+      "docs": [
+        "Token account is invalid (wrong owner, wrong size, or failed deserialization)"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "tokenMintMismatch",
+      "code": 1367932937,
+      "message": "Token mint mismatch",
+      "docs": [
+        "Token mint does not match the subscription's configured `token_mint`"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "destinationMismatch",
+      "code": 1367932938,
+      "message": "Destination account mismatch",
+      "docs": [
+        "Destination token account is not the payout owner's ATA"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "subscriptionNotCloseable",
+      "code": 1367932939,
+      "message": "Subscription not closeable",
+      "docs": [
+        "Subscription is not in a terminal state (Expired) and cannot be closed"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "sourceMismatch",
+      "code": 1367932940,
+      "message": "Source account mismatch",
+      "docs": [
+        "Source token account is not the subscriber profile's ATA"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "vaultSourceMismatch",
+      "code": 1367932941,
+      "message": "Vault source account mismatch",
+      "docs": [
+        "Vault token account is not owned by the provided vault authority"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "profileVaultProgramMismatch",
+      "code": 1367932942,
+      "message": "Profile Vault program mismatch",
+      "docs": [
+        "The provided Profile Vault program does not match the configured program id"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "vaultPermissionKeyMismatch",
+      "code": 1367932943,
+      "message": "Vault permission key mismatch",
+      "docs": [
+        "The Profile Vault drain permission key index does not point at this subscription PDA"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "vaultPermissionScopeMismatch",
+      "code": 1367932944,
+      "message": "Vault permission scope mismatch",
+      "docs": [
+        "The Profile Vault drain permission must be scoped to the vault authority or vault account"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "vaultDrainPermissionMissing",
+      "code": 1367932945,
+      "message": "Vault drain permission missing or expired",
+      "docs": [
+        "The Profile Vault drain permission is missing or expired"
+      ]
+    }
+  ]
+}

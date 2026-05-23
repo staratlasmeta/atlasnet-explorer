@@ -1,0 +1,314 @@
+{
+  "kind": "programNode",
+  "name": "profileFactionStarFrame",
+  "publicKey": "C4FACQA1PpNRKrjQ2862ABNR42DTz7EzGj1uhTNFASwP",
+  "version": "0.45.0",
+  "accounts": [
+    {
+      "kind": "accountNode",
+      "name": "profileFactionAccount",
+      "docs": [
+        "Stores a profile's enlisted faction on-chain."
+      ],
+      "data": {
+        "kind": "structTypeNode",
+        "fields": [
+          {
+            "kind": "structFieldTypeNode",
+            "name": "discriminator",
+            "defaultValueStrategy": "omitted",
+            "type": {
+              "kind": "fixedSizeTypeNode",
+              "size": 8,
+              "type": {
+                "kind": "bytesTypeNode"
+              }
+            },
+            "defaultValue": {
+              "kind": "bytesValueNode",
+              "data": "0e9577f391f04fe3",
+              "encoding": "base16"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "version",
+            "docs": [
+              "The data version of this account."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "profile",
+            "docs": [
+              "The profile this faction enlistment is for."
+            ],
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "faction",
+            "docs": [
+              "The faction of the profile."
+            ],
+            "type": {
+              "kind": "definedTypeLinkNode",
+              "name": "faction"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "bump",
+            "docs": [
+              "The bump for this account."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            }
+          }
+        ]
+      },
+      "pda": {
+        "kind": "pdaLinkNode",
+        "name": "profileFactionAccount"
+      },
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    }
+  ],
+  "instructions": [
+    {
+      "kind": "instructionNode",
+      "name": "chooseFaction",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationSigner",
+          "isWritable": false,
+          "isSigner": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProfile",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationCertificate",
+          "isWritable": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "factionAccount",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The faction to change to."
+          ],
+          "defaultValue": {
+            "kind": "pdaValueNode",
+            "pda": {
+              "kind": "pdaNode",
+              "name": "factionAccount",
+              "seeds": [
+                {
+                  "kind": "constantPdaSeedNode",
+                  "type": {
+                    "kind": "bytesTypeNode"
+                  },
+                  "value": {
+                    "kind": "bytesValueNode",
+                    "data": "706c617965725f66616374696f6e",
+                    "encoding": "base16"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "profileValidationProfile1",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                }
+              ]
+            },
+            "seeds": [
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "profileValidationProfile1",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "profileValidationProfile"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "systemProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The system program."
+          ],
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "11111111111111111111111111111111"
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The profile program."
+          ],
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+          }
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "b2e844d95970caaf",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "faction",
+          "type": {
+            "kind": "definedTypeLinkNode",
+            "name": "faction"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    }
+  ],
+  "definedTypes": [
+    {
+      "kind": "definedTypeNode",
+      "name": "faction",
+      "docs": [
+        "A faction that a player can belong to."
+      ],
+      "type": {
+        "kind": "enumTypeNode",
+        "variants": [
+          {
+            "kind": "enumEmptyVariantTypeNode",
+            "name": "unaligned",
+            "discriminator": 0
+          },
+          {
+            "kind": "enumEmptyVariantTypeNode",
+            "name": "mud",
+            "discriminator": 1
+          },
+          {
+            "kind": "enumEmptyVariantTypeNode",
+            "name": "oni",
+            "discriminator": 2
+          },
+          {
+            "kind": "enumEmptyVariantTypeNode",
+            "name": "ustur",
+            "discriminator": 3
+          }
+        ],
+        "size": {
+          "kind": "numberTypeNode",
+          "format": "u8",
+          "endian": "le"
+        }
+      }
+    }
+  ],
+  "pdas": [
+    {
+      "kind": "pdaNode",
+      "name": "profileFactionAccount",
+      "docs": [
+        "Stores a profile's enlisted faction on-chain."
+      ],
+      "seeds": [
+        {
+          "kind": "constantPdaSeedNode",
+          "type": {
+            "kind": "bytesTypeNode"
+          },
+          "value": {
+            "kind": "bytesValueNode",
+            "data": "706c617965725f66616374696f6e",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "variablePdaSeedNode",
+          "name": "profile",
+          "type": {
+            "kind": "publicKeyTypeNode"
+          }
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

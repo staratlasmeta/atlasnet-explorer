@@ -1,6 +1,7 @@
 'use client';
 
 import Logo from '@img/logos-solana/dark-explorer-logo.svg';
+import ZinkLogo from '@img/logos-zink/zink-logo.svg';
 import { useDisclosure } from '@mantine/hooks';
 import { explorerAppName } from '@utils/network';
 import { useClusterPath } from '@utils/url';
@@ -17,6 +18,9 @@ export interface INavbarProps {
 
 export function Navbar({ children }: INavbarProps) {
     const [navOpened, navHandlers] = useDisclosure(false);
+    const isZinkFlavor = process.env.NEXT_PUBLIC_FLAVOR === 'zink';
+    const logo = isZinkFlavor ? ZinkLogo : Logo;
+    const logoDimensions = isZinkFlavor ? { height: 24, width: 72 } : { height: 22, width: 214 };
     const homePath = useClusterPath({ pathname: '/' });
     const supplyPath = useClusterPath({ pathname: '/supply' });
     const inspectorPath = useClusterPath({ pathname: '/tx/inspector' });
@@ -26,7 +30,7 @@ export function Navbar({ children }: INavbarProps) {
         <nav className="navbar navbar-expand-lg navbar-light">
             <div className="container px-4">
                 <Link href={homePath}>
-                    <Image alt={explorerAppName()} height={22} src={Logo} width={214} />
+                    <Image alt={explorerAppName()} src={logo} {...logoDimensions} />
                 </Link>
 
                 <button className="navbar-toggler" type="button" onClick={navHandlers.toggle}>

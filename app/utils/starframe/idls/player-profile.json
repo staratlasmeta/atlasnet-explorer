@@ -1,0 +1,3074 @@
+{
+  "kind": "programNode",
+  "name": "playerProfileStarFrame",
+  "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u",
+  "version": "0.45.0",
+  "accounts": [
+    {
+      "kind": "accountNode",
+      "name": "playerName",
+      "docs": [
+        "Stores a player's name on-chain."
+      ],
+      "data": {
+        "kind": "structTypeNode",
+        "fields": [
+          {
+            "kind": "structFieldTypeNode",
+            "name": "discriminator",
+            "defaultValueStrategy": "omitted",
+            "type": {
+              "kind": "fixedSizeTypeNode",
+              "size": 8,
+              "type": {
+                "kind": "bytesTypeNode"
+              }
+            },
+            "defaultValue": {
+              "kind": "bytesValueNode",
+              "data": "6609f16260c4d4a1",
+              "encoding": "base16"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "version",
+            "docs": [
+              "The data version of this account."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "profile",
+            "docs": [
+              "The profile this name is for."
+            ],
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "bump",
+            "docs": [
+              "The bump for this account."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "name",
+            "type": {
+              "kind": "arrayTypeNode",
+              "item": {
+                "kind": "numberTypeNode",
+                "format": "u8",
+                "endian": "le"
+              },
+              "count": {
+                "kind": "remainderCountNode"
+              }
+            }
+          }
+        ]
+      },
+      "pda": {
+        "kind": "pdaLinkNode",
+        "name": "playerName"
+      },
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "accountNode",
+      "name": "profileRoleMembership",
+      "docs": [
+        "A player's roles for a given profile",
+        "Remaining data contains an unordered list of [`RoleMembership`](RoleMembership) structs"
+      ],
+      "data": {
+        "kind": "structTypeNode",
+        "fields": [
+          {
+            "kind": "structFieldTypeNode",
+            "name": "discriminator",
+            "defaultValueStrategy": "omitted",
+            "type": {
+              "kind": "fixedSizeTypeNode",
+              "size": 8,
+              "type": {
+                "kind": "bytesTypeNode"
+              }
+            },
+            "defaultValue": {
+              "kind": "bytesValueNode",
+              "data": "2d02566f6e790501",
+              "encoding": "base16"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "version",
+            "docs": [
+              "The data version of this account."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "profile",
+            "docs": [
+              "The Profile this belongs to"
+            ],
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "member",
+            "docs": [
+              "The member's profile pubkey"
+            ],
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "bump",
+            "docs": [
+              "PDA bump"
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "memberships",
+            "docs": [
+              "role memberships"
+            ],
+            "type": {
+              "kind": "arrayTypeNode",
+              "item": {
+                "kind": "definedTypeLinkNode",
+                "name": "roleMembership"
+              },
+              "count": {
+                "kind": "prefixedCountNode",
+                "prefix": {
+                  "kind": "numberTypeNode",
+                  "format": "u32",
+                  "endian": "le"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "pda": {
+        "kind": "pdaLinkNode",
+        "name": "profileRoleMembership"
+      },
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "accountNode",
+      "name": "profile",
+      "data": {
+        "kind": "structTypeNode",
+        "fields": [
+          {
+            "kind": "structFieldTypeNode",
+            "name": "discriminator",
+            "defaultValueStrategy": "omitted",
+            "type": {
+              "kind": "fixedSizeTypeNode",
+              "size": 8,
+              "type": {
+                "kind": "bytesTypeNode"
+              }
+            },
+            "defaultValue": {
+              "kind": "bytesValueNode",
+              "data": "b865a5bc5f3f7fbc",
+              "encoding": "base16"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "version",
+            "docs": [
+              "The data version of this account."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "authKeyCount",
+            "docs": [
+              "The number of auth keys on the account"
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u16",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "keyThreshold",
+            "docs": [
+              "The number of auth keys needed to update the profile."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "nextSeqId",
+            "docs": [
+              "The next sequence number for a new role."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u64",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "createdAt",
+            "docs": [
+              "When the profile was created."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "i64",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "profileKeys",
+            "docs": [
+              "The keys on the profile."
+            ],
+            "type": {
+              "kind": "arrayTypeNode",
+              "item": {
+                "kind": "definedTypeLinkNode",
+                "name": "profileKey"
+              },
+              "count": {
+                "kind": "prefixedCountNode",
+                "prefix": {
+                  "kind": "numberTypeNode",
+                  "format": "u16",
+                  "endian": "le"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "accountNode",
+      "name": "role",
+      "docs": [
+        "A Role associated with a Profile. A Role contains an unordered list of Role Members in its",
+        "remaining data which lists all of the members who carry this role."
+      ],
+      "data": {
+        "kind": "structTypeNode",
+        "fields": [
+          {
+            "kind": "structFieldTypeNode",
+            "name": "discriminator",
+            "defaultValueStrategy": "omitted",
+            "type": {
+              "kind": "fixedSizeTypeNode",
+              "size": 8,
+              "type": {
+                "kind": "bytesTypeNode"
+              }
+            },
+            "defaultValue": {
+              "kind": "bytesValueNode",
+              "data": "2edbc518e9f9fd9a",
+              "encoding": "base16"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "version",
+            "docs": [
+              "The data version of this account."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "profile",
+            "docs": [
+              "Profile that this role belongs to"
+            ],
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "authorizer",
+            "docs": [
+              "Origin authority of the account"
+            ],
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "roleSeqId",
+            "docs": [
+              "Role's seq_id"
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u64",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "acceptingNewMembers",
+            "docs": [
+              "Is role accepting new members"
+            ],
+            "type": {
+              "kind": "booleanTypeNode",
+              "size": {
+                "kind": "numberTypeNode",
+                "format": "u8",
+                "endian": "le"
+              }
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "bump",
+            "docs": [
+              "The name of the rank",
+              "TODO: Add instruction to use `player-name` as the label",
+              "PDA bump"
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "memberships",
+            "type": {
+              "kind": "arrayTypeNode",
+              "item": {
+                "kind": "definedTypeLinkNode",
+                "name": "roleMembership"
+              },
+              "count": {
+                "kind": "prefixedCountNode",
+                "prefix": {
+                  "kind": "numberTypeNode",
+                  "format": "u32",
+                  "endian": "le"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "pda": {
+        "kind": "pdaLinkNode",
+        "name": "role"
+      },
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    }
+  ],
+  "instructions": [
+    {
+      "kind": "instructionNode",
+      "name": "acceptInvite",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "newMember",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The new member",
+            "CHECK: Body checks that this is a keypair or a profile with an authorized signer"
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "roleAccount",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The role which the player is joining"
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "roleMembershipAccount",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The role membership account for the new member"
+          ]
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "fefc992c29e8386b",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndexInRoleAccount",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndexInMembershipAccount",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        }
+      ],
+      "remainingAccounts": [
+        {
+          "kind": "instructionRemainingAccountsNode",
+          "docs": [
+            "Remaining accounts used for profile validation"
+          ],
+          "value": {
+            "kind": "argumentValueNode",
+            "name": "remaining"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "addKeys",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "funder",
+          "isWritable": true,
+          "isSigner": true,
+          "docs": [
+            "The funder for the profile."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "key",
+          "isWritable": false,
+          "isSigner": true,
+          "docs": [
+            "Key with [`ProfilePermissions::ADD_KEYS`] permission to add keys."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profile",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The profile to add to"
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "systemProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The system program"
+          ],
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "11111111111111111111111111111111"
+          }
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "9ae110b0924c4e69",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyAddIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyPermissionsIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keysToAdd",
+          "type": {
+            "kind": "arrayTypeNode",
+            "item": {
+              "kind": "definedTypeLinkNode",
+              "name": "addKeyInput"
+            },
+            "count": {
+              "kind": "prefixedCountNode",
+              "prefix": {
+                "kind": "numberTypeNode",
+                "format": "u32",
+                "endian": "le"
+              }
+            }
+          }
+        }
+      ],
+      "remainingAccounts": [
+        {
+          "kind": "instructionRemainingAccountsNode",
+          "docs": [
+            "The keys to add"
+          ],
+          "value": {
+            "kind": "argumentValueNode",
+            "name": "remainingAccounts"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "addRoleMember",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "funder",
+          "isWritable": true,
+          "isSigner": true,
+          "docs": [
+            "The funder for reallocation."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "newMember",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The profile of the member to be added to the role",
+            "CHECK: Account added can be a keypair or a profile. The new member will confirm their membership in a separate transaction"
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profile",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The profile which the role belongs to."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "roleMembershipAccount",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The role membership account for the new member"
+          ],
+          "defaultValue": {
+            "kind": "pdaValueNode",
+            "pda": {
+              "kind": "pdaNode",
+              "name": "roleMembershipAccount",
+              "seeds": [
+                {
+                  "kind": "constantPdaSeedNode",
+                  "type": {
+                    "kind": "bytesTypeNode"
+                  },
+                  "value": {
+                    "kind": "bytesValueNode",
+                    "data": "726f6c652d6d656d626572",
+                    "encoding": "base16"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "profile1",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "newMember2",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                }
+              ]
+            },
+            "seeds": [
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "profile1",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "profile"
+                }
+              },
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "newMember2",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "newMember"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "roleAccount",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The role which the player is joining"
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "systemProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The system program"
+          ],
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "11111111111111111111111111111111"
+          }
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "55339e2990076757",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "existingRoleIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        }
+      ],
+      "remainingAccounts": [
+        {
+          "kind": "instructionRemainingAccountsNode",
+          "docs": [
+            "Remaining accounts used for profile validation"
+          ],
+          "value": {
+            "kind": "argumentValueNode",
+            "name": "remaining"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "adjustAuth",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "funder",
+          "isWritable": true,
+          "isSigner": true,
+          "docs": [
+            "The funder for the profile."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profile",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The profile to create"
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "systemProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The system program"
+          ],
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "11111111111111111111111111111111"
+          }
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "06feb1576f480cd3",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "authIndexes",
+          "type": {
+            "kind": "arrayTypeNode",
+            "item": {
+              "kind": "numberTypeNode",
+              "format": "u16",
+              "endian": "le"
+            },
+            "count": {
+              "kind": "prefixedCountNode",
+              "prefix": {
+                "kind": "numberTypeNode",
+                "format": "u32",
+                "endian": "le"
+              }
+            }
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "newKeyPermissions",
+          "type": {
+            "kind": "arrayTypeNode",
+            "item": {
+              "kind": "definedTypeLinkNode",
+              "name": "addKeyInput"
+            },
+            "count": {
+              "kind": "prefixedCountNode",
+              "prefix": {
+                "kind": "numberTypeNode",
+                "format": "u32",
+                "endian": "le"
+              }
+            }
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "removeRange",
+          "type": {
+            "kind": "arrayTypeNode",
+            "item": {
+              "kind": "numberTypeNode",
+              "format": "u16",
+              "endian": "le"
+            },
+            "count": {
+              "kind": "fixedCountNode",
+              "value": 2
+            }
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "newKeyThreshold",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u8",
+            "endian": "le"
+          }
+        }
+      ],
+      "remainingAccounts": [
+        {
+          "kind": "instructionRemainingAccountsNode",
+          "docs": [
+            "Not exactly sure what accounts need to go here"
+          ],
+          "value": {
+            "kind": "argumentValueNode",
+            "name": "remainingAccounts"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "createProfile",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "funder",
+          "isWritable": true,
+          "isSigner": true,
+          "docs": [
+            "The funder for the new profile."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profile",
+          "isWritable": true,
+          "isSigner": true,
+          "docs": [
+            "The profile to create"
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "systemProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The system program"
+          ],
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "11111111111111111111111111111111"
+          }
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "e1cdea8f11ba32dc",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyPermissions",
+          "type": {
+            "kind": "arrayTypeNode",
+            "item": {
+              "kind": "definedTypeLinkNode",
+              "name": "addKeyInput"
+            },
+            "count": {
+              "kind": "prefixedCountNode",
+              "prefix": {
+                "kind": "numberTypeNode",
+                "format": "u32",
+                "endian": "le"
+              }
+            }
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyThreshold",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u8",
+            "endian": "le"
+          }
+        }
+      ],
+      "remainingAccounts": [
+        {
+          "kind": "instructionRemainingAccountsNode",
+          "docs": [
+            "Additional keys to add"
+          ],
+          "value": {
+            "kind": "argumentValueNode",
+            "name": "remainingAccounts"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "createRole",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "funder",
+          "isWritable": true,
+          "isSigner": true,
+          "docs": [
+            "The funder for the transaction"
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profile",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The [`Profile`] account that the role is being created for"
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "newRoleAccount",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The role account being created"
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "systemProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The system program"
+          ],
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "11111111111111111111111111111111"
+          }
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "aa937fdfde70cda3",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        }
+      ],
+      "remainingAccounts": [
+        {
+          "kind": "instructionRemainingAccountsNode",
+          "docs": [
+            "Remaining accounts used for profile validation"
+          ],
+          "value": {
+            "kind": "argumentValueNode",
+            "name": "remaining"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "drainSolVault",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "validationSigner",
+          "isWritable": false,
+          "isSigner": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "validationProfile",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "validationCertificate",
+          "isWritable": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "validationProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "recipient",
+          "isWritable": true,
+          "isSigner": false
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "1e6bc55f4f99c220",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "amount",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u64",
+            "endian": "le"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "inviteMember",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "funder",
+          "isWritable": true,
+          "isSigner": true,
+          "docs": [
+            "The funder for the new profile."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "newMember",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The profile of the user to be added to the role",
+            "CHECK: This account can be a Role, Profile, or Wallet and is validated in the function body"
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profile",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The profile which the role belongs to."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "roleMembershipAccount",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The role membership account for the new member"
+          ],
+          "defaultValue": {
+            "kind": "pdaValueNode",
+            "pda": {
+              "kind": "pdaNode",
+              "name": "roleMembershipAccount",
+              "seeds": [
+                {
+                  "kind": "constantPdaSeedNode",
+                  "type": {
+                    "kind": "bytesTypeNode"
+                  },
+                  "value": {
+                    "kind": "bytesValueNode",
+                    "data": "726f6c652d6d656d626572",
+                    "encoding": "base16"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "profile1",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "newMember2",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                }
+              ]
+            },
+            "seeds": [
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "profile1",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "profile"
+                }
+              },
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "newMember2",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "newMember"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "roleAccount",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The role which the player is joining"
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "systemProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The system program"
+          ],
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "11111111111111111111111111111111"
+          }
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "fd86f832580b8d90",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        }
+      ],
+      "remainingAccounts": [
+        {
+          "kind": "instructionRemainingAccountsNode",
+          "docs": [
+            "Remaining accounts used for profile validation"
+          ],
+          "value": {
+            "kind": "argumentValueNode",
+            "name": "remaining"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "joinRole",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "funder",
+          "isWritable": true,
+          "isSigner": true,
+          "docs": [
+            "The funder for the new profile."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "newMember",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The new member joining the role",
+            "CHECK: This account can be a Role, Profile, or Wallet and is validated in the function body"
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "roleMembershipAccount",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The role membership account for the new member"
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "roleAccount",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The role which the player is joining"
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "systemProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The system program"
+          ],
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "11111111111111111111111111111111"
+          }
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "86b9dbb6db7e189d",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        }
+      ],
+      "remainingAccounts": [
+        {
+          "kind": "instructionRemainingAccountsNode",
+          "docs": [
+            "Remaining accounts used for profile validation"
+          ],
+          "value": {
+            "kind": "argumentValueNode",
+            "name": "remaining"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "leaveRole",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "funder",
+          "isWritable": true,
+          "isSigner": true,
+          "docs": [
+            "The funder to receive the rent allocation.",
+            "CHECK: Funder is only receiving funds from rent realloc"
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "member",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The member leaving the role",
+            "CHECK: This account can be a Role, Profile, or Wallet and is validated in the function body"
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "roleMembershipAccount",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The role membership account for the member"
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "roleAccount",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The role which the player is leaving"
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "systemProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The system program"
+          ],
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "11111111111111111111111111111111"
+          }
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "78c6676b0ec1664f",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndexInRoleAccount",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndexInMembershipAccount",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        }
+      ],
+      "remainingAccounts": [
+        {
+          "kind": "instructionRemainingAccountsNode",
+          "docs": [
+            "Remaining accounts used for profile validation"
+          ],
+          "value": {
+            "kind": "argumentValueNode",
+            "name": "remaining"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "removeKeys",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "funder",
+          "isWritable": true,
+          "isSigner": true,
+          "docs": [
+            "The funder for the profile."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "key",
+          "isWritable": false,
+          "isSigner": true,
+          "docs": [
+            "Key with [`ProfilePermissions::REMOVE_KEYS`] permission to remove keys."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profile",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The profile to remove from. We don't clean up rent, so the SOL vault just gets more SOL."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "systemProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The system program"
+          ],
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "11111111111111111111111111111111"
+          }
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "ac41643f1fd03947",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keysToRemove",
+          "type": {
+            "kind": "arrayTypeNode",
+            "item": {
+              "kind": "numberTypeNode",
+              "format": "u16",
+              "endian": "le"
+            },
+            "count": {
+              "kind": "fixedCountNode",
+              "value": 2
+            }
+          }
+        }
+      ],
+      "remainingAccounts": [
+        {
+          "kind": "instructionRemainingAccountsNode",
+          "docs": [
+            "Any keys used for profile validation"
+          ],
+          "value": {
+            "kind": "argumentValueNode",
+            "name": "remainingAccounts"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "removeRole",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "funder",
+          "isWritable": true,
+          "isSigner": true,
+          "docs": [
+            "The funder for the transaction",
+            "CHECK: Only used to receive funds"
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profile",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The Profile that the role is being removed from"
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "roleAccount",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "roleNameAccount",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The role name account (if it exists)",
+            "CHECK: checked with seeds"
+          ],
+          "defaultValue": {
+            "kind": "pdaValueNode",
+            "pda": {
+              "kind": "pdaNode",
+              "name": "roleNameAccount",
+              "seeds": [
+                {
+                  "kind": "constantPdaSeedNode",
+                  "type": {
+                    "kind": "bytesTypeNode"
+                  },
+                  "value": {
+                    "kind": "bytesValueNode",
+                    "data": "706c617965725f6e616d65",
+                    "encoding": "base16"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "roleAccount1",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                }
+              ]
+            },
+            "seeds": [
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "roleAccount1",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "roleAccount"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "4a45a8a3f8038200",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "roleNameBump",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u8",
+            "endian": "le"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        }
+      ],
+      "remainingAccounts": [
+        {
+          "kind": "instructionRemainingAccountsNode",
+          "docs": [
+            "Remaining accounts used for profile validation"
+          ],
+          "value": {
+            "kind": "argumentValueNode",
+            "name": "remaining"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "removeRoleMember",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "funder",
+          "isWritable": true,
+          "isSigner": true,
+          "docs": [
+            "The funder to receive the rent allocation",
+            "CHECK: Funder is only receiving funds from rent realloc"
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "member",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The profile of the user to be added to the role",
+            "CHECK: This account can be a Role, Profile, or Wallet and is validated in the function body"
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profile",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The profile which the role belongs to."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "roleMembershipAccount",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The role membership account for the member"
+          ],
+          "defaultValue": {
+            "kind": "pdaValueNode",
+            "pda": {
+              "kind": "pdaNode",
+              "name": "roleMembershipAccount",
+              "seeds": [
+                {
+                  "kind": "constantPdaSeedNode",
+                  "type": {
+                    "kind": "bytesTypeNode"
+                  },
+                  "value": {
+                    "kind": "bytesValueNode",
+                    "data": "726f6c652d6d656d626572",
+                    "encoding": "base16"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "profile1",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "member2",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                }
+              ]
+            },
+            "seeds": [
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "profile1",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "profile"
+                }
+              },
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "member2",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "member"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "roleAccount",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The role which the player is being removed from"
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "systemProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The system program"
+          ],
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "11111111111111111111111111111111"
+          }
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "7d4e4dd0cf7ff60e",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyToRemove",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyToRemoveInMemberList",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        }
+      ],
+      "remainingAccounts": [
+        {
+          "kind": "instructionRemainingAccountsNode",
+          "docs": [
+            "Remaining accounts used for profile validation"
+          ],
+          "value": {
+            "kind": "argumentValueNode",
+            "name": "remaining"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "setName",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "key",
+          "isWritable": false,
+          "isSigner": true,
+          "docs": [
+            "The key authorized to change the name."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "funder",
+          "isWritable": true,
+          "isSigner": true,
+          "docs": [
+            "The funder for the name size change."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profile",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The profile to set the name for."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "name",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The name account."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "systemProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The system program."
+          ],
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "11111111111111111111111111111111"
+          }
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "4ec26fe5c6a9a26a",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "name",
+          "type": {
+            "kind": "arrayTypeNode",
+            "item": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            },
+            "count": {
+              "kind": "prefixedCountNode",
+              "prefix": {
+                "kind": "numberTypeNode",
+                "format": "u32",
+                "endian": "le"
+              }
+            }
+          }
+        }
+      ],
+      "remainingAccounts": [
+        {
+          "kind": "instructionRemainingAccountsNode",
+          "docs": [
+            "Any keys used for profile validation"
+          ],
+          "value": {
+            "kind": "argumentValueNode",
+            "name": "remainingAccounts"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "setRoleAcceptingMembers",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "profile",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The profile which owns the role being modified."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "roleAccount",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The role account to set as accepting members."
+          ]
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "ff844cab91d57fd6",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        }
+      ],
+      "remainingAccounts": [
+        {
+          "kind": "instructionRemainingAccountsNode",
+          "docs": [
+            "Remaining accounts used for profile validation"
+          ],
+          "value": {
+            "kind": "argumentValueNode",
+            "name": "remaining"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "setRoleAuthorizer",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "funder",
+          "isWritable": true,
+          "isSigner": true,
+          "docs": [
+            "The funder for the name size change."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profile",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The profile to set the name for."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "roleAccount",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The role account to set the authorizer for."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "authorizer",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The authorizer account to set."
+          ]
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "4adbd0f8ed99bce5",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        }
+      ],
+      "remainingAccounts": [
+        {
+          "kind": "instructionRemainingAccountsNode",
+          "docs": [
+            "Remaining accounts used for profile validation"
+          ],
+          "value": {
+            "kind": "argumentValueNode",
+            "name": "remaining"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "setRoleName",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "funder",
+          "isWritable": true,
+          "isSigner": true,
+          "docs": [
+            "The funder for the name size change."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profile",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The profile which the role belongs to"
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "role",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The role to set the name for."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "name",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The name account.",
+            "CHECK: This is checked to see if it needs to be initialized."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "systemProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The system program."
+          ],
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "11111111111111111111111111111111"
+          }
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "0961b0241c13295d",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "name",
+          "type": {
+            "kind": "arrayTypeNode",
+            "item": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            },
+            "count": {
+              "kind": "prefixedCountNode",
+              "prefix": {
+                "kind": "numberTypeNode",
+                "format": "u32",
+                "endian": "le"
+              }
+            }
+          }
+        }
+      ],
+      "remainingAccounts": [
+        {
+          "kind": "instructionRemainingAccountsNode",
+          "docs": [
+            "Remaining accounts used for profile validation"
+          ],
+          "value": {
+            "kind": "argumentValueNode",
+            "name": "remaining"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "setRoleNotAcceptingMembers",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "profile",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The profile which owns the role being modified."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "roleAccount",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The role account to set as accepting members."
+          ]
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "e6979804ee0b640f",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        }
+      ],
+      "remainingAccounts": [
+        {
+          "kind": "instructionRemainingAccountsNode",
+          "docs": [
+            "Remaining accounts used for profile validation"
+          ],
+          "value": {
+            "kind": "argumentValueNode",
+            "name": "remaining"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    }
+  ],
+  "definedTypes": [
+    {
+      "kind": "definedTypeNode",
+      "name": "addKeyInput",
+      "docs": [
+        "Struct for adding a key"
+      ],
+      "type": {
+        "kind": "structTypeNode",
+        "fields": [
+          {
+            "kind": "structFieldTypeNode",
+            "name": "scope",
+            "docs": [
+              "The block of permissions"
+            ],
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "expireTime",
+            "docs": [
+              "The expire time of the key to add"
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "i64",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "permissions",
+            "docs": [
+              "The permissions for the key"
+            ],
+            "type": {
+              "kind": "arrayTypeNode",
+              "item": {
+                "kind": "numberTypeNode",
+                "format": "u8",
+                "endian": "le"
+              },
+              "count": {
+                "kind": "fixedCountNode",
+                "value": 8
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "kind": "definedTypeNode",
+      "name": "memberStatus",
+      "docs": [
+        "Represents potential membership statuses for a player with a role"
+      ],
+      "type": {
+        "kind": "enumTypeNode",
+        "variants": [
+          {
+            "kind": "enumEmptyVariantTypeNode",
+            "name": "inactive",
+            "discriminator": 0
+          },
+          {
+            "kind": "enumEmptyVariantTypeNode",
+            "name": "active",
+            "discriminator": 1
+          }
+        ],
+        "size": {
+          "kind": "numberTypeNode",
+          "format": "u8",
+          "endian": "le"
+        }
+      }
+    },
+    {
+      "kind": "definedTypeNode",
+      "name": "profileKey",
+      "type": {
+        "kind": "structTypeNode",
+        "fields": [
+          {
+            "kind": "structFieldTypeNode",
+            "name": "key",
+            "docs": [
+              "The key."
+            ],
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "scope",
+            "docs": [
+              "The key for the permissions."
+            ],
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "expireTime",
+            "docs": [
+              "The expiry time for this key.",
+              "If `<0` does not expire."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "i64",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "permissions",
+            "docs": [
+              "The permissions for the key."
+            ],
+            "type": {
+              "kind": "arrayTypeNode",
+              "item": {
+                "kind": "numberTypeNode",
+                "format": "u8",
+                "endian": "le"
+              },
+              "count": {
+                "kind": "fixedCountNode",
+                "value": 8
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "kind": "definedTypeNode",
+      "name": "roleMembership",
+      "docs": [
+        "Represents a member's status in a role"
+      ],
+      "type": {
+        "kind": "structTypeNode",
+        "fields": [
+          {
+            "kind": "structFieldTypeNode",
+            "name": "key",
+            "docs": [
+              "The member or role key associated with this membership"
+            ],
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "status",
+            "docs": [
+              "The member's role status"
+            ],
+            "type": {
+              "kind": "definedTypeLinkNode",
+              "name": "memberStatus"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "pdas": [
+    {
+      "kind": "pdaNode",
+      "name": "playerName",
+      "docs": [
+        "Stores a player's name on-chain."
+      ],
+      "seeds": [
+        {
+          "kind": "constantPdaSeedNode",
+          "type": {
+            "kind": "bytesTypeNode"
+          },
+          "value": {
+            "kind": "bytesValueNode",
+            "data": "706c617965725f6e616d65",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "variablePdaSeedNode",
+          "name": "profile",
+          "type": {
+            "kind": "publicKeyTypeNode"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "pdaNode",
+      "name": "profileRoleMembership",
+      "docs": [
+        "A player's roles for a given profile",
+        "Remaining data contains an unordered list of [`RoleMembership`](RoleMembership) structs"
+      ],
+      "seeds": [
+        {
+          "kind": "constantPdaSeedNode",
+          "type": {
+            "kind": "bytesTypeNode"
+          },
+          "value": {
+            "kind": "bytesValueNode",
+            "data": "726f6c652d6d656d626572",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "variablePdaSeedNode",
+          "name": "profile",
+          "docs": [
+            "The profile this member belongs to"
+          ],
+          "type": {
+            "kind": "publicKeyTypeNode"
+          }
+        },
+        {
+          "kind": "variablePdaSeedNode",
+          "name": "member",
+          "docs": [
+            "The member's profile pubkey"
+          ],
+          "type": {
+            "kind": "publicKeyTypeNode"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "pdaNode",
+      "name": "role",
+      "docs": [
+        "A Role associated with a Profile. A Role contains an unordered list of Role Members in its",
+        "remaining data which lists all of the members who carry this role."
+      ],
+      "seeds": [
+        {
+          "kind": "constantPdaSeedNode",
+          "type": {
+            "kind": "bytesTypeNode"
+          },
+          "value": {
+            "kind": "bytesValueNode",
+            "data": "70726f66696c652d726f6c65",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "variablePdaSeedNode",
+          "name": "profile",
+          "docs": [
+            "The profile this role belongs to"
+          ],
+          "type": {
+            "kind": "publicKeyTypeNode"
+          }
+        },
+        {
+          "kind": "variablePdaSeedNode",
+          "name": "roleSeqId",
+          "docs": [
+            "The sequence ID of the role"
+          ],
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u64",
+            "endian": "le"
+          }
+        }
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "kind": "errorNode",
+      "name": "keyIndexOutOfBounds",
+      "code": 1367932928,
+      "message": "Key index out of bounds",
+      "docs": [
+        "Key index out of bounds."
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "keyIndexNotSet",
+      "code": 1367932929,
+      "message": "Key index not set",
+      "docs": [
+        "Key index not set"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "profileMismatch",
+      "code": 1367932930,
+      "message": "Profile did not match profile key",
+      "docs": [
+        "Profile did not match profile key"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "keyMismatch",
+      "code": 1367932931,
+      "message": "Key did not match profile key",
+      "docs": [
+        "Key did not match profile key"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "scopeMismatch",
+      "code": 1367932932,
+      "message": "Scope did not match profile scope",
+      "docs": [
+        "Scope did not match profile scope"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "keyExpired",
+      "code": 1367932933,
+      "message": "Key expired",
+      "docs": [
+        "Key expired"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "keyMissingPermissions",
+      "code": 1367932934,
+      "message": "Key is missing permissions",
+      "docs": [
+        "Key is missing permissions"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "permissionsMismatch",
+      "code": 1367932935,
+      "message": "Permissions don't match available",
+      "docs": [
+        "Permissions don't match available"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "authKeyCannotExpire",
+      "code": 1367932936,
+      "message": "Auth keys cannot expire",
+      "docs": [
+        "Auth keys cannot expire"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "authKeyMustSign",
+      "code": 1367932937,
+      "message": "New auth keys must be signers",
+      "docs": [
+        "New auth keys must be signers"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "duplicateAuthKey",
+      "code": 1367932938,
+      "message": "Duplicate key when adjusting auth keys",
+      "docs": [
+        "Duplicate key when adjusting auth keys"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "roleAuthorityAlreadySet",
+      "code": 1367932939,
+      "message": "Role authority has already been set",
+      "docs": [
+        "Role authority has already been set"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "roleNotAcceptingMembers",
+      "code": 1367932940,
+      "message": "Role is not accepting new members",
+      "docs": [
+        "Role is not accepting new members"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "roleMembershipMismatch",
+      "code": 1367932941,
+      "message": "Role membership is not as expected",
+      "docs": [
+        "Role membership is not as expected"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "roleLimitExceeded",
+      "code": 1367932942,
+      "message": "Role limit exceeded",
+      "docs": [
+        "Role limit exceeded"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "roleHasMembers",
+      "code": 1367932943,
+      "message": "Cannot remove role with members",
+      "docs": [
+        "Role still has members"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "insufficientFunds",
+      "code": 1367932944,
+      "message": "Insufficient funds in SOL vault",
+      "docs": [
+        "Insufficient funds in SOL vault"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "drainSolVaultFailed",
+      "code": 1367932945,
+      "message": "DrainSolVault CPI failed",
+      "docs": [
+        "DrainSolVault CPI failed"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "selfRemovalForbidden",
+      "code": 1367932946,
+      "message": "Key cannot remove itself",
+      "docs": [
+        "Operation would remove the acting key itself"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "cannotRemoveAuthKey",
+      "code": 1367932947,
+      "message": "Cannot remove authority key",
+      "docs": [
+        "Attempted to remove an authority key"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "cannotAddAuthKey",
+      "code": 1367932948,
+      "message": "Cannot add authority key with add_key",
+      "docs": [
+        "Attempted to add an authority key via add_key"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "noKeysProvided",
+      "code": 1367932949,
+      "message": "No keys provided",
+      "docs": [
+        "No keys were provided where at least one is required"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "invalidKeyThreshold",
+      "code": 1367932950,
+      "message": "Key threshold must be greater than 0",
+      "docs": [
+        "Key threshold must be greater than zero"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "tooFewAuthKeys",
+      "code": 1367932951,
+      "message": "Too few authority keys to satisfy threshold",
+      "docs": [
+        "There are too few authority keys to satisfy the threshold"
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "featureNotImplemented",
+      "code": 1367932952,
+      "message": "This feature is not yet support",
+      "docs": [
+        "Feature not implemented"
+      ]
+    }
+  ]
+}
