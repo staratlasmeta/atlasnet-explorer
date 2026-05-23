@@ -50,7 +50,7 @@ export function clusterName (cluster: Cluster): string {
     case Cluster.Universe:
       return 'Universe';
     case Cluster.Zink:
-      return 'Zink Network';
+      return 'Zink Testnet';
     case Cluster.UniverseLocal:
       return 'Universe Local';
     case Cluster.Localnet:

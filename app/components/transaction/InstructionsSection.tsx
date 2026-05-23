@@ -38,6 +38,7 @@ import {
 } from '@solana/web3.js';
 import { Cluster } from '@utils/cluster';
 import { INNER_INSTRUCTIONS_START_SLOT, SignatureProps } from '@utils/index';
+import { getSageTokenBalanceDeltas, SageTokenBalanceDelta } from '@utils/sage-cargo';
 import { getStarFrameProgram } from '@utils/starframe';
 import { intoTransactionInstruction } from '@utils/tx';
 import React from 'react';
@@ -73,6 +74,11 @@ export function InstructionsSection({ signature }: SignatureProps) {
         return <ErrorCard retry={refreshDetails} text="No instructions found" />;
     }
     const { meta, transaction } = transactionWithMeta;
+    const tokenBalanceDeltas = getSageTokenBalanceDeltas(
+        meta?.preTokenBalances,
+        meta?.postTokenBalances,
+        transaction.message.accountKeys
+    );
 
     if (transaction.message.instructions.length === 0) {
         return <ErrorCard retry={refreshDetails} text="No instructions found" />;
@@ -111,9 +117,10 @@ export function InstructionsSection({ signature }: SignatureProps) {
             <React.Suspense fallback={<LoadingCard message="Loading Instructions" />}>
                 {transaction.message.instructions.map((instruction, index) => {
                     const innerCards: JSX.Element[] = [];
+                    const instructionInnerInstructions = innerInstructions[index] ?? [];
 
                     if (index in innerInstructions) {
-                        innerInstructions[index].forEach((ix, childIndex) => {
+                        instructionInnerInstructions.forEach((ix, childIndex) => {
                             const res = (
                                 <InstructionCard
                                     key={`${index}-${childIndex}`}
@@ -123,6 +130,7 @@ export function InstructionsSection({ signature }: SignatureProps) {
                                     signature={signature}
                                     tx={transaction}
                                     childIndex={childIndex}
+                                    tokenBalanceDeltas={tokenBalanceDeltas}
                                     url={url}
                                 />
                             );
@@ -139,6 +147,8 @@ export function InstructionsSection({ signature }: SignatureProps) {
                             signature={signature}
                             tx={transaction}
                             innerCards={innerCards}
+                            innerInstructions={instructionInnerInstructions}
+                            tokenBalanceDeltas={tokenBalanceDeltas}
                             url={url}
                         />
                     );
@@ -155,7 +165,9 @@ function InstructionCard({
     index,
     signature,
     innerCards,
+    innerInstructions,
     childIndex,
+    tokenBalanceDeltas,
     url,
 }: {
     ix: ParsedInstruction | PartiallyDecodedInstruction;
@@ -164,7 +176,9 @@ function InstructionCard({
     index: number;
     signature: TransactionSignature;
     innerCards?: JSX.Element[];
+    innerInstructions?: (ParsedInstruction | PartiallyDecodedInstruction)[];
     childIndex?: number;
+    tokenBalanceDeltas?: Map<string, SageTokenBalanceDelta[]>;
     url: string;
 }) {
     const key = `${index}-${childIndex}`;
@@ -243,7 +257,12 @@ function InstructionCard({
     } else if (getStarFrameProgram(transactionIx.programId.toBase58())) {
         return (
             <ErrorBoundary fallback={<UnknownDetailsCard {...props} />} key={key}>
-                <StarFrameDetailsCard {...props} />
+                <StarFrameDetailsCard
+                    {...props}
+                    innerInstructions={innerInstructions}
+                    tokenBalanceDeltas={tokenBalanceDeltas}
+                    url={url}
+                />
             </ErrorBoundary>
         );
     } else {
