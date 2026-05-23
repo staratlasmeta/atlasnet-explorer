@@ -6,7 +6,7 @@ export function explorerNetworkName() {
         case 'universe-local':
             return 'Universe';
         case 'zink':
-            return 'Zink Network';
+            return 'Zink Testnet';
         case 'localnet':
             return 'Localnet';
         default:
@@ -15,7 +15,7 @@ export function explorerNetworkName() {
 }
 
 export function explorerNetworkDescriptionName() {
-    return flavor === 'zink' ? 'the Zink Network' : explorerNetworkName();
+    return flavor === 'zink' ? 'the Zink Testnet' : explorerNetworkName();
 }
 
 export function explorerAppName() {

@@ -14,8 +14,16 @@ type StarFrameIdl = {
     kind: 'programNode';
     name: string;
     publicKey: string;
+    accounts?: StarFrameAccountNode[];
     instructions?: StarFrameInstructionNode[];
     definedTypes?: CodamaNode[];
+};
+
+export type StarFrameAccountNode = {
+    kind: 'accountNode';
+    name: string;
+    data: CodamaNode;
+    discriminators?: CodamaNode[];
 };
 
 export type StarFrameInstructionAccountNode = {
@@ -64,6 +72,8 @@ export type StarFrameProgramDefinition = {
     name: string;
     displayName: string;
     publicKey: string;
+    accounts: StarFrameAccountNode[];
+    accountByName: Map<string, StarFrameAccountNode>;
     definedTypes: Map<string, CodamaNode>;
     instructions: StarFrameInstructionNode[];
     instructionByDiscriminator: Map<string, StarFrameInstructionNode>;
@@ -81,6 +91,20 @@ export type StarFrameDecodedInstruction =
           program: StarFrameProgramDefinition;
           instruction?: StarFrameInstructionNode;
           arguments: StarFrameDecodedArgument[];
+          error: string;
+      };
+
+export type StarFrameDecodedAccount =
+    | {
+          status: 'decoded';
+          program: StarFrameProgramDefinition;
+          account: StarFrameAccountNode;
+          data: StarFrameValue;
+      }
+    | {
+          status: 'error';
+          program: StarFrameProgramDefinition;
+          account: StarFrameAccountNode;
           error: string;
       };
 
@@ -159,6 +183,59 @@ export function decodeStarFrameInstruction(ix: TransactionInstruction): StarFram
     }
 }
 
+export function decodeStarFrameAccount(
+    programIdOrName: string,
+    accountName: string,
+    data: Uint8Array
+): StarFrameDecodedAccount | null {
+    const program = STARFRAME_PROGRAMS_BY_ID.get(programIdOrName) ?? STARFRAME_PROGRAMS_BY_NAME.get(programIdOrName);
+    if (!program) {
+        return null;
+    }
+
+    const account = program.accountByName.get(accountName);
+    if (!account) {
+        return null;
+    }
+
+    const encodedData = Buffer.from(data);
+    const discriminator = getAccountDiscriminator(account);
+    if (discriminator && encodedData.slice(0, discriminator.length / 2).toString('hex') !== discriminator) {
+        return {
+            account,
+            error: `Unexpected ${program.displayName}:${account.name} account discriminator`,
+            program,
+            status: 'error',
+        };
+    }
+
+    const decoder = new StarFrameDecoder(encodedData, program);
+
+    try {
+        const decodedData = decoder.decodeType(account.data);
+
+        if (decoder.remainingBytes() !== 0) {
+            throw new Error(
+                `${decoder.remainingBytes()} unread byte(s) after decoding ${program.displayName}:${account.name}`
+            );
+        }
+
+        return {
+            account,
+            data: decodedData,
+            program,
+            status: 'decoded',
+        };
+    } catch (error) {
+        return {
+            account,
+            error: error instanceof Error ? error.message : String(error),
+            program,
+            status: 'error',
+        };
+    }
+}
+
 export function getStarFrameTypeLabel(type: CodamaNode): string {
     switch (type.kind) {
         case 'arrayTypeNode':
@@ -215,6 +292,8 @@ export function stringifyStarFrameValue(value: StarFrameValue): string {
 }
 
 function createStarFrameProgramDefinition(idl: StarFrameIdl, displayName: string): StarFrameProgramDefinition {
+    const accounts = idl.accounts ?? [];
+    const accountByName = new Map(accounts.map(account => [account.name, account]));
     const definedTypes = new Map((idl.definedTypes ?? []).map(type => [type.name, type]));
     const instructionByDiscriminator = new Map<string, StarFrameInstructionNode>();
 
@@ -226,6 +305,8 @@ function createStarFrameProgramDefinition(idl: StarFrameIdl, displayName: string
     }
 
     return {
+        accountByName,
+        accounts,
         definedTypes,
         displayName,
         idl,
@@ -239,6 +320,17 @@ function createStarFrameProgramDefinition(idl: StarFrameIdl, displayName: string
 function getInstructionDiscriminator(instruction: StarFrameInstructionNode): string | undefined {
     const discriminatorArgument = (instruction.arguments ?? []).find(argument => argument.name === 'discriminator');
     const defaultValue = discriminatorArgument?.defaultValue;
+
+    if (defaultValue?.kind === 'bytesValueNode' && defaultValue.encoding === 'base16') {
+        return defaultValue.data.toLowerCase();
+    }
+
+    return undefined;
+}
+
+function getAccountDiscriminator(account: StarFrameAccountNode): string | undefined {
+    const discriminatorField = account.data?.fields?.find((field: CodamaNode) => field.name === 'discriminator');
+    const defaultValue = discriminatorField?.defaultValue;
 
     if (defaultValue?.kind === 'bytesValueNode' && defaultValue.encoding === 'base16') {
         return defaultValue.data.toLowerCase();

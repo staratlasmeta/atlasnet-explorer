@@ -123,7 +123,7 @@ function InspectorInstructionCard({
             <ErrorBoundary
                 fallback={<UnknownDetailsCard key={index} index={index} ix={ix} programName={programName} />}
             >
-                <StarFrameDetailsCard index={index} ix={ix} result={result} signature={signature} />
+                <StarFrameDetailsCard index={index} ix={ix} result={result} signature={signature} url={url} />
             </ErrorBoundary>
         );
     }
