@@ -1,7 +1,9 @@
-import { explorerAppName, explorerNetworkDescriptionName } from '@utils/network';
+import { explorerAppName, explorerBrandIcons, explorerNetworkDescriptionName } from '@utils/network';
 import type { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
+    const brandIcons = explorerBrandIcons();
+
     return {
         background_color: '#000000',
         description: `Inspect transactions, accounts, blocks, and more on ${explorerNetworkDescriptionName()}`,
@@ -9,12 +11,12 @@ export default function manifest(): MetadataRoute.Manifest {
         icons: [
             {
                 sizes: '192x192',
-                src: '/icon-192.png',
+                src: brandIcons.pwa192,
                 type: 'image/png',
             },
             {
                 sizes: '512x512',
-                src: '/icon-512.png',
+                src: brandIcons.pwa512,
                 type: 'image/png',
             },
         ],
