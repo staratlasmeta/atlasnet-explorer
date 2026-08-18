@@ -1,9 +1,10 @@
 'use client';
 
 import { Cluster, clusterName, ClusterStatus, clusterUrl, DEFAULT_CLUSTER } from '@utils/cluster';
+import { parseClusterParam } from '@utils/cluster-param';
 import { EpochSchedule } from '@utils/epoch-schedule';
 import { localStorageIsAvailable } from '@utils/local-storage';
-import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, { createContext, useContext, useEffect, useReducer, useState } from 'react';
 import { createSolanaRpc } from 'web3js-experimental';
 
@@ -49,31 +50,6 @@ function clusterReducer (state: State, action: Action): State {
   }
 }
 
-function parseQuery (searchParams: ReadonlyURLSearchParams | null): Cluster {
-  const clusterParam = searchParams?.get('cluster');
-  switch (clusterParam) {
-    case 'custom':
-      return Cluster.Custom;
-    case 'devnet':
-      return Cluster.Devnet;
-    case 'testnet':
-      return Cluster.Testnet;
-    case 'atlasnet':
-      return Cluster.Atlasnet;
-    case 'universe':
-      return Cluster.Universe;
-    case 'zink':
-      return Cluster.Zink;
-    case 'universe-local':
-      return Cluster.UniverseLocal;
-    case 'localnet':
-      return Cluster.Localnet;
-    case 'mainnet-beta':
-    default:
-      return DEFAULT_CLUSTER;
-  }
-}
-
 const ModalContext = createContext<[boolean, SetShowModal] | undefined>(undefined);
 const StateContext = createContext<State | undefined>(undefined);
 const DispatchContext = createContext<Dispatch | undefined>(undefined);
@@ -88,7 +64,7 @@ export function ClusterProvider ({ children }: ClusterProviderProps) {
   });
   const modalState = useState(false);
   const searchParams = useSearchParams();
-  const cluster = parseQuery(searchParams);
+  const cluster = parseClusterParam(searchParams?.get('cluster'));
   const enableCustomUrl = localStorageIsAvailable() && localStorage.getItem('enableCustomUrl') !== null;
   const customUrl = (enableCustomUrl && searchParams?.get('customUrl')) || state.customUrl;
   const pathname = usePathname();
