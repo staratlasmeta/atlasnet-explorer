@@ -1,6 +1,9 @@
 'use client';
 
+/* eslint-disable @next/next/no-img-element -- fc-app contact sprites are already-sized transparent PNG art. */
+
 import { ParsedTransactionWithMeta } from '@solana/web3.js';
+import { CombatParticipantArt, CombatParticipantKind } from '@utils/combat-art';
 import {
     CombatantSnapshot,
     CombatDamageType,
@@ -14,6 +17,7 @@ import {
 import React, { useMemo } from 'react';
 
 import styles from './CombatVisualizer.module.scss';
+import { useCombatParticipantArt } from './useCombatParticipantArt';
 
 const DAMAGE_TYPE_COLORS: Readonly<Record<CombatDamageType, string>> = {
     bomb: '#ffd66b',
@@ -32,7 +36,9 @@ const SHIELD_COLOR = '#65e8ff';
 const HULL_COLOR = '#ff705c';
 
 type Side = 'left' | 'right';
-type ParticipantKind = 'fleet' | 'starbase';
+type ParticipantKind = CombatParticipantKind;
+
+type ParticipantArtBySide = Readonly<Partial<Record<Side, CombatParticipantArt>>>;
 
 interface ParticipantView {
     readonly kind: ParticipantKind;
@@ -67,32 +73,58 @@ export function CombatVisualizerSection({ transactionWithMeta }: { transactionWi
     return (
         <>
             {visualizations.map(visualization => (
-                <div className={`card ${styles.explorerCard}`} key={visualization.instructionIndex}>
-                    <div className={`card-header ${styles.explorerCardHeader}`}>
-                        <div>
-                            <span className={styles.cardEyebrow}>
-                                Instruction #{visualization.instructionIndex + 1}
-                            </span>
-                            <h3 className="card-header-title">Combat Visualizer</h3>
-                        </div>
-                        <span
-                            className={`badge ${visualization.telemetry ? 'bg-success-soft' : 'bg-secondary-soft'} ${
-                                styles.telemetryBadge
-                            }`}
-                        >
-                            {visualization.telemetry
-                                ? `Telemetry v${visualization.telemetry.version}`
-                                : 'Telemetry unavailable'}
-                        </span>
-                    </div>
-                    <CombatVisualizer visualization={visualization} />
-                </div>
+                <CombatVisualizerCard key={visualization.instructionIndex} visualization={visualization} />
             ))}
         </>
     );
 }
 
-export function CombatVisualizer({ visualization }: { visualization: CombatVisualization }) {
+function CombatVisualizerCard({ visualization }: { visualization: CombatVisualization }) {
+    const model = buildReplayModel(visualization);
+    const starbaseLevel =
+        visualization.telemetry?.kind === 'fleet-vs-starbase' ? visualization.telemetry.starbaseLevelBefore : null;
+    const leftArt = useCombatParticipantArt({
+        accountKey: model.leftParticipant.snapshot?.key,
+        kind: model.leftParticipant.kind,
+    });
+    const rightArt = useCombatParticipantArt({
+        accountKey: model.rightParticipant.snapshot?.key,
+        kind: model.rightParticipant.kind,
+        starbaseLevel,
+    });
+
+    return (
+        <div className={`card ${styles.explorerCard}`}>
+            <div className={`card-header ${styles.explorerCardHeader}`}>
+                <div>
+                    <span className={styles.cardEyebrow}>Instruction #{visualization.instructionIndex + 1}</span>
+                    <h3 className="card-header-title">Combat Visualizer</h3>
+                </div>
+                <span
+                    className={`badge ${visualization.telemetry ? 'bg-success-soft' : 'bg-secondary-soft'} ${
+                        styles.telemetryBadge
+                    }`}
+                >
+                    {visualization.telemetry
+                        ? `Telemetry v${visualization.telemetry.version}`
+                        : 'Telemetry unavailable'}
+                </span>
+            </div>
+            <CombatVisualizer
+                participantArt={{ left: leftArt ?? undefined, right: rightArt ?? undefined }}
+                visualization={visualization}
+            />
+        </div>
+    );
+}
+
+export function CombatVisualizer({
+    participantArt = {},
+    visualization,
+}: {
+    participantArt?: ParticipantArtBySide;
+    visualization: CombatVisualization;
+}) {
     const model = buildReplayModel(visualization);
     const hasReturnFire = model.returnShot?.attempted === true;
     const summary = buildAccessibleSummary(model.primaryShot, model.returnShot);
@@ -127,8 +159,8 @@ export function CombatVisualizer({ visualization }: { visualization: CombatVisua
 
                 <ParticipantHud participant={model.leftParticipant} side="left" />
                 <ParticipantHud participant={model.rightParticipant} side="right" />
-                <CombatBlip kind={model.leftParticipant.kind} side="left" />
-                <CombatBlip kind={model.rightParticipant.kind} side="right" />
+                <CombatBlip art={participantArt.left} kind={model.leftParticipant.kind} side="left" />
+                <CombatBlip art={participantArt.right} kind={model.rightParticipant.kind} side="right" />
 
                 {visualization.telemetry ? (
                     <>
@@ -160,7 +192,7 @@ export function CombatVisualizer({ visualization }: { visualization: CombatVisua
                 </div>
                 <div className={`${styles.timelineStep} ${hasReturnFire ? styles.timelineStepActive : ''}`}>
                     <span>02</span>
-                    <strong>{hasReturnFire ? '+1.0s RETURN FIRE' : 'NO RETURN FIRE'}</strong>
+                    <strong>{hasReturnFire ? 'RETURN FIRE' : 'NO RETURN FIRE'}</strong>
                 </div>
                 <div className={styles.loopLabel}>AUTO LOOP // 6.8s</div>
             </div>
@@ -228,16 +260,19 @@ function ParticipantHud({ participant, side }: { participant: ParticipantView; s
     );
 }
 
-function CombatBlip({ kind, side }: { kind: ParticipantKind; side: Side }) {
+function CombatBlip({ art, kind, side }: { art?: CombatParticipantArt; kind: ParticipantKind; side: Side }) {
     return (
         <div
-            aria-label={`${side === 'left' ? 'Attacking' : 'Defending'} ${kind}`}
+            aria-label={`${side === 'left' ? 'Attacking' : 'Defending'} ${kind}${art ? `: ${art.alt}` : ''}`}
             className={`${styles.blip} ${side === 'left' ? styles.leftBlip : styles.rightBlip} ${
                 kind === 'starbase' ? styles.starbaseBlip : styles.fleetBlip
             }`}
+            title={art?.alt}
         >
             <i className={styles.blipRing} aria-hidden="true" />
-            {kind === 'starbase' ? (
+            {art ? (
+                <img alt="" aria-hidden="true" className={styles.contactSprite} draggable={false} src={art.src} />
+            ) : kind === 'starbase' ? (
                 <svg aria-hidden="true" viewBox="0 0 48 48">
                     <path d="M24 3l13 8v8l8 5-8 5v8l-13 8-13-8v-8l-8-5 8-5v-8z" />
                     <circle cx="24" cy="24" r="7" />
@@ -249,6 +284,7 @@ function CombatBlip({ kind, side }: { kind: ParticipantKind; side: Side }) {
                     <path d="M13 21H2M20 16l15 5-15 5z" />
                 </svg>
             )}
+            {art && <span className={styles.contactCaption}>{art.caption}</span>}
         </div>
     );
 }

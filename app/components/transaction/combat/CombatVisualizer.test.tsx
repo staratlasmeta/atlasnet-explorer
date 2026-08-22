@@ -111,7 +111,7 @@ describe('CombatVisualizer', () => {
         expect(screen.getByText('−200 HP')).toBeInTheDocument();
         expect(screen.getByText('−25 SP')).toBeInTheDocument();
         expect(screen.getByText('−75 HP')).toBeInTheDocument();
-        expect(screen.getByText('+1.0s RETURN FIRE')).toBeInTheDocument();
+        expect(screen.getByText('RETURN FIRE')).toBeInTheDocument();
     });
 
     it('conveys dodge and the absence of return fire', () => {
@@ -136,6 +136,39 @@ describe('CombatVisualizer', () => {
 
         expect(screen.getByText('DODGE')).toBeInTheDocument();
         expect(screen.getAllByText('NO RETURN FIRE')).toHaveLength(2);
+    });
+
+    it('renders enriched fc-app contact art with an accessible largest-class label', () => {
+        const telemetry: FleetVsStarbaseCombatTelemetry = {
+            attackerShot: shot(),
+            fleet: snapshot({ key: address(5) }),
+            incrementSequenceId: false,
+            kind: 'fleet-vs-starbase',
+            retaliationDamage: 0n,
+            slot: 123n,
+            starbase: snapshot({ key: address(6) }),
+            starbaseDestroyedOrDowngraded: false,
+            starbaseLevelAfter: 5,
+            starbaseLevelBefore: 5,
+            unixTimestamp: 456n,
+            version: 2,
+        };
+
+        render(
+            <CombatVisualizer
+                participantArt={{
+                    left: {
+                        alt: 'Pearce T1, titan class',
+                        caption: 'TITAN // Pearce T1',
+                        src: 'https://cdn.staratlas.com/sage/ship-topdown/T1TAN.png',
+                    },
+                }}
+                visualization={visualization(telemetry)}
+            />
+        );
+
+        expect(screen.getByLabelText('Attacking fleet: Pearce T1, titan class')).toBeInTheDocument();
+        expect(screen.getByText('TITAN // Pearce T1')).toBeInTheDocument();
     });
 
     it('still renders the widget when an attack instruction has no finalized telemetry', () => {
