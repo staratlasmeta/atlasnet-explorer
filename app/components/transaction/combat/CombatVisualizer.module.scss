@@ -344,36 +344,147 @@
     letter-spacing: 0.04em;
 }
 
+.participantIdentity {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: center;
+    margin-top: 3px;
+}
+
+.rightHud .participantIdentity {
+    justify-content: flex-end;
+}
+
+.profileName,
+.factionBadge,
+.apReadout {
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-weight: 700;
+}
+
+.profileName {
+    color: rgba(231, 252, 255, 0.86);
+    font-size: 0.59rem;
+    letter-spacing: 0.035em;
+}
+
+.factionBadge {
+    padding: 1px 4px;
+    color: rgba(160, 237, 249, 0.78);
+    background: rgba(66, 232, 255, 0.07);
+    border: 1px solid rgba(66, 232, 255, 0.18);
+    border-radius: 2px;
+    font-size: 0.45rem;
+    letter-spacing: 0.08em;
+}
+
+.rightHud .factionBadge {
+    color: rgba(255, 167, 151, 0.82);
+    background: rgba(255, 107, 88, 0.07);
+    border-color: rgba(255, 107, 88, 0.2);
+}
+
+.apReadout {
+    margin-top: 3px;
+    color: rgba(190, 167, 255, 0.74);
+    font-size: 0.5rem;
+    letter-spacing: 0.055em;
+}
+
 .vitals {
     display: grid;
     width: 100%;
     max-width: 190px;
-    grid-template-columns: 1fr 1fr;
-    gap: 2px 10px;
+    gap: 5px;
     margin-top: 6px;
     color: rgba(218, 247, 250, 0.62);
     font-family: SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     font-size: 0.54rem;
 }
 
-.hullTrack {
+.vitalRow {
+    display: grid;
+    gap: 2px;
+}
+
+.vitalHeader {
+    display: flex;
+    justify-content: space-between;
+    color: rgba(218, 247, 250, 0.62);
+    font-size: 0.5rem;
+    font-weight: 700;
+    letter-spacing: 0.055em;
+}
+
+.vitalValue {
+    position: relative;
+    min-width: 50px;
+    text-align: right;
+}
+
+.vitalStartValue,
+.vitalEndValue {
+    display: block;
+}
+
+.vitalEndValue {
+    position: absolute;
+    top: 0;
+    right: 0;
+    opacity: 0;
+}
+
+.vitalTrack {
     position: relative;
     overflow: hidden;
-    height: 2px;
-    grid-column: 1 / -1;
+    height: 3px;
     background: rgba(184, 228, 236, 0.13);
 }
 
-.hullTrack i {
+.vitalTrack i {
     position: absolute;
     inset: 0 auto 0 0;
+    width: var(--vital-start-width);
+}
+
+.hpFill {
     background: linear-gradient(90deg, #ff705c, #ffd66b);
     box-shadow: 0 0 7px rgba(255, 112, 92, 0.65);
 }
 
-.rightHud .hullTrack i {
+.spFill {
+    background: linear-gradient(90deg, #3fa8ff, #65e8ff);
+    box-shadow: 0 0 7px rgba(101, 232, 255, 0.62);
+}
+
+.rightHud .vitalTrack i {
     right: 0;
     left: auto;
+}
+
+.primaryVital .vitalTrack i {
+    animation: primaryVitalFill var(--loop-duration) ease-out infinite;
+}
+
+.returnVital .vitalTrack i {
+    animation: returnVitalFill var(--loop-duration) ease-out infinite;
+}
+
+.primaryVital .vitalStartValue {
+    animation: primaryVitalStartValue var(--loop-duration) linear infinite;
+}
+
+.primaryVital .vitalEndValue {
+    animation: primaryVitalEndValue var(--loop-duration) linear infinite;
+}
+
+.returnVital .vitalStartValue {
+    animation: returnVitalStartValue var(--loop-duration) linear infinite;
+}
+
+.returnVital .vitalEndValue {
+    animation: returnVitalEndValue var(--loop-duration) linear infinite;
 }
 
 .blip {
@@ -831,6 +942,72 @@
     }
 }
 
+@keyframes primaryVitalFill {
+    0%,
+    17% {
+        width: var(--vital-start-width);
+    }
+    23%,
+    100% {
+        width: var(--vital-end-width);
+    }
+}
+
+@keyframes returnVitalFill {
+    0%,
+    42% {
+        width: var(--vital-start-width);
+    }
+    48%,
+    100% {
+        width: var(--vital-end-width);
+    }
+}
+
+@keyframes primaryVitalStartValue {
+    0%,
+    18% {
+        opacity: 1;
+    }
+    20%,
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes primaryVitalEndValue {
+    0%,
+    18% {
+        opacity: 0;
+    }
+    20%,
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes returnVitalStartValue {
+    0%,
+    43% {
+        opacity: 1;
+    }
+    45%,
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes returnVitalEndValue {
+    0%,
+    43% {
+        opacity: 0;
+    }
+    45%,
+    100% {
+        opacity: 1;
+    }
+}
+
 @keyframes primaryBeam {
     0%,
     9% {
@@ -1105,12 +1282,7 @@
     }
 
     .vitals {
-        grid-template-columns: 1fr;
-        gap: 1px;
-    }
-
-    .hullTrack {
-        grid-column: 1;
+        gap: 4px;
     }
 
     .floatingDamageStack {
@@ -1166,8 +1338,23 @@
     .floatingExpense,
     .floatingDamage,
     .noReturnFire,
-    .timelineTrack::after {
+    .timelineTrack::after,
+    .vitalTrack i,
+    .vitalStartValue,
+    .vitalEndValue {
         animation: none !important;
+    }
+
+    .vitalTrack i {
+        width: var(--vital-end-width);
+    }
+
+    .vitalStartValue {
+        opacity: 0;
+    }
+
+    .vitalEndValue {
+        opacity: 1;
     }
 
     .floatingDamage {

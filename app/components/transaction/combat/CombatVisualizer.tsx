@@ -3,21 +3,22 @@
 /* eslint-disable @next/next/no-img-element -- fc-app contact sprites are already-sized transparent PNG art. */
 
 import { ParsedTransactionWithMeta } from '@solana/web3.js';
-import { CombatParticipantArt, CombatParticipantKind } from '@utils/combat-art';
+import { CombatParticipantKind, formatCombatFaction } from '@utils/combat-art';
 import {
     CombatantSnapshot,
     CombatDamageType,
     CombatShotSummary,
     CombatVisualization,
+    FleetApSnapshot,
     getAppliedCombatHpDamage,
     getAppliedCombatSpDamage,
     getCombatVisualizations,
     getDominantCombatDamageType,
 } from '@utils/combat-telemetry';
-import React, { useMemo } from 'react';
+import React, { CSSProperties, useMemo } from 'react';
 
 import styles from './CombatVisualizer.module.scss';
-import { useCombatParticipantArt } from './useCombatParticipantArt';
+import { CombatParticipantEnrichment, useCombatParticipantArt } from './useCombatParticipantArt';
 
 const DAMAGE_TYPE_COLORS: Readonly<Record<CombatDamageType, string>> = {
     bomb: '#ffd66b',
@@ -38,12 +39,15 @@ const HULL_COLOR = '#ff705c';
 type Side = 'left' | 'right';
 type ParticipantKind = CombatParticipantKind;
 
-type ParticipantArtBySide = Readonly<Partial<Record<Side, CombatParticipantArt>>>;
+type ParticipantEnrichmentBySide = Readonly<Partial<Record<Side, Partial<CombatParticipantEnrichment>>>>;
 
 interface ParticipantView {
+    readonly ap: FleetApSnapshot | null;
+    readonly factionId: number | null;
     readonly kind: ParticipantKind;
     readonly role: string;
     readonly name: string;
+    readonly representativeShipConfigId: number | null;
     readonly snapshot: CombatantSnapshot | null;
 }
 
@@ -83,14 +87,19 @@ function CombatVisualizerCard({ visualization }: { visualization: CombatVisualiz
     const model = buildReplayModel(visualization);
     const starbaseLevel =
         visualization.telemetry?.kind === 'fleet-vs-starbase' ? visualization.telemetry.starbaseLevelBefore : null;
-    const leftArt = useCombatParticipantArt({
-        accountKey: model.leftParticipant.snapshot?.key,
-        kind: model.leftParticipant.kind,
-    });
-    const rightArt = useCombatParticipantArt({
-        accountKey: model.rightParticipant.snapshot?.key,
-        kind: model.rightParticipant.kind,
-        starbaseLevel,
+    const participantEnrichment = useCombatParticipantArt({
+        left: {
+            accountKey: model.leftParticipant.snapshot?.key,
+            kind: model.leftParticipant.kind,
+            representativeShipConfigId: model.leftParticipant.representativeShipConfigId,
+        },
+        right: {
+            accountKey: model.rightParticipant.snapshot?.key,
+            kind: model.rightParticipant.kind,
+            representativeShipConfigId: model.rightParticipant.representativeShipConfigId,
+            starbaseFactionId: model.rightParticipant.factionId,
+            starbaseLevel,
+        },
     });
 
     return (
@@ -110,19 +119,16 @@ function CombatVisualizerCard({ visualization }: { visualization: CombatVisualiz
                         : 'Telemetry unavailable'}
                 </span>
             </div>
-            <CombatVisualizer
-                participantArt={{ left: leftArt ?? undefined, right: rightArt ?? undefined }}
-                visualization={visualization}
-            />
+            <CombatVisualizer participantEnrichment={participantEnrichment} visualization={visualization} />
         </div>
     );
 }
 
 export function CombatVisualizer({
-    participantArt = {},
+    participantEnrichment = {},
     visualization,
 }: {
-    participantArt?: ParticipantArtBySide;
+    participantEnrichment?: ParticipantEnrichmentBySide;
     visualization: CombatVisualization;
 }) {
     const model = buildReplayModel(visualization);
@@ -157,10 +163,20 @@ export function CombatVisualizer({
                     ))}
                 </div>
 
-                <ParticipantHud participant={model.leftParticipant} side="left" />
-                <ParticipantHud participant={model.rightParticipant} side="right" />
-                <CombatBlip art={participantArt.left} kind={model.leftParticipant.kind} side="left" />
-                <CombatBlip art={participantArt.right} kind={model.rightParticipant.kind} side="right" />
+                <ParticipantHud
+                    enrichment={participantEnrichment.left}
+                    impactPhase={model.returnShot?.attempted ? 'return' : 'none'}
+                    participant={model.leftParticipant}
+                    side="left"
+                />
+                <ParticipantHud
+                    enrichment={participantEnrichment.right}
+                    impactPhase={model.primaryShot.attempted ? 'primary' : 'none'}
+                    participant={model.rightParticipant}
+                    side="right"
+                />
+                <CombatBlip enrichment={participantEnrichment.left} kind={model.leftParticipant.kind} side="left" />
+                <CombatBlip enrichment={participantEnrichment.right} kind={model.rightParticipant.kind} side="right" />
 
                 {visualization.telemetry ? (
                     <>
@@ -232,9 +248,27 @@ function RadarGrid() {
     );
 }
 
-function ParticipantHud({ participant, side }: { participant: ParticipantView; side: Side }) {
+type ImpactPhase = 'none' | 'primary' | 'return';
+
+type VitalStyle = CSSProperties & {
+    '--vital-end-width': string;
+    '--vital-start-width': string;
+};
+
+function ParticipantHud({
+    enrichment,
+    impactPhase,
+    participant,
+    side,
+}: {
+    enrichment?: Partial<CombatParticipantEnrichment>;
+    impactPhase: ImpactPhase;
+    participant: ParticipantView;
+    side: Side;
+}) {
     const snapshot = participant.snapshot;
-    const hpPercent = snapshot?.maxHp ? Math.max(0, Math.min(100, (snapshot.finalHp / snapshot.maxHp) * 100)) : 0;
+    const ownerLabel = enrichment?.profileName ? `@${enrichment.profileName.replace(/^@/, '')}` : null;
+    const factionLabel = formatCombatFaction(participant.factionId);
 
     return (
         <div className={`${styles.participantHud} ${side === 'left' ? styles.leftHud : styles.rightHud}`}>
@@ -242,15 +276,43 @@ function ParticipantHud({ participant, side }: { participant: ParticipantView; s
             <strong>{participant.name}</strong>
             {snapshot ? (
                 <>
+                    {(ownerLabel || factionLabel) && (
+                        <div className={styles.participantIdentity}>
+                            {ownerLabel && (
+                                <span className={styles.profileName} title={enrichment?.ownerProfile ?? undefined}>
+                                    {ownerLabel}
+                                </span>
+                            )}
+                            {factionLabel && <span className={styles.factionBadge}>{factionLabel}</span>}
+                        </div>
+                    )}
                     <span className={styles.participantKey} title={snapshot.key}>
                         {shortAddress(snapshot.key)}
                     </span>
+                    {participant.ap && (
+                        <span
+                            aria-label={`Ability power ${participant.ap.before} before combat, ${participant.ap.after} after combat`}
+                            className={styles.apReadout}
+                        >
+                            AP {formatNumber(BigInt(participant.ap.before))} →{' '}
+                            {formatNumber(BigInt(participant.ap.after))}
+                        </span>
+                    )}
                     <div className={styles.vitals}>
-                        <div className={styles.hullTrack}>
-                            <i style={{ width: `${hpPercent}%` }} />
-                        </div>
-                        <span>HP {formatNumber(BigInt(snapshot.finalHp))}</span>
-                        <span>SP {formatNumber(BigInt(snapshot.finalSp))}</span>
+                        <VitalBar
+                            end={BigInt(snapshot.postHp)}
+                            impactPhase={impactPhase}
+                            kind="hp"
+                            maximum={BigInt(snapshot.maxHp)}
+                            start={projectedWhole(snapshot.projectedHpQ6)}
+                        />
+                        <VitalBar
+                            end={BigInt(snapshot.postSp)}
+                            impactPhase={impactPhase}
+                            kind="sp"
+                            maximum={projectedWhole(snapshot.projectedSpQ6)}
+                            start={projectedWhole(snapshot.projectedSpQ6)}
+                        />
                     </div>
                 </>
             ) : (
@@ -260,10 +322,69 @@ function ParticipantHud({ participant, side }: { participant: ParticipantView; s
     );
 }
 
-function CombatBlip({ art, kind, side }: { art?: CombatParticipantArt; kind: ParticipantKind; side: Side }) {
+function VitalBar({
+    end,
+    impactPhase,
+    kind,
+    maximum,
+    start,
+}: {
+    end: bigint;
+    impactPhase: ImpactPhase;
+    kind: 'hp' | 'sp';
+    maximum: bigint;
+    start: bigint;
+}) {
+    const label = kind.toUpperCase();
+    const style: VitalStyle = {
+        '--vital-end-width': `${vitalPercent(end, maximum)}%`,
+        '--vital-start-width': `${vitalPercent(start, maximum)}%`,
+    };
+
     return (
         <div
-            aria-label={`${side === 'left' ? 'Attacking' : 'Defending'} ${kind}${art ? `: ${art.alt}` : ''}`}
+            aria-label={`${label} ${formatNumber(start)} before impact, ${formatNumber(end)} after impact`}
+            className={`${styles.vitalRow} ${
+                impactPhase === 'primary' ? styles.primaryVital : impactPhase === 'return' ? styles.returnVital : ''
+            }`}
+            style={style}
+        >
+            <div className={styles.vitalHeader} aria-hidden="true">
+                <span>{label}</span>
+                <span className={styles.vitalValue}>
+                    <span className={styles.vitalStartValue}>{formatNumber(start)}</span>
+                    <span className={styles.vitalEndValue}>{formatNumber(end)}</span>
+                </span>
+            </div>
+            <div className={styles.vitalTrack} aria-hidden="true">
+                <i className={kind === 'hp' ? styles.hpFill : styles.spFill} />
+            </div>
+        </div>
+    );
+}
+
+function CombatBlip({
+    enrichment,
+    kind,
+    side,
+}: {
+    enrichment?: Partial<CombatParticipantEnrichment>;
+    kind: ParticipantKind;
+    side: Side;
+}) {
+    const art = enrichment?.art;
+    const additionalShips = kind === 'fleet' ? enrichment?.additionalShipCount : null;
+    const shipCountLabel =
+        additionalShips !== null && additionalShips !== undefined ? ` (+${formatNumber(additionalShips)} ships)` : '';
+    const caption = art ? `${art.caption}${shipCountLabel}` : shipCountLabel ? `FLEET${shipCountLabel}` : null;
+
+    return (
+        <div
+            aria-label={`${side === 'left' ? 'Attacking' : 'Defending'} ${kind}${art ? `: ${art.alt}` : ''}${
+                additionalShips !== null && additionalShips !== undefined
+                    ? `, plus ${formatNumber(additionalShips)} additional ships`
+                    : ''
+            }`}
             className={`${styles.blip} ${side === 'left' ? styles.leftBlip : styles.rightBlip} ${
                 kind === 'starbase' ? styles.starbaseBlip : styles.fleetBlip
             }`}
@@ -284,7 +405,7 @@ function CombatBlip({ art, kind, side }: { art?: CombatParticipantArt; kind: Par
                     <path d="M13 21H2M20 16l15 5-15 5z" />
                 </svg>
             )}
-            {art && <span className={styles.contactCaption}>{art.caption}</span>}
+            {caption && <span className={styles.contactCaption}>{caption}</span>}
         </div>
     );
 }
@@ -372,7 +493,11 @@ function buildReplayModel(visualization: CombatVisualization) {
         const primaryAttempted = telemetry.attackerShot.attempted !== false;
         const returnAttempted = wasShotAttempted(telemetry.defenderShot);
         return {
-            leftParticipant: participant('fleet', 'ATTACKER', 'Attacking Fleet', telemetry.attacker),
+            leftParticipant: participant('fleet', 'ATTACKER', 'Attacking Fleet', telemetry.attacker, {
+                ap: telemetry.attackerAp,
+                factionId: telemetry.attackerIdentity?.factionId ?? null,
+                representativeShipConfigId: telemetry.attackerIdentity?.shipConfigId ?? null,
+            }),
             primaryShot: buildShotView({
                 attempted: primaryAttempted,
                 color: PRIMARY_COLOR,
@@ -393,7 +518,11 @@ function buildReplayModel(visualization: CombatVisualization) {
                       targetSide: 'left',
                   })
                 : null,
-            rightParticipant: participant('fleet', 'DEFENDER', 'Defending Fleet', telemetry.defender),
+            rightParticipant: participant('fleet', 'DEFENDER', 'Defending Fleet', telemetry.defender, {
+                ap: telemetry.defenderAp,
+                factionId: telemetry.defenderIdentity?.factionId ?? null,
+                representativeShipConfigId: telemetry.defenderIdentity?.shipConfigId ?? null,
+            }),
             title,
         };
     }
@@ -422,7 +551,11 @@ function buildReplayModel(visualization: CombatVisualization) {
     }
 
     return {
-        leftParticipant: participant('fleet', 'ATTACKER', 'Attacking Fleet', telemetry.fleet),
+        leftParticipant: participant('fleet', 'ATTACKER', 'Attacking Fleet', telemetry.fleet, {
+            ap: telemetry.fleetAp,
+            factionId: telemetry.fleetIdentity?.factionId ?? null,
+            representativeShipConfigId: telemetry.fleetIdentity?.shipConfigId ?? null,
+        }),
         primaryShot,
         returnShot: returnAttempted
             ? buildShotView({
@@ -436,7 +569,9 @@ function buildReplayModel(visualization: CombatVisualization) {
                   targetSide: 'left',
               })
             : null,
-        rightParticipant: participant('starbase', 'DEFENDER', 'Defending Starbase', telemetry.starbase),
+        rightParticipant: participant('starbase', 'DEFENDER', 'Defending Starbase', telemetry.starbase, {
+            factionId: telemetry.starbaseFactionId,
+        }),
         title,
     };
 }
@@ -445,9 +580,22 @@ function participant(
     kind: ParticipantKind,
     role: string,
     name: string,
-    snapshot: CombatantSnapshot | null
+    snapshot: CombatantSnapshot | null,
+    enrichment: {
+        ap?: FleetApSnapshot | null;
+        factionId?: number | null;
+        representativeShipConfigId?: number | null;
+    } = {}
 ): ParticipantView {
-    return { kind, name, role, snapshot };
+    return {
+        ap: enrichment.ap ?? null,
+        factionId: enrichment.factionId ?? null,
+        kind,
+        name,
+        representativeShipConfigId: enrichment.representativeShipConfigId ?? null,
+        role,
+        snapshot,
+    };
 }
 
 function emptyShot(source: Side, target: Side, color: string): ShotView {
@@ -550,6 +698,18 @@ function buildAccessibleSummary(primaryShot: ShotView, returnShot: ShotView | nu
 
 function shortAddress(address: string): string {
     return `${address.slice(0, 5)}…${address.slice(-5)}`;
+}
+
+function projectedWhole(valueQ6: bigint): bigint {
+    return valueQ6 / 64n;
+}
+
+function vitalPercent(value: bigint, maximum: bigint): number {
+    if (maximum <= 0n || value <= 0n) {
+        return 0;
+    }
+    const basisPoints = (value * 10_000n) / maximum;
+    return Number(basisPoints > 10_000n ? 10_000n : basisPoints) / 100;
 }
 
 function formatNumber(value: bigint): string {
