@@ -10,6 +10,7 @@ import { Slot } from '@components/common/Slot';
 import { SolBalance } from '@components/common/SolBalance';
 import { TableCardBody } from '@components/common/TableCardBody';
 import { SignatureContext } from '@components/instruction/SignatureContext';
+import { CombatVisualizerSection } from '@components/transaction/combat/CombatVisualizer';
 import { InstructionsSection } from '@components/transaction/InstructionsSection';
 import { ProgramLogSection } from '@components/transaction/ProgramLogSection';
 import { TokenBalancesCard } from '@components/transaction/TokenBalancesCard';
@@ -377,6 +378,7 @@ function DetailsSection({ signature }: SignatureProps) {
         <>
             <AccountsCard signature={signature} />
             <TokenBalancesCard signature={signature} />
+            <CombatVisualizerSection transactionWithMeta={transactionWithMeta} />
             <InstructionsSection signature={signature} />
             <ProgramLogSection signature={signature} />
         </>
