@@ -357,8 +357,7 @@
 }
 
 .profileName,
-.factionBadge,
-.apReadout {
+.factionBadge {
     font-family: SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     font-weight: 700;
 }
@@ -370,6 +369,9 @@
 }
 
 .factionBadge {
+    display: inline-flex;
+    gap: 3px;
+    align-items: center;
     padding: 1px 4px;
     color: rgba(160, 237, 249, 0.78);
     background: rgba(66, 232, 255, 0.07);
@@ -379,17 +381,47 @@
     letter-spacing: 0.08em;
 }
 
-.rightHud .factionBadge {
-    color: rgba(255, 167, 151, 0.82);
-    background: rgba(255, 107, 88, 0.07);
-    border-color: rgba(255, 107, 88, 0.2);
+.factionSymbol {
+    width: 8px;
+    height: 8px;
+    background: currentColor;
+    mask-position: center;
+    mask-repeat: no-repeat;
+    mask-size: contain;
 }
 
-.apReadout {
-    margin-top: 3px;
-    color: rgba(190, 167, 255, 0.74);
-    font-size: 0.5rem;
-    letter-spacing: 0.055em;
+.mudFaction {
+    color: #ff665a;
+    background: rgba(255, 102, 90, 0.11);
+    border-color: rgba(255, 102, 90, 0.34);
+}
+
+.mudFaction .factionSymbol {
+    mask-image: url('/combat/factions/mud.svg');
+}
+
+.oniFaction {
+    color: #59a9ff;
+    background: rgba(89, 169, 255, 0.11);
+    border-color: rgba(89, 169, 255, 0.34);
+}
+
+.oniFaction .factionSymbol {
+    mask-image: url('/combat/factions/oni.svg');
+}
+
+.usturFaction {
+    color: #ffd45f;
+    background: rgba(255, 212, 95, 0.11);
+    border-color: rgba(255, 212, 95, 0.34);
+}
+
+.usturFaction .factionSymbol {
+    mask-image: url('/combat/factions/ustur.svg');
+}
+
+.otherFaction {
+    color: rgba(160, 237, 249, 0.78);
 }
 
 .vitals {
@@ -456,6 +488,11 @@
 .spFill {
     background: linear-gradient(90deg, #3fa8ff, #65e8ff);
     box-shadow: 0 0 7px rgba(101, 232, 255, 0.62);
+}
+
+.apFill {
+    background: linear-gradient(90deg, #8f6eff, #d5c6ff);
+    box-shadow: 0 0 7px rgba(183, 152, 255, 0.62);
 }
 
 .rightHud .vitalTrack i {
@@ -560,7 +597,7 @@
 }
 
 .rightBlip.fleetBlip .contactSprite {
-    transform: translate(-50%, -50%) rotate(-108deg);
+    transform: translate(-50%, -50%) rotate(72deg) scaleX(-1);
 }
 
 .starbaseBlip .contactSprite {
@@ -568,9 +605,9 @@
     height: 92px;
 }
 
-.contactCaption {
+.contactCaption,
+.shipCountCaption {
     position: absolute;
-    top: calc(100% + 5px);
     left: 50%;
     overflow: hidden;
     width: max-content;
@@ -589,6 +626,17 @@
     letter-spacing: 0.07em;
     opacity: 0.72;
     transform: translateX(-50%);
+}
+
+.contactCaption {
+    top: calc(100% + 5px);
+}
+
+.shipCountCaption {
+    top: calc(100% + 25px);
+    padding: 1px 4px;
+    font-size: 0.42rem;
+    opacity: 0.6;
 }
 
 .blipRing {
@@ -1276,9 +1324,15 @@
         height: 80px;
     }
 
-    .contactCaption {
+    .contactCaption,
+    .shipCountCaption {
         max-width: 125px;
         font-size: 0.4rem;
+    }
+
+    .shipCountCaption {
+        top: calc(100% + 23px);
+        font-size: 0.36rem;
     }
 
     .vitals {

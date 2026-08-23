@@ -115,11 +115,48 @@ describe('CombatVisualizer', () => {
         expect(screen.getByText('−25 SP')).toBeInTheDocument();
         expect(screen.getByText('−75 HP')).toBeInTheDocument();
         expect(screen.getByText('RETURN FIRE')).toBeInTheDocument();
-        expect(screen.getByText('AP 96 → 0')).toBeInTheDocument();
         expect(screen.getByText('USTUR')).toBeInTheDocument();
         expect(screen.getByText('ONI')).toBeInTheDocument();
+        expect(screen.getByLabelText('USTUR faction')).toHaveAttribute('data-faction', 'ustur');
+        expect(screen.getByLabelText('USTUR faction')).toHaveAttribute('data-symbol', 'true');
+        expect(screen.getByLabelText('ONI faction')).toHaveAttribute('data-faction', 'oni');
+        expect(screen.getByLabelText('AP 96 before shot, 0 after shot')).toHaveAttribute(
+            'data-impact-phase',
+            'primary'
+        );
         expect(screen.getAllByLabelText('HP 1,000 before impact, 800 after impact')).toHaveLength(2);
         expect(screen.getAllByLabelText('SP 150 before impact, 100 after impact')).toHaveLength(2);
+    });
+
+    it('times attacker and defender AP spend to their respective shots', () => {
+        const telemetry: FleetVsFleetCombatTelemetry = {
+            attacker: snapshot({ key: address(8) }),
+            attackerAp: { after: 32, before: 120 },
+            attackerIdentity: { factionId: 1, shipConfigId: 101 },
+            attackerShot: shot(),
+            defender: snapshot({ key: address(9) }),
+            defenderAp: { after: 12, before: 80 },
+            defenderIdentity: { factionId: 2, shipConfigId: 202 },
+            defenderShot: shot(),
+            kind: 'fleet-vs-fleet',
+            slot: 123n,
+            unixTimestamp: 456n,
+            version: 3,
+        };
+
+        render(<CombatVisualizer visualization={visualization(telemetry)} />);
+
+        expect(screen.getByLabelText('AP 120 before shot, 32 after shot')).toHaveAttribute(
+            'data-impact-phase',
+            'primary'
+        );
+        expect(screen.getByLabelText('AP 80 before shot, 12 after shot')).toHaveAttribute(
+            'data-impact-phase',
+            'return'
+        );
+        expect(screen.getByLabelText('MUD faction')).toHaveAttribute('data-faction', 'mud');
+        expect(screen.getByLabelText('MUD faction')).toHaveAttribute('data-symbol', 'true');
+        expect(screen.getByLabelText('ONI faction')).toHaveAttribute('data-symbol', 'true');
     });
 
     it('conveys dodge and the absence of return fire', () => {
@@ -190,7 +227,8 @@ describe('CombatVisualizer', () => {
         expect(
             screen.getByLabelText('Attacking fleet: Pearce T1, titan class, plus 12 additional ships')
         ).toBeInTheDocument();
-        expect(screen.getByText('TITAN // Pearce T1 (+12 ships)')).toBeInTheDocument();
+        expect(screen.getByText('TITAN // Pearce T1')).toBeInTheDocument();
+        expect(screen.getByText('+12 SHIPS')).toBeInTheDocument();
         expect(screen.getByText('@bravetarget')).toBeInTheDocument();
     });
 

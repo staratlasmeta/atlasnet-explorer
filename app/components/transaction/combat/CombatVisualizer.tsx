@@ -164,14 +164,16 @@ export function CombatVisualizer({
                 </div>
 
                 <ParticipantHud
+                    apImpactPhase={model.primaryShot.attempted ? 'primary' : 'none'}
+                    damageImpactPhase={model.returnShot?.attempted ? 'return' : 'none'}
                     enrichment={participantEnrichment.left}
-                    impactPhase={model.returnShot?.attempted ? 'return' : 'none'}
                     participant={model.leftParticipant}
                     side="left"
                 />
                 <ParticipantHud
+                    apImpactPhase={model.returnShot?.attempted ? 'return' : 'none'}
+                    damageImpactPhase={model.primaryShot.attempted ? 'primary' : 'none'}
                     enrichment={participantEnrichment.right}
-                    impactPhase={model.primaryShot.attempted ? 'primary' : 'none'}
                     participant={model.rightParticipant}
                     side="right"
                 />
@@ -256,13 +258,15 @@ type VitalStyle = CSSProperties & {
 };
 
 function ParticipantHud({
+    apImpactPhase,
+    damageImpactPhase,
     enrichment,
-    impactPhase,
     participant,
     side,
 }: {
+    apImpactPhase: ImpactPhase;
+    damageImpactPhase: ImpactPhase;
     enrichment?: Partial<CombatParticipantEnrichment>;
-    impactPhase: ImpactPhase;
     participant: ParticipantView;
     side: Side;
 }) {
@@ -283,42 +287,71 @@ function ParticipantHud({
                                     {ownerLabel}
                                 </span>
                             )}
-                            {factionLabel && <span className={styles.factionBadge}>{factionLabel}</span>}
+                            {factionLabel && <FactionBadge factionId={participant.factionId} />}
                         </div>
                     )}
                     <span className={styles.participantKey} title={snapshot.key}>
                         {shortAddress(snapshot.key)}
                     </span>
-                    {participant.ap && (
-                        <span
-                            aria-label={`Ability power ${participant.ap.before} before combat, ${participant.ap.after} after combat`}
-                            className={styles.apReadout}
-                        >
-                            AP {formatNumber(BigInt(participant.ap.before))} →{' '}
-                            {formatNumber(BigInt(participant.ap.after))}
-                        </span>
-                    )}
                     <div className={styles.vitals}>
                         <VitalBar
                             end={BigInt(snapshot.postHp)}
-                            impactPhase={impactPhase}
+                            impactPhase={damageImpactPhase}
                             kind="hp"
                             maximum={BigInt(snapshot.maxHp)}
                             start={projectedWhole(snapshot.projectedHpQ6)}
                         />
                         <VitalBar
                             end={BigInt(snapshot.postSp)}
-                            impactPhase={impactPhase}
+                            impactPhase={damageImpactPhase}
                             kind="sp"
                             maximum={projectedWhole(snapshot.projectedSpQ6)}
                             start={projectedWhole(snapshot.projectedSpQ6)}
                         />
+                        {participant.ap && (
+                            <VitalBar
+                                end={BigInt(participant.ap.after)}
+                                impactPhase={apImpactPhase}
+                                kind="ap"
+                                maximum={BigInt(Math.max(participant.ap.before, participant.ap.after, 1))}
+                                start={BigInt(participant.ap.before)}
+                            />
+                        )}
                     </div>
                 </>
             ) : (
                 <span className={styles.participantKey}>AWAITING TELEMETRY</span>
             )}
         </div>
+    );
+}
+
+function FactionBadge({ factionId }: { factionId: number | null }) {
+    const label = formatCombatFaction(factionId);
+    const faction = factionId === 1 ? 'mud' : factionId === 2 ? 'oni' : factionId === 3 ? 'ustur' : null;
+    const factionClass =
+        faction === 'mud'
+            ? styles.mudFaction
+            : faction === 'oni'
+            ? styles.oniFaction
+            : faction === 'ustur'
+            ? styles.usturFaction
+            : styles.otherFaction;
+
+    if (!label) {
+        return null;
+    }
+
+    return (
+        <span
+            aria-label={`${label} faction`}
+            className={`${styles.factionBadge} ${factionClass}`}
+            data-faction={faction ?? 'other'}
+            data-symbol={faction ? 'true' : 'false'}
+        >
+            {faction && <i aria-hidden="true" className={styles.factionSymbol} />}
+            {label}
+        </span>
     );
 }
 
@@ -331,11 +364,13 @@ function VitalBar({
 }: {
     end: bigint;
     impactPhase: ImpactPhase;
-    kind: 'hp' | 'sp';
+    kind: 'ap' | 'hp' | 'sp';
     maximum: bigint;
     start: bigint;
 }) {
     const label = kind.toUpperCase();
+    const timingLabel = kind === 'ap' ? 'shot' : 'impact';
+    const fillClass = kind === 'hp' ? styles.hpFill : kind === 'sp' ? styles.spFill : styles.apFill;
     const style: VitalStyle = {
         '--vital-end-width': `${vitalPercent(end, maximum)}%`,
         '--vital-start-width': `${vitalPercent(start, maximum)}%`,
@@ -343,10 +378,14 @@ function VitalBar({
 
     return (
         <div
-            aria-label={`${label} ${formatNumber(start)} before impact, ${formatNumber(end)} after impact`}
+            aria-label={`${label} ${formatNumber(start)} before ${timingLabel}, ${formatNumber(
+                end
+            )} after ${timingLabel}`}
             className={`${styles.vitalRow} ${
                 impactPhase === 'primary' ? styles.primaryVital : impactPhase === 'return' ? styles.returnVital : ''
             }`}
+            data-impact-phase={impactPhase}
+            data-vital-kind={kind}
             style={style}
         >
             <div className={styles.vitalHeader} aria-hidden="true">
@@ -357,7 +396,7 @@ function VitalBar({
                 </span>
             </div>
             <div className={styles.vitalTrack} aria-hidden="true">
-                <i className={kind === 'hp' ? styles.hpFill : styles.spFill} />
+                <i className={fillClass} />
             </div>
         </div>
     );
@@ -375,8 +414,8 @@ function CombatBlip({
     const art = enrichment?.art;
     const additionalShips = kind === 'fleet' ? enrichment?.additionalShipCount : null;
     const shipCountLabel =
-        additionalShips !== null && additionalShips !== undefined ? ` (+${formatNumber(additionalShips)} ships)` : '';
-    const caption = art ? `${art.caption}${shipCountLabel}` : shipCountLabel ? `FLEET${shipCountLabel}` : null;
+        additionalShips !== null && additionalShips !== undefined ? `+${formatNumber(additionalShips)} SHIPS` : null;
+    const caption = art?.caption ?? (shipCountLabel ? 'FLEET' : null);
 
     return (
         <div
@@ -406,6 +445,7 @@ function CombatBlip({
                 </svg>
             )}
             {caption && <span className={styles.contactCaption}>{caption}</span>}
+            {shipCountLabel && <span className={styles.shipCountCaption}>{shipCountLabel}</span>}
         </div>
     );
 }
