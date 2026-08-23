@@ -1,3 +1,5 @@
+import { PublicKey } from '@solana/web3.js';
+
 import { StarFrameValue } from './starframe';
 
 export type CombatParticipantKind = 'fleet' | 'starbase';
@@ -9,6 +11,8 @@ export interface CombatParticipantArt {
 }
 
 const SHIP_TOP_DOWN_CDN = 'https://cdn.staratlas.com/sage/ship-topdown';
+const PLAYER_PROFILE_PROGRAM_ID = new PublicKey('C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u');
+const PLAYER_NAME_SEED = new TextEncoder().encode('player_name');
 
 // Keep this filename map aligned with fc-app/src/utils/shipImages.ts. The explorer deliberately
 // consumes the same top-down art source as the fleet map instead of introducing a second sprite set.
@@ -91,35 +95,58 @@ type ObjectValue = Record<string, StarFrameValue>;
 /** Resolve the same largest-class fleet contact and ship art used by fc-app's FleetManager. */
 export function resolveFleetParticipantArt(
     fleetValue: StarFrameValue | null,
-    gameValue: StarFrameValue | null
+    gameValue: StarFrameValue | null,
+    representativeShipConfigId: number | null = null
 ): CombatParticipantArt | null {
     const fleet = asObject(fleetValue);
     const game = asObject(gameValue);
-    const shipCounts = asObject(fleet?.shipCounts);
-    const largestClass = SIZE_CLASSES.find(sizeClass => numericValue(shipCounts?.[sizeClass.countKey]) > 0);
-    if (!fleet || !game || !largestClass) {
+    if (!game) {
         return null;
     }
 
-    const activeShipIds = new Set(
-        asArray(fleet.fleetShips)
-            .map(asObject)
-            .filter(entry => numericValue(entry?.value) > 0)
-            .map(entry => tupleNumber(entry?.key))
-            .filter((shipId): shipId is number => shipId !== null)
-    );
     const definitions = asArray(pathValue(game, 'shipDefinitions', 'ships', 'unsizedList'))
         .map(asObject)
         .filter((definition): definition is ObjectValue => definition !== null);
-    const largestShip = definitions.find(definition => {
-        const id = tupleNumber(definition.id);
-        return id !== null && activeShipIds.has(id) && enumVariant(definition.sizeClass) === largestClass.variant;
-    });
+    let largestShip =
+        representativeShipConfigId === null
+            ? null
+            : definitions.find(definition => tupleNumber(definition.id) === representativeShipConfigId) ?? null;
+
+    if (!largestShip && fleet) {
+        const shipCounts = asObject(fleet.shipCounts);
+        const largestClass = SIZE_CLASSES.find(sizeClass => numericValue(shipCounts?.[sizeClass.countKey]) > 0);
+        const activeShipIds = new Set(
+            asArray(fleet.fleetShips)
+                .map(asObject)
+                .filter(entry => numericValue(entry?.value) > 0)
+                .map(entry => tupleNumber(entry?.key))
+                .filter((shipId): shipId is number => shipId !== null)
+        );
+        if (largestClass) {
+            largestShip =
+                definitions
+                    .filter(definition => {
+                        const id = tupleNumber(definition.id);
+                        return (
+                            id !== null &&
+                            activeShipIds.has(id) &&
+                            enumVariant(definition.sizeClass) === largestClass.variant
+                        );
+                    })
+                    .sort((left, right) => (tupleNumber(left.id) ?? 0) - (tupleNumber(right.id) ?? 0))[0] ?? null;
+        }
+    }
     if (!largestShip) {
         return null;
     }
+    const selectedShip = largestShip;
 
-    const configName = decodeFixedName(largestShip.name);
+    const largestClass = SIZE_CLASSES.find(sizeClass => sizeClass.variant === enumVariant(selectedShip.sizeClass));
+    if (!largestClass) {
+        return null;
+    }
+
+    const configName = decodeFixedName(selectedShip.name);
     const imageEntry = SHIP_IMAGE_ENTRIES.find(([shipName]) => configName.includes(shipName));
     if (!imageEntry) {
         return null;
@@ -136,11 +163,12 @@ export function resolveFleetParticipantArt(
 /** Resolve the fc-app faction/tier starbase sprite while retaining the emitted pre-impact tier. */
 export function resolveStarbaseParticipantArt(
     starSystemValue: StarFrameValue | null,
-    telemetryLevel: number | null
+    telemetryLevel: number | null,
+    telemetryFactionId: number | null = null
 ): CombatParticipantArt {
     const starSystem = asObject(starSystemValue);
     const starbase = asObject(starSystem?.starbase);
-    const faction = enumVariant(starbase?.owner);
+    const faction = majorFactionVariant(telemetryFactionId) ?? enumVariant(starbase?.owner);
     const level = normalizeStarbaseLevel(telemetryLevel) ?? levelFromVariant(enumVariant(starbase?.level));
     const knownFaction = faction === 'mud' || faction === 'oni' || faction === 'ustur';
     const filename =
@@ -157,6 +185,64 @@ export function resolveStarbaseParticipantArt(
         caption: `${tierLabel} // ${factionLabel}`,
         src: `/combat/starbases/${filename}`,
     };
+}
+
+/** Number of fleet ships not represented by the single contact sprite. */
+export function getFleetAdditionalShipCount(fleetValue: StarFrameValue | null): bigint | null {
+    const fleet = asObject(fleetValue);
+    if (!fleet) {
+        return null;
+    }
+
+    const declaredTotal = bigintValue(asObject(fleet.shipCounts)?.total);
+    const total =
+        declaredTotal ??
+        asArray(fleet.fleetShips)
+            .map(asObject)
+            .reduce((sum, entry) => sum + (bigintValue(entry?.value) ?? 0n), 0n);
+    return total > 0n ? total - 1n : 0n;
+}
+
+export function getFleetOwnerProfile(fleetValue: StarFrameValue | null): string | null {
+    const ownerProfile = asObject(fleetValue)?.ownerProfile;
+    return typeof ownerProfile === 'string' ? ownerProfile : null;
+}
+
+export function getPlayerNameAccountAddress(profileId: string | null): string | null {
+    if (!profileId) {
+        return null;
+    }
+
+    try {
+        return PublicKey.findProgramAddressSync(
+            [PLAYER_NAME_SEED, new PublicKey(profileId).toBytes()],
+            PLAYER_PROFILE_PROGRAM_ID
+        )[0].toBase58();
+    } catch {
+        return null;
+    }
+}
+
+export function decodeCombatPlayerName(playerNameValue: StarFrameValue | null): string | null {
+    const name = asArray(asObject(playerNameValue)?.name);
+    if (name.length === 0) {
+        return null;
+    }
+
+    const bytes = name.map(byte => numericValue(byte)).filter(byte => byte >= 0 && byte <= 255);
+    const value = new TextDecoder().decode(Uint8Array.from(bytes)).replaceAll('\0', '').trim();
+    return value || null;
+}
+
+export function formatCombatFaction(factionId: number | null): string | null {
+    if (factionId === null) {
+        return null;
+    }
+    if (factionId === 0) {
+        return 'UNALIGNED';
+    }
+    const major = majorFactionVariant(factionId);
+    return major ? major.toUpperCase() : `FACTION ${factionId}`;
 }
 
 export function getCombatAccountGameId(value: StarFrameValue | null): string | null {
@@ -208,6 +294,29 @@ function numericValue(value: StarFrameValue | undefined | null): number {
         return Number(value);
     }
     return 0;
+}
+
+function bigintValue(value: StarFrameValue | undefined | null): bigint | null {
+    if (typeof value === 'bigint') {
+        return value;
+    }
+    if (typeof value === 'number' && Number.isSafeInteger(value)) {
+        return BigInt(value);
+    }
+    return null;
+}
+
+function majorFactionVariant(factionId: number | null): 'mud' | 'oni' | 'ustur' | null {
+    if (factionId === 1) {
+        return 'mud';
+    }
+    if (factionId === 2) {
+        return 'oni';
+    }
+    if (factionId === 3) {
+        return 'ustur';
+    }
+    return null;
 }
 
 function pathValue(value: ObjectValue, ...path: string[]): StarFrameValue | undefined {

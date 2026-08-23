@@ -88,16 +88,19 @@ describe('CombatVisualizer', () => {
         const telemetry: FleetVsStarbaseCombatTelemetry = {
             attackerShot: shot({ crit: true }),
             fleet: snapshot({ hpDamage: 75, key: address(1), spDamage: 25 }),
+            fleetAp: { after: 0, before: 96 },
+            fleetIdentity: { factionId: 3, shipConfigId: 303 },
             incrementSequenceId: false,
             kind: 'fleet-vs-starbase',
             retaliationDamage: 100n,
             slot: 123n,
             starbase: snapshot({ hpDamage: 200, key: address(2), spDamage: 50 }),
             starbaseDestroyedOrDowngraded: false,
+            starbaseFactionId: 2,
             starbaseLevelAfter: 5,
             starbaseLevelBefore: 5,
             unixTimestamp: 456n,
-            version: 2,
+            version: 3,
         };
 
         render(<CombatVisualizer visualization={visualization(telemetry)} />);
@@ -112,13 +115,59 @@ describe('CombatVisualizer', () => {
         expect(screen.getByText('−25 SP')).toBeInTheDocument();
         expect(screen.getByText('−75 HP')).toBeInTheDocument();
         expect(screen.getByText('RETURN FIRE')).toBeInTheDocument();
+        expect(screen.getByText('USTUR')).toBeInTheDocument();
+        expect(screen.getByText('ONI')).toBeInTheDocument();
+        expect(screen.getByLabelText('USTUR faction')).toHaveAttribute('data-faction', 'ustur');
+        expect(screen.getByLabelText('USTUR faction')).toHaveAttribute('data-symbol', 'true');
+        expect(screen.getByLabelText('ONI faction')).toHaveAttribute('data-faction', 'oni');
+        expect(screen.getByLabelText('AP 96 before shot, 0 after shot')).toHaveAttribute(
+            'data-impact-phase',
+            'primary'
+        );
+        expect(screen.getAllByLabelText('HP 1,000 before impact, 800 after impact')).toHaveLength(2);
+        expect(screen.getAllByLabelText('SP 150 before impact, 100 after impact')).toHaveLength(2);
+    });
+
+    it('times attacker and defender AP spend to their respective shots', () => {
+        const telemetry: FleetVsFleetCombatTelemetry = {
+            attacker: snapshot({ key: address(8) }),
+            attackerAp: { after: 32, before: 120 },
+            attackerIdentity: { factionId: 1, shipConfigId: 101 },
+            attackerShot: shot(),
+            defender: snapshot({ key: address(9) }),
+            defenderAp: { after: 12, before: 80 },
+            defenderIdentity: { factionId: 2, shipConfigId: 202 },
+            defenderShot: shot(),
+            kind: 'fleet-vs-fleet',
+            slot: 123n,
+            unixTimestamp: 456n,
+            version: 3,
+        };
+
+        render(<CombatVisualizer visualization={visualization(telemetry)} />);
+
+        expect(screen.getByLabelText('AP 120 before shot, 32 after shot')).toHaveAttribute(
+            'data-impact-phase',
+            'primary'
+        );
+        expect(screen.getByLabelText('AP 80 before shot, 12 after shot')).toHaveAttribute(
+            'data-impact-phase',
+            'return'
+        );
+        expect(screen.getByLabelText('MUD faction')).toHaveAttribute('data-faction', 'mud');
+        expect(screen.getByLabelText('MUD faction')).toHaveAttribute('data-symbol', 'true');
+        expect(screen.getByLabelText('ONI faction')).toHaveAttribute('data-symbol', 'true');
     });
 
     it('conveys dodge and the absence of return fire', () => {
         const telemetry: FleetVsFleetCombatTelemetry = {
             attacker: snapshot({ key: address(3) }),
+            attackerAp: null,
+            attackerIdentity: null,
             attackerShot: shot({ dodged: true, effectiveDamage: 0n, hit: false, rawDamage: 0n }),
             defender: snapshot({ key: address(4) }),
+            defenderAp: null,
+            defenderIdentity: null,
             defenderShot: shot({
                 attempted: false,
                 effectiveDamage: 0n,
@@ -142,12 +191,15 @@ describe('CombatVisualizer', () => {
         const telemetry: FleetVsStarbaseCombatTelemetry = {
             attackerShot: shot(),
             fleet: snapshot({ key: address(5) }),
+            fleetAp: null,
+            fleetIdentity: null,
             incrementSequenceId: false,
             kind: 'fleet-vs-starbase',
             retaliationDamage: 0n,
             slot: 123n,
             starbase: snapshot({ key: address(6) }),
             starbaseDestroyedOrDowngraded: false,
+            starbaseFactionId: null,
             starbaseLevelAfter: 5,
             starbaseLevelBefore: 5,
             unixTimestamp: 456n,
@@ -156,19 +208,28 @@ describe('CombatVisualizer', () => {
 
         render(
             <CombatVisualizer
-                participantArt={{
+                participantEnrichment={{
                     left: {
-                        alt: 'Pearce T1, titan class',
-                        caption: 'TITAN // Pearce T1',
-                        src: 'https://cdn.staratlas.com/sage/ship-topdown/T1TAN.png',
+                        additionalShipCount: 12n,
+                        art: {
+                            alt: 'Pearce T1, titan class',
+                            caption: 'TITAN // Pearce T1',
+                            src: 'https://cdn.staratlas.com/sage/ship-topdown/T1TAN.png',
+                        },
+                        ownerProfile: address(7),
+                        profileName: 'bravetarget',
                     },
                 }}
                 visualization={visualization(telemetry)}
             />
         );
 
-        expect(screen.getByLabelText('Attacking fleet: Pearce T1, titan class')).toBeInTheDocument();
+        expect(
+            screen.getByLabelText('Attacking fleet: Pearce T1, titan class, plus 12 additional ships')
+        ).toBeInTheDocument();
         expect(screen.getByText('TITAN // Pearce T1')).toBeInTheDocument();
+        expect(screen.getByText('+12 SHIPS')).toBeInTheDocument();
+        expect(screen.getByText('@bravetarget')).toBeInTheDocument();
     });
 
     it('still renders the widget when an attack instruction has no finalized telemetry', () => {

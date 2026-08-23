@@ -3,12 +3,15 @@ import { decodeStarFrameInstruction } from '@utils/starframe';
 import { intoTransactionInstruction } from '@utils/tx';
 
 export const COMBAT_TELEMETRY_V1_VERSION = 1;
-export const COMBAT_TELEMETRY_VERSION = 2;
+export const COMBAT_TELEMETRY_V2_VERSION = 2;
+export const COMBAT_TELEMETRY_VERSION = 3;
 
 export const FLEET_VS_FLEET_TELEMETRY_V1_LENGTH = 290;
 export const FLEET_VS_STARBASE_TELEMETRY_V1_LENGTH = 267;
-export const FLEET_VS_FLEET_TELEMETRY_LENGTH = 444;
-export const FLEET_VS_STARBASE_TELEMETRY_LENGTH = 348;
+export const FLEET_VS_FLEET_TELEMETRY_V2_LENGTH = 444;
+export const FLEET_VS_STARBASE_TELEMETRY_V2_LENGTH = 348;
+export const FLEET_VS_FLEET_TELEMETRY_LENGTH = 468;
+export const FLEET_VS_STARBASE_TELEMETRY_LENGTH = 362;
 
 const FLEET_VS_FLEET_KIND = 1;
 const FLEET_VS_STARBASE_KIND = 2;
@@ -28,9 +31,26 @@ export const COMBAT_DAMAGE_TYPES = [
 
 export type CombatDamageType = (typeof COMBAT_DAMAGE_TYPES)[number];
 export type CombatDamageByType = Readonly<Record<CombatDamageType, bigint>>;
-export type CombatTelemetryVersion = typeof COMBAT_TELEMETRY_V1_VERSION | typeof COMBAT_TELEMETRY_VERSION;
+export type CombatTelemetryVersion =
+    | typeof COMBAT_TELEMETRY_V1_VERSION
+    | typeof COMBAT_TELEMETRY_V2_VERSION
+    | typeof COMBAT_TELEMETRY_VERSION;
 export type CombatInstructionName = 'attackFleet' | 'attackStarbase';
 export type CombatKind = 'fleet-vs-fleet' | 'fleet-vs-starbase';
+
+export interface FleetApSnapshot {
+    /** Whole usable AP supplied to combat after cooldown and effective-max clamping. */
+    readonly before: number;
+    /** Whole AP persisted on the fleet after the exchange. */
+    readonly after: number;
+}
+
+export interface FleetIdentitySnapshot {
+    /** Effective combat faction id: 0 unaligned, 1..=3 majors, >=4 dynamic/minor factions. */
+    readonly factionId: number;
+    /** Representative active ShipId: largest size class, then lowest id. */
+    readonly shipConfigId: number;
+}
 
 export interface CombatShotSummary {
     /** Null only for legacy v1 payloads, which did not serialize attempted-shot semantics. */
@@ -82,6 +102,11 @@ export interface FleetVsFleetCombatTelemetry extends CombatTelemetryBase {
     readonly defender: CombatantSnapshot;
     readonly attackerShot: CombatShotSummary;
     readonly defenderShot: CombatShotSummary;
+    /** Null for v1/v2; v3 appends these fields after the complete v2 record. */
+    readonly attackerAp: FleetApSnapshot | null;
+    readonly defenderAp: FleetApSnapshot | null;
+    readonly attackerIdentity: FleetIdentitySnapshot | null;
+    readonly defenderIdentity: FleetIdentitySnapshot | null;
 }
 
 export interface FleetVsStarbaseCombatTelemetry extends CombatTelemetryBase {
@@ -94,6 +119,10 @@ export interface FleetVsStarbaseCombatTelemetry extends CombatTelemetryBase {
     readonly starbaseLevelAfter: number;
     readonly incrementSequenceId: boolean;
     readonly starbaseDestroyedOrDowngraded: boolean;
+    /** Null for v1/v2; starbases have no AP or ship-config identity. */
+    readonly fleetAp: FleetApSnapshot | null;
+    readonly fleetIdentity: FleetIdentitySnapshot | null;
+    readonly starbaseFactionId: number | null;
 }
 
 export type CombatTelemetry = FleetVsFleetCombatTelemetry | FleetVsStarbaseCombatTelemetry;
@@ -109,6 +138,8 @@ export interface CombatVisualization {
 const SUPPORTED_LENGTHS = new Set([
     FLEET_VS_FLEET_TELEMETRY_V1_LENGTH,
     FLEET_VS_STARBASE_TELEMETRY_V1_LENGTH,
+    FLEET_VS_FLEET_TELEMETRY_V2_LENGTH,
+    FLEET_VS_STARBASE_TELEMETRY_V2_LENGTH,
     FLEET_VS_FLEET_TELEMETRY_LENGTH,
     FLEET_VS_STARBASE_TELEMETRY_LENGTH,
 ]);
@@ -124,6 +155,13 @@ class BorshReader {
     readU8(): number {
         this.require(1);
         return this.view.getUint8(this.offset++);
+    }
+
+    readU16(): number {
+        this.require(2);
+        const value = this.view.getUint16(this.offset, true);
+        this.offset += 2;
+        return value;
     }
 
     readBool(): boolean {
@@ -194,7 +232,7 @@ function readCombatant(reader: BorshReader, version: CombatTelemetryVersion): Co
         finalSp: reader.readU32(),
         hpDamageTaken: reader.readU32(),
         destroyed: reader.readBool(),
-        spDamageTaken: version === COMBAT_TELEMETRY_VERSION ? reader.readU32() : null,
+        spDamageTaken: version === COMBAT_TELEMETRY_V1_VERSION ? null : reader.readU32(),
     };
 }
 
@@ -214,15 +252,15 @@ function readDamageByType(reader: BorshReader): CombatDamageByType {
 function readShot(reader: BorshReader, version: CombatTelemetryVersion): CombatShotSummary {
     const hitChancePpm = reader.readU32();
     const dodgeChancePpm = reader.readU32();
-    const attempted = version === COMBAT_TELEMETRY_VERSION ? reader.readBool() : null;
+    const attempted = version === COMBAT_TELEMETRY_V1_VERSION ? null : reader.readBool();
     const hit = reader.readBool();
     const dodged = reader.readBool();
     const crit = reader.readBool();
     const rawDamage = reader.readU64();
     const blockedDamage = reader.readU64();
     const effectiveDamage = reader.readU64();
-    const effectiveDamageByType = version === COMBAT_TELEMETRY_VERSION ? readDamageByType(reader) : null;
-    const otherEffectiveDamage = version === COMBAT_TELEMETRY_VERSION ? reader.readU64() : null;
+    const effectiveDamageByType = version === COMBAT_TELEMETRY_V1_VERSION ? null : readDamageByType(reader);
+    const otherEffectiveDamage = version === COMBAT_TELEMETRY_V1_VERSION ? null : reader.readU64();
 
     if (effectiveDamageByType && otherEffectiveDamage !== null) {
         const reconciledDamage = COMBAT_DAMAGE_TYPES.reduce(
@@ -249,21 +287,43 @@ function readShot(reader: BorshReader, version: CombatTelemetryVersion): CombatS
     };
 }
 
+function readFleetAp(reader: BorshReader): FleetApSnapshot {
+    return {
+        before: reader.readU32(),
+        after: reader.readU32(),
+    };
+}
+
+function readFleetIdentity(reader: BorshReader): FleetIdentitySnapshot {
+    return {
+        factionId: reader.readU16(),
+        shipConfigId: reader.readU16(),
+    };
+}
+
 function expectedLength(kind: number, version: CombatTelemetryVersion): number | null {
     if (kind === FLEET_VS_FLEET_KIND) {
-        return version === COMBAT_TELEMETRY_VERSION
-            ? FLEET_VS_FLEET_TELEMETRY_LENGTH
-            : FLEET_VS_FLEET_TELEMETRY_V1_LENGTH;
+        if (version === COMBAT_TELEMETRY_VERSION) {
+            return FLEET_VS_FLEET_TELEMETRY_LENGTH;
+        }
+        if (version === COMBAT_TELEMETRY_V2_VERSION) {
+            return FLEET_VS_FLEET_TELEMETRY_V2_LENGTH;
+        }
+        return FLEET_VS_FLEET_TELEMETRY_V1_LENGTH;
     }
     if (kind === FLEET_VS_STARBASE_KIND) {
-        return version === COMBAT_TELEMETRY_VERSION
-            ? FLEET_VS_STARBASE_TELEMETRY_LENGTH
-            : FLEET_VS_STARBASE_TELEMETRY_V1_LENGTH;
+        if (version === COMBAT_TELEMETRY_VERSION) {
+            return FLEET_VS_STARBASE_TELEMETRY_LENGTH;
+        }
+        if (version === COMBAT_TELEMETRY_V2_VERSION) {
+            return FLEET_VS_STARBASE_TELEMETRY_V2_LENGTH;
+        }
+        return FLEET_VS_STARBASE_TELEMETRY_V1_LENGTH;
     }
     return null;
 }
 
-/** Decode the exact v1/v2 Borsh payload emitted by SAGE combat's `sol_log_data` call. */
+/** Decode the exact v1/v2/v3 Borsh payload emitted by SAGE combat's `sol_log_data` call. */
 export function parseCombatTelemetry(bytes: Uint8Array): CombatTelemetry | null {
     if (!SUPPORTED_LENGTHS.has(bytes.length)) {
         return null;
@@ -273,7 +333,11 @@ export function parseCombatTelemetry(bytes: Uint8Array): CombatTelemetry | null 
         const reader = new BorshReader(bytes);
         const numericKind = reader.readU8();
         const numericVersion = reader.readU8();
-        if (numericVersion !== COMBAT_TELEMETRY_V1_VERSION && numericVersion !== COMBAT_TELEMETRY_VERSION) {
+        if (
+            numericVersion !== COMBAT_TELEMETRY_V1_VERSION &&
+            numericVersion !== COMBAT_TELEMETRY_V2_VERSION &&
+            numericVersion !== COMBAT_TELEMETRY_VERSION
+        ) {
             return null;
         }
 
@@ -295,6 +359,10 @@ export function parseCombatTelemetry(bytes: Uint8Array): CombatTelemetry | null 
                 defender: readCombatant(reader, version),
                 attackerShot: readShot(reader, version),
                 defenderShot: readShot(reader, version),
+                attackerAp: version === COMBAT_TELEMETRY_VERSION ? readFleetAp(reader) : null,
+                defenderAp: version === COMBAT_TELEMETRY_VERSION ? readFleetAp(reader) : null,
+                attackerIdentity: version === COMBAT_TELEMETRY_VERSION ? readFleetIdentity(reader) : null,
+                defenderIdentity: version === COMBAT_TELEMETRY_VERSION ? readFleetIdentity(reader) : null,
             };
             reader.assertDone();
             return event;
@@ -314,6 +382,9 @@ export function parseCombatTelemetry(bytes: Uint8Array): CombatTelemetry | null 
                 starbaseLevelAfter: reader.readU8(),
                 incrementSequenceId: reader.readBool(),
                 starbaseDestroyedOrDowngraded: reader.readBool(),
+                fleetAp: version === COMBAT_TELEMETRY_VERSION ? readFleetAp(reader) : null,
+                fleetIdentity: version === COMBAT_TELEMETRY_VERSION ? readFleetIdentity(reader) : null,
+                starbaseFactionId: version === COMBAT_TELEMETRY_VERSION ? reader.readU16() : null,
             };
             reader.assertDone();
             return event;
