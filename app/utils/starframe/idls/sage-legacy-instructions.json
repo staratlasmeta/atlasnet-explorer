@@ -1,0 +1,3186 @@
+{
+    "source": {
+        "repository": "https://github.com/staratlasmeta/atlasnet-explorer",
+        "commit": "54ca8666aa7fbb9a45153dbd7ccac32a74246384",
+        "path": "app/utils/starframe/idls/sage.json"
+    },
+    "instructions": [
+        {
+            "kind": "instructionNode",
+            "name": "adminCreateFleet",
+            "accounts": [
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationSigner",
+                    "isWritable": false,
+                    "isSigner": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationProfile",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationCertificate",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "isOptional": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationProgram",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "publicKeyValueNode",
+                        "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+                    }
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileFaction",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "game",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "fleet",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "systemProgram",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "publicKeyValueNode",
+                        "publicKey": "11111111111111111111111111111111"
+                    }
+                }
+            ],
+            "arguments": [
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "discriminator",
+                    "defaultValueStrategy": "omitted",
+                    "type": {
+                        "kind": "fixedSizeTypeNode",
+                        "size": 8,
+                        "type": {
+                            "kind": "bytesTypeNode"
+                        }
+                    },
+                    "defaultValue": {
+                        "kind": "bytesValueNode",
+                        "data": "d0de873b81aef4f7",
+                        "encoding": "base16"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "fleetLabel",
+                    "type": {
+                        "kind": "definedTypeLinkNode",
+                        "name": "name"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "shipId",
+                    "type": {
+                        "kind": "definedTypeLinkNode",
+                        "name": "shipId"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "shipAmount",
+                    "type": {
+                        "kind": "numberTypeNode",
+                        "format": "u8",
+                        "endian": "le"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "sector",
+                    "type": {
+                        "kind": "arrayTypeNode",
+                        "item": {
+                            "kind": "numberTypeNode",
+                            "format": "i64",
+                            "endian": "le"
+                        },
+                        "count": {
+                            "kind": "fixedCountNode",
+                            "value": 2
+                        }
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "keyIndex",
+                    "type": {
+                        "kind": "numberTypeNode",
+                        "format": "u16",
+                        "endian": "le"
+                    }
+                }
+            ],
+            "discriminators": [
+                {
+                    "kind": "fieldDiscriminatorNode",
+                    "name": "discriminator",
+                    "offset": 0
+                }
+            ]
+        },
+        {
+            "kind": "instructionNode",
+            "name": "adminDepositCargoToFleet",
+            "accounts": [
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationSigner",
+                    "isWritable": false,
+                    "isSigner": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationProfile",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationCertificate",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "isOptional": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationProgram",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "publicKeyValueNode",
+                        "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+                    }
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "game",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "fleet",
+                    "isWritable": true,
+                    "isSigner": false
+                }
+            ],
+            "arguments": [
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "discriminator",
+                    "defaultValueStrategy": "omitted",
+                    "type": {
+                        "kind": "fixedSizeTypeNode",
+                        "size": 8,
+                        "type": {
+                            "kind": "bytesTypeNode"
+                        }
+                    },
+                    "defaultValue": {
+                        "kind": "bytesValueNode",
+                        "data": "187f4dc48d32d759",
+                        "encoding": "base16"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "fuelAmount",
+                    "type": {
+                        "kind": "numberTypeNode",
+                        "format": "u64",
+                        "endian": "le"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "ammoAmount",
+                    "type": {
+                        "kind": "numberTypeNode",
+                        "format": "u64",
+                        "endian": "le"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "keyIndex",
+                    "type": {
+                        "kind": "numberTypeNode",
+                        "format": "u16",
+                        "endian": "le"
+                    }
+                }
+            ],
+            "discriminators": [
+                {
+                    "kind": "fieldDiscriminatorNode",
+                    "name": "discriminator",
+                    "offset": 0
+                }
+            ]
+        },
+        {
+            "kind": "instructionNode",
+            "name": "cancelLocalMarketOrders",
+            "accounts": [
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationSigner",
+                    "isWritable": false,
+                    "isSigner": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationProfile",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationCertificate",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "isOptional": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationProgram",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "publicKeyValueNode",
+                        "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+                    }
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "game",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "character",
+                    "isWritable": true,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "pdaValueNode",
+                        "pda": {
+                            "kind": "pdaNode",
+                            "name": "character",
+                            "seeds": [
+                                {
+                                    "kind": "constantPdaSeedNode",
+                                    "type": {
+                                        "kind": "bytesTypeNode"
+                                    },
+                                    "value": {
+                                        "kind": "bytesValueNode",
+                                        "data": "436861726163746572",
+                                        "encoding": "base16"
+                                    }
+                                },
+                                {
+                                    "kind": "variablePdaSeedNode",
+                                    "name": "profileValidationProfile1",
+                                    "type": {
+                                        "kind": "publicKeyTypeNode"
+                                    }
+                                },
+                                {
+                                    "kind": "variablePdaSeedNode",
+                                    "name": "game2",
+                                    "type": {
+                                        "kind": "publicKeyTypeNode"
+                                    }
+                                }
+                            ]
+                        },
+                        "seeds": [
+                            {
+                                "kind": "pdaSeedValueNode",
+                                "name": "profileValidationProfile1",
+                                "value": {
+                                    "kind": "accountValueNode",
+                                    "name": "profileValidationProfile"
+                                }
+                            },
+                            {
+                                "kind": "pdaSeedValueNode",
+                                "name": "game2",
+                                "value": {
+                                    "kind": "accountValueNode",
+                                    "name": "game"
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "system",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "starbasePlayer",
+                    "isWritable": true,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "pdaValueNode",
+                        "pda": {
+                            "kind": "pdaNode",
+                            "name": "starbasePlayer",
+                            "seeds": [
+                                {
+                                    "kind": "constantPdaSeedNode",
+                                    "type": {
+                                        "kind": "bytesTypeNode"
+                                    },
+                                    "value": {
+                                        "kind": "bytesValueNode",
+                                        "data": "5374617262617365506c61796572",
+                                        "encoding": "base16"
+                                    }
+                                },
+                                {
+                                    "kind": "variablePdaSeedNode",
+                                    "name": "system1",
+                                    "type": {
+                                        "kind": "publicKeyTypeNode"
+                                    }
+                                },
+                                {
+                                    "kind": "variablePdaSeedNode",
+                                    "name": "character2",
+                                    "type": {
+                                        "kind": "publicKeyTypeNode"
+                                    }
+                                }
+                            ]
+                        },
+                        "seeds": [
+                            {
+                                "kind": "pdaSeedValueNode",
+                                "name": "system1",
+                                "value": {
+                                    "kind": "accountValueNode",
+                                    "name": "system"
+                                }
+                            },
+                            {
+                                "kind": "pdaSeedValueNode",
+                                "name": "character2",
+                                "value": {
+                                    "kind": "accountValueNode",
+                                    "name": "character"
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "localMarket",
+                    "isWritable": true,
+                    "isSigner": false
+                }
+            ],
+            "arguments": [
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "discriminator",
+                    "defaultValueStrategy": "omitted",
+                    "type": {
+                        "kind": "fixedSizeTypeNode",
+                        "size": 8,
+                        "type": {
+                            "kind": "bytesTypeNode"
+                        }
+                    },
+                    "defaultValue": {
+                        "kind": "bytesValueNode",
+                        "data": "47e80e07a6f1d8dd",
+                        "encoding": "base16"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "keyIndex",
+                    "type": {
+                        "kind": "numberTypeNode",
+                        "format": "u16",
+                        "endian": "le"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "args",
+                    "type": {
+                        "kind": "arrayTypeNode",
+                        "item": {
+                            "kind": "definedTypeLinkNode",
+                            "name": "cancelOrderArgs"
+                        },
+                        "count": {
+                            "kind": "prefixedCountNode",
+                            "prefix": {
+                                "kind": "numberTypeNode",
+                                "format": "u32",
+                                "endian": "le"
+                            }
+                        }
+                    }
+                }
+            ],
+            "discriminators": [
+                {
+                    "kind": "fieldDiscriminatorNode",
+                    "name": "discriminator",
+                    "offset": 0
+                }
+            ]
+        },
+        {
+            "kind": "instructionNode",
+            "name": "cleanupInvalidMarket",
+            "accounts": [
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profile",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "character",
+                    "isWritable": true,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "pdaValueNode",
+                        "pda": {
+                            "kind": "pdaNode",
+                            "name": "character",
+                            "seeds": [
+                                {
+                                    "kind": "constantPdaSeedNode",
+                                    "type": {
+                                        "kind": "bytesTypeNode"
+                                    },
+                                    "value": {
+                                        "kind": "bytesValueNode",
+                                        "data": "436861726163746572",
+                                        "encoding": "base16"
+                                    }
+                                },
+                                {
+                                    "kind": "variablePdaSeedNode",
+                                    "name": "profile1",
+                                    "type": {
+                                        "kind": "publicKeyTypeNode"
+                                    }
+                                },
+                                {
+                                    "kind": "variablePdaSeedNode",
+                                    "name": "game2",
+                                    "type": {
+                                        "kind": "publicKeyTypeNode"
+                                    }
+                                }
+                            ]
+                        },
+                        "seeds": [
+                            {
+                                "kind": "pdaSeedValueNode",
+                                "name": "profile1",
+                                "value": {
+                                    "kind": "accountValueNode",
+                                    "name": "profile"
+                                }
+                            },
+                            {
+                                "kind": "pdaSeedValueNode",
+                                "name": "game2",
+                                "value": {
+                                    "kind": "accountValueNode",
+                                    "name": "game"
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "game",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "system",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "localMarket",
+                    "isWritable": true,
+                    "isSigner": false
+                }
+            ],
+            "arguments": [
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "discriminator",
+                    "defaultValueStrategy": "omitted",
+                    "type": {
+                        "kind": "fixedSizeTypeNode",
+                        "size": 8,
+                        "type": {
+                            "kind": "bytesTypeNode"
+                        }
+                    },
+                    "defaultValue": {
+                        "kind": "bytesValueNode",
+                        "data": "ec83bbd473f57d6c",
+                        "encoding": "base16"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "keyIndex",
+                    "type": {
+                        "kind": "numberTypeNode",
+                        "format": "u16",
+                        "endian": "le"
+                    }
+                }
+            ],
+            "discriminators": [
+                {
+                    "kind": "fieldDiscriminatorNode",
+                    "name": "discriminator",
+                    "offset": 0
+                }
+            ]
+        },
+        {
+            "kind": "instructionNode",
+            "name": "completeCraftingProcess",
+            "accounts": [
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationSigner",
+                    "isWritable": false,
+                    "isSigner": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationProfile",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationCertificate",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "isOptional": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationProgram",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "publicKeyValueNode",
+                        "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+                    }
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "character",
+                    "isWritable": true,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "pdaValueNode",
+                        "pda": {
+                            "kind": "pdaNode",
+                            "name": "character",
+                            "seeds": [
+                                {
+                                    "kind": "constantPdaSeedNode",
+                                    "type": {
+                                        "kind": "bytesTypeNode"
+                                    },
+                                    "value": {
+                                        "kind": "bytesValueNode",
+                                        "data": "436861726163746572",
+                                        "encoding": "base16"
+                                    }
+                                },
+                                {
+                                    "kind": "variablePdaSeedNode",
+                                    "name": "profileValidationProfile1",
+                                    "type": {
+                                        "kind": "publicKeyTypeNode"
+                                    }
+                                },
+                                {
+                                    "kind": "variablePdaSeedNode",
+                                    "name": "game2",
+                                    "type": {
+                                        "kind": "publicKeyTypeNode"
+                                    }
+                                }
+                            ]
+                        },
+                        "seeds": [
+                            {
+                                "kind": "pdaSeedValueNode",
+                                "name": "profileValidationProfile1",
+                                "value": {
+                                    "kind": "accountValueNode",
+                                    "name": "profileValidationProfile"
+                                }
+                            },
+                            {
+                                "kind": "pdaSeedValueNode",
+                                "name": "game2",
+                                "value": {
+                                    "kind": "accountValueNode",
+                                    "name": "game"
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "game",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "system",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "starbasePlayer",
+                    "isWritable": true,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "pdaValueNode",
+                        "pda": {
+                            "kind": "pdaNode",
+                            "name": "starbasePlayer",
+                            "seeds": [
+                                {
+                                    "kind": "constantPdaSeedNode",
+                                    "type": {
+                                        "kind": "bytesTypeNode"
+                                    },
+                                    "value": {
+                                        "kind": "bytesValueNode",
+                                        "data": "5374617262617365506c61796572",
+                                        "encoding": "base16"
+                                    }
+                                },
+                                {
+                                    "kind": "variablePdaSeedNode",
+                                    "name": "system1",
+                                    "type": {
+                                        "kind": "publicKeyTypeNode"
+                                    }
+                                },
+                                {
+                                    "kind": "variablePdaSeedNode",
+                                    "name": "character2",
+                                    "type": {
+                                        "kind": "publicKeyTypeNode"
+                                    }
+                                }
+                            ]
+                        },
+                        "seeds": [
+                            {
+                                "kind": "pdaSeedValueNode",
+                                "name": "system1",
+                                "value": {
+                                    "kind": "accountValueNode",
+                                    "name": "system"
+                                }
+                            },
+                            {
+                                "kind": "pdaSeedValueNode",
+                                "name": "character2",
+                                "value": {
+                                    "kind": "accountValueNode",
+                                    "name": "character"
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "recipe",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "craftingHabInstance",
+                    "isWritable": true,
+                    "isSigner": false,
+                    "isOptional": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "craftingProcess",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "currencyCache",
+                    "isWritable": true,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "pdaValueNode",
+                        "pda": {
+                            "kind": "pdaNode",
+                            "name": "currencyCache",
+                            "seeds": [
+                                {
+                                    "kind": "constantPdaSeedNode",
+                                    "type": {
+                                        "kind": "bytesTypeNode"
+                                    },
+                                    "value": {
+                                        "kind": "bytesValueNode",
+                                        "data": "43757272656e6379436f6e666967",
+                                        "encoding": "base16"
+                                    }
+                                },
+                                {
+                                    "kind": "variablePdaSeedNode",
+                                    "name": "game1",
+                                    "type": {
+                                        "kind": "publicKeyTypeNode"
+                                    }
+                                }
+                            ]
+                        },
+                        "seeds": [
+                            {
+                                "kind": "pdaSeedValueNode",
+                                "name": "game1",
+                                "value": {
+                                    "kind": "accountValueNode",
+                                    "name": "game"
+                                }
+                            }
+                        ]
+                    }
+                }
+            ],
+            "arguments": [
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "discriminator",
+                    "defaultValueStrategy": "omitted",
+                    "type": {
+                        "kind": "fixedSizeTypeNode",
+                        "size": 8,
+                        "type": {
+                            "kind": "bytesTypeNode"
+                        }
+                    },
+                    "defaultValue": {
+                        "kind": "bytesValueNode",
+                        "data": "1f9c4a3dbf5357cb",
+                        "encoding": "base16"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "keyIndex",
+                    "type": {
+                        "kind": "numberTypeNode",
+                        "format": "u16",
+                        "endian": "le"
+                    }
+                }
+            ],
+            "discriminators": [
+                {
+                    "kind": "fieldDiscriminatorNode",
+                    "name": "discriminator",
+                    "offset": 0
+                }
+            ]
+        },
+        {
+            "kind": "instructionNode",
+            "name": "createRegion",
+            "accounts": [
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileSigner",
+                    "isWritable": false,
+                    "isSigner": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileProfile",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileCertificate",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "isOptional": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileProgram",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "publicKeyValueNode",
+                        "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+                    }
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "game",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "regionTracker",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "systemProgram",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "publicKeyValueNode",
+                        "publicKey": "11111111111111111111111111111111"
+                    }
+                }
+            ],
+            "arguments": [
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "discriminator",
+                    "defaultValueStrategy": "omitted",
+                    "type": {
+                        "kind": "fixedSizeTypeNode",
+                        "size": 8,
+                        "type": {
+                            "kind": "bytesTypeNode"
+                        }
+                    },
+                    "defaultValue": {
+                        "kind": "bytesValueNode",
+                        "data": "6cfcb7292e4d5442",
+                        "encoding": "base16"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "id",
+                    "type": {
+                        "kind": "definedTypeLinkNode",
+                        "name": "regionId"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "name",
+                    "type": {
+                        "kind": "definedTypeLinkNode",
+                        "name": "name"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "riskZone",
+                    "type": {
+                        "kind": "definedTypeLinkNode",
+                        "name": "riskZoneBorsh"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "connections",
+                    "type": {
+                        "kind": "optionTypeNode",
+                        "item": {
+                            "kind": "arrayTypeNode",
+                            "item": {
+                                "kind": "definedTypeLinkNode",
+                                "name": "regionId"
+                            },
+                            "count": {
+                                "kind": "prefixedCountNode",
+                                "prefix": {
+                                    "kind": "numberTypeNode",
+                                    "format": "u32",
+                                    "endian": "le"
+                                }
+                            }
+                        },
+                        "prefix": {
+                            "kind": "numberTypeNode",
+                            "format": "u8",
+                            "endian": "le"
+                        }
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "border",
+                    "type": {
+                        "kind": "arrayTypeNode",
+                        "item": {
+                            "kind": "arrayTypeNode",
+                            "item": {
+                                "kind": "numberTypeNode",
+                                "format": "i64",
+                                "endian": "le"
+                            },
+                            "count": {
+                                "kind": "fixedCountNode",
+                                "value": 2
+                            }
+                        },
+                        "count": {
+                            "kind": "prefixedCountNode",
+                            "prefix": {
+                                "kind": "numberTypeNode",
+                                "format": "u32",
+                                "endian": "le"
+                            }
+                        }
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "scanningResearchRequirements",
+                    "type": {
+                        "kind": "optionTypeNode",
+                        "item": {
+                            "kind": "arrayTypeNode",
+                            "item": {
+                                "kind": "definedTypeLinkNode",
+                                "name": "researchTag"
+                            },
+                            "count": {
+                                "kind": "prefixedCountNode",
+                                "prefix": {
+                                    "kind": "numberTypeNode",
+                                    "format": "u32",
+                                    "endian": "le"
+                                }
+                            }
+                        },
+                        "prefix": {
+                            "kind": "numberTypeNode",
+                            "format": "u8",
+                            "endian": "le"
+                        }
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "miningResearchRequirements",
+                    "type": {
+                        "kind": "optionTypeNode",
+                        "item": {
+                            "kind": "arrayTypeNode",
+                            "item": {
+                                "kind": "definedTypeLinkNode",
+                                "name": "researchTag"
+                            },
+                            "count": {
+                                "kind": "prefixedCountNode",
+                                "prefix": {
+                                    "kind": "numberTypeNode",
+                                    "format": "u32",
+                                    "endian": "le"
+                                }
+                            }
+                        },
+                        "prefix": {
+                            "kind": "numberTypeNode",
+                            "format": "u8",
+                            "endian": "le"
+                        }
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "xpModifier",
+                    "type": {
+                        "kind": "numberTypeNode",
+                        "format": "u32",
+                        "endian": "le"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "keyIndex",
+                    "type": {
+                        "kind": "numberTypeNode",
+                        "format": "u16",
+                        "endian": "le"
+                    }
+                }
+            ],
+            "discriminators": [
+                {
+                    "kind": "fieldDiscriminatorNode",
+                    "name": "discriminator",
+                    "offset": 0
+                }
+            ]
+        },
+        {
+            "kind": "instructionNode",
+            "name": "createStarSystem",
+            "accounts": [
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileSigner",
+                    "isWritable": false,
+                    "isSigner": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileProfile",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileCertificate",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "isOptional": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileProgram",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "publicKeyValueNode",
+                        "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+                    }
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "game",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "regionTracker",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "system",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "systemProgram",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "publicKeyValueNode",
+                        "publicKey": "11111111111111111111111111111111"
+                    }
+                }
+            ],
+            "arguments": [
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "discriminator",
+                    "defaultValueStrategy": "omitted",
+                    "type": {
+                        "kind": "fixedSizeTypeNode",
+                        "size": 8,
+                        "type": {
+                            "kind": "bytesTypeNode"
+                        }
+                    },
+                    "defaultValue": {
+                        "kind": "bytesValueNode",
+                        "data": "5a0444fea1e291c0",
+                        "encoding": "base16"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "systemId",
+                    "type": {
+                        "kind": "definedTypeLinkNode",
+                        "name": "systemId"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "regionId",
+                    "type": {
+                        "kind": "optionTypeNode",
+                        "item": {
+                            "kind": "tupleTypeNode",
+                            "items": [
+                                {
+                                    "kind": "definedTypeLinkNode",
+                                    "name": "regionId"
+                                },
+                                {
+                                    "kind": "booleanTypeNode",
+                                    "size": {
+                                        "kind": "numberTypeNode",
+                                        "format": "u8",
+                                        "endian": "le"
+                                    }
+                                }
+                            ]
+                        },
+                        "prefix": {
+                            "kind": "numberTypeNode",
+                            "format": "u8",
+                            "endian": "le"
+                        }
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "coordinates",
+                    "type": {
+                        "kind": "arrayTypeNode",
+                        "item": {
+                            "kind": "numberTypeNode",
+                            "format": "i64",
+                            "endian": "le"
+                        },
+                        "count": {
+                            "kind": "fixedCountNode",
+                            "value": 2
+                        }
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "name",
+                    "type": {
+                        "kind": "definedTypeLinkNode",
+                        "name": "name"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "keyIndex",
+                    "type": {
+                        "kind": "numberTypeNode",
+                        "format": "u16",
+                        "endian": "le"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "connections",
+                    "type": {
+                        "kind": "arrayTypeNode",
+                        "item": {
+                            "kind": "tupleTypeNode",
+                            "items": [
+                                {
+                                    "kind": "definedTypeLinkNode",
+                                    "name": "systemId"
+                                },
+                                {
+                                    "kind": "definedTypeLinkNode",
+                                    "name": "connectionCost"
+                                }
+                            ]
+                        },
+                        "count": {
+                            "kind": "prefixedCountNode",
+                            "prefix": {
+                                "kind": "numberTypeNode",
+                                "format": "u32",
+                                "endian": "le"
+                            }
+                        }
+                    }
+                }
+            ],
+            "remainingAccounts": [
+                {
+                    "kind": "instructionRemainingAccountsNode",
+                    "value": {
+                        "kind": "argumentValueNode",
+                        "name": "connectionSystems"
+                    }
+                }
+            ],
+            "discriminators": [
+                {
+                    "kind": "fieldDiscriminatorNode",
+                    "name": "discriminator",
+                    "offset": 0
+                }
+            ]
+        },
+        {
+            "kind": "instructionNode",
+            "name": "deleteStarSystem",
+            "accounts": [
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileSigner",
+                    "isWritable": false,
+                    "isSigner": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileProfile",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileCertificate",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "isOptional": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileProgram",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "publicKeyValueNode",
+                        "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+                    }
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "game",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "regionTracker",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "system",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "systemProgram",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "publicKeyValueNode",
+                        "publicKey": "11111111111111111111111111111111"
+                    }
+                }
+            ],
+            "arguments": [
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "discriminator",
+                    "defaultValueStrategy": "omitted",
+                    "type": {
+                        "kind": "fixedSizeTypeNode",
+                        "size": 8,
+                        "type": {
+                            "kind": "bytesTypeNode"
+                        }
+                    },
+                    "defaultValue": {
+                        "kind": "bytesValueNode",
+                        "data": "5d3de52249c2c766",
+                        "encoding": "base16"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "systemId",
+                    "type": {
+                        "kind": "definedTypeLinkNode",
+                        "name": "systemId"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "keyIndex",
+                    "type": {
+                        "kind": "numberTypeNode",
+                        "format": "u16",
+                        "endian": "le"
+                    }
+                }
+            ],
+            "discriminators": [
+                {
+                    "kind": "fieldDiscriminatorNode",
+                    "name": "discriminator",
+                    "offset": 0
+                }
+            ]
+        },
+        {
+            "kind": "instructionNode",
+            "name": "destroyCraftingProcess",
+            "accounts": [
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profile",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "character",
+                    "isWritable": true,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "pdaValueNode",
+                        "pda": {
+                            "kind": "pdaNode",
+                            "name": "character",
+                            "seeds": [
+                                {
+                                    "kind": "constantPdaSeedNode",
+                                    "type": {
+                                        "kind": "bytesTypeNode"
+                                    },
+                                    "value": {
+                                        "kind": "bytesValueNode",
+                                        "data": "436861726163746572",
+                                        "encoding": "base16"
+                                    }
+                                },
+                                {
+                                    "kind": "variablePdaSeedNode",
+                                    "name": "profile1",
+                                    "type": {
+                                        "kind": "publicKeyTypeNode"
+                                    }
+                                },
+                                {
+                                    "kind": "variablePdaSeedNode",
+                                    "name": "game2",
+                                    "type": {
+                                        "kind": "publicKeyTypeNode"
+                                    }
+                                }
+                            ]
+                        },
+                        "seeds": [
+                            {
+                                "kind": "pdaSeedValueNode",
+                                "name": "profile1",
+                                "value": {
+                                    "kind": "accountValueNode",
+                                    "name": "profile"
+                                }
+                            },
+                            {
+                                "kind": "pdaSeedValueNode",
+                                "name": "game2",
+                                "value": {
+                                    "kind": "accountValueNode",
+                                    "name": "game"
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "game",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "system",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "craftingProcess",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "recipe",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "craftingHabInstance",
+                    "isWritable": true,
+                    "isSigner": false,
+                    "isOptional": true
+                }
+            ],
+            "arguments": [
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "discriminator",
+                    "defaultValueStrategy": "omitted",
+                    "type": {
+                        "kind": "fixedSizeTypeNode",
+                        "size": 8,
+                        "type": {
+                            "kind": "bytesTypeNode"
+                        }
+                    },
+                    "defaultValue": {
+                        "kind": "bytesValueNode",
+                        "data": "9156ef102743e2fa",
+                        "encoding": "base16"
+                    }
+                }
+            ],
+            "discriminators": [
+                {
+                    "kind": "fieldDiscriminatorNode",
+                    "name": "discriminator",
+                    "offset": 0
+                }
+            ]
+        },
+        {
+            "kind": "instructionNode",
+            "name": "disbandDestroyedFleet",
+            "accounts": [
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "funder",
+                    "isWritable": true,
+                    "isSigner": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "fleet",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profile",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "character",
+                    "isWritable": true,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "pdaValueNode",
+                        "pda": {
+                            "kind": "pdaNode",
+                            "name": "character",
+                            "seeds": [
+                                {
+                                    "kind": "constantPdaSeedNode",
+                                    "type": {
+                                        "kind": "bytesTypeNode"
+                                    },
+                                    "value": {
+                                        "kind": "bytesValueNode",
+                                        "data": "436861726163746572",
+                                        "encoding": "base16"
+                                    }
+                                },
+                                {
+                                    "kind": "variablePdaSeedNode",
+                                    "name": "profile1",
+                                    "type": {
+                                        "kind": "publicKeyTypeNode"
+                                    }
+                                },
+                                {
+                                    "kind": "variablePdaSeedNode",
+                                    "name": "game2",
+                                    "type": {
+                                        "kind": "publicKeyTypeNode"
+                                    }
+                                }
+                            ]
+                        },
+                        "seeds": [
+                            {
+                                "kind": "pdaSeedValueNode",
+                                "name": "profile1",
+                                "value": {
+                                    "kind": "accountValueNode",
+                                    "name": "profile"
+                                }
+                            },
+                            {
+                                "kind": "pdaSeedValueNode",
+                                "name": "game2",
+                                "value": {
+                                    "kind": "accountValueNode",
+                                    "name": "game"
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "cssStarSystem",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "cssStarbasePlayer",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "game",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "fleetFactionOwnership",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "isOptional": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "ownerFactionAccount",
+                    "isWritable": true,
+                    "isSigner": false,
+                    "isOptional": true
+                }
+            ],
+            "arguments": [
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "discriminator",
+                    "defaultValueStrategy": "omitted",
+                    "type": {
+                        "kind": "fixedSizeTypeNode",
+                        "size": 8,
+                        "type": {
+                            "kind": "bytesTypeNode"
+                        }
+                    },
+                    "defaultValue": {
+                        "kind": "bytesValueNode",
+                        "data": "1e66821b3d884c91",
+                        "encoding": "base16"
+                    }
+                }
+            ],
+            "discriminators": [
+                {
+                    "kind": "fieldDiscriminatorNode",
+                    "name": "discriminator",
+                    "offset": 0
+                }
+            ]
+        },
+        {
+            "kind": "instructionNode",
+            "name": "dockedToRespawn",
+            "accounts": [
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationSigner",
+                    "isWritable": false,
+                    "isSigner": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationProfile",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationCertificate",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "isOptional": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationProgram",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "publicKeyValueNode",
+                        "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+                    }
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "character",
+                    "isWritable": true,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "pdaValueNode",
+                        "pda": {
+                            "kind": "pdaNode",
+                            "name": "character",
+                            "seeds": [
+                                {
+                                    "kind": "constantPdaSeedNode",
+                                    "type": {
+                                        "kind": "bytesTypeNode"
+                                    },
+                                    "value": {
+                                        "kind": "bytesValueNode",
+                                        "data": "436861726163746572",
+                                        "encoding": "base16"
+                                    }
+                                },
+                                {
+                                    "kind": "variablePdaSeedNode",
+                                    "name": "profileValidationProfile1",
+                                    "type": {
+                                        "kind": "publicKeyTypeNode"
+                                    }
+                                },
+                                {
+                                    "kind": "variablePdaSeedNode",
+                                    "name": "game2",
+                                    "type": {
+                                        "kind": "publicKeyTypeNode"
+                                    }
+                                }
+                            ]
+                        },
+                        "seeds": [
+                            {
+                                "kind": "pdaSeedValueNode",
+                                "name": "profileValidationProfile1",
+                                "value": {
+                                    "kind": "accountValueNode",
+                                    "name": "profileValidationProfile"
+                                }
+                            },
+                            {
+                                "kind": "pdaSeedValueNode",
+                                "name": "game2",
+                                "value": {
+                                    "kind": "accountValueNode",
+                                    "name": "game"
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "fleet",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "systemAndStarbasePlayerSystem",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "systemAndStarbasePlayerStarbasePlayer",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "cssStarSystem",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "regionTracker",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "game",
+                    "isWritable": false,
+                    "isSigner": false
+                }
+            ],
+            "arguments": [
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "discriminator",
+                    "defaultValueStrategy": "omitted",
+                    "type": {
+                        "kind": "fixedSizeTypeNode",
+                        "size": 8,
+                        "type": {
+                            "kind": "bytesTypeNode"
+                        }
+                    },
+                    "defaultValue": {
+                        "kind": "bytesValueNode",
+                        "data": "7b2acc69c0a8f87b",
+                        "encoding": "base16"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "keyIndex",
+                    "type": {
+                        "kind": "numberTypeNode",
+                        "format": "u16",
+                        "endian": "le"
+                    }
+                }
+            ],
+            "discriminators": [
+                {
+                    "kind": "fieldDiscriminatorNode",
+                    "name": "discriminator",
+                    "offset": 0
+                }
+            ]
+        },
+        {
+            "kind": "instructionNode",
+            "name": "idleToRespawn",
+            "accounts": [
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationSigner",
+                    "isWritable": false,
+                    "isSigner": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationProfile",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationCertificate",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "isOptional": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationProgram",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "publicKeyValueNode",
+                        "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+                    }
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "character",
+                    "isWritable": true,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "pdaValueNode",
+                        "pda": {
+                            "kind": "pdaNode",
+                            "name": "character",
+                            "seeds": [
+                                {
+                                    "kind": "constantPdaSeedNode",
+                                    "type": {
+                                        "kind": "bytesTypeNode"
+                                    },
+                                    "value": {
+                                        "kind": "bytesValueNode",
+                                        "data": "436861726163746572",
+                                        "encoding": "base16"
+                                    }
+                                },
+                                {
+                                    "kind": "variablePdaSeedNode",
+                                    "name": "profileValidationProfile1",
+                                    "type": {
+                                        "kind": "publicKeyTypeNode"
+                                    }
+                                },
+                                {
+                                    "kind": "variablePdaSeedNode",
+                                    "name": "game2",
+                                    "type": {
+                                        "kind": "publicKeyTypeNode"
+                                    }
+                                }
+                            ]
+                        },
+                        "seeds": [
+                            {
+                                "kind": "pdaSeedValueNode",
+                                "name": "profileValidationProfile1",
+                                "value": {
+                                    "kind": "accountValueNode",
+                                    "name": "profileValidationProfile"
+                                }
+                            },
+                            {
+                                "kind": "pdaSeedValueNode",
+                                "name": "game2",
+                                "value": {
+                                    "kind": "accountValueNode",
+                                    "name": "game"
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "fleet",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "cssStarSystem",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "regionTracker",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "game",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "crewBinding",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "isOptional": true
+                }
+            ],
+            "arguments": [
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "discriminator",
+                    "defaultValueStrategy": "omitted",
+                    "type": {
+                        "kind": "fixedSizeTypeNode",
+                        "size": 8,
+                        "type": {
+                            "kind": "bytesTypeNode"
+                        }
+                    },
+                    "defaultValue": {
+                        "kind": "bytesValueNode",
+                        "data": "ebcfc8aea1745ba8",
+                        "encoding": "base16"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "keyIndex",
+                    "type": {
+                        "kind": "numberTypeNode",
+                        "format": "u16",
+                        "endian": "le"
+                    }
+                }
+            ],
+            "discriminators": [
+                {
+                    "kind": "fieldDiscriminatorNode",
+                    "name": "discriminator",
+                    "offset": 0
+                }
+            ]
+        },
+        {
+            "kind": "instructionNode",
+            "name": "mineAsteroidToRespawn",
+            "accounts": [
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationSigner",
+                    "isWritable": false,
+                    "isSigner": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationProfile",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationCertificate",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "isOptional": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationProgram",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "publicKeyValueNode",
+                        "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+                    }
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "character",
+                    "isWritable": true,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "pdaValueNode",
+                        "pda": {
+                            "kind": "pdaNode",
+                            "name": "character",
+                            "seeds": [
+                                {
+                                    "kind": "constantPdaSeedNode",
+                                    "type": {
+                                        "kind": "bytesTypeNode"
+                                    },
+                                    "value": {
+                                        "kind": "bytesValueNode",
+                                        "data": "436861726163746572",
+                                        "encoding": "base16"
+                                    }
+                                },
+                                {
+                                    "kind": "variablePdaSeedNode",
+                                    "name": "profileValidationProfile1",
+                                    "type": {
+                                        "kind": "publicKeyTypeNode"
+                                    }
+                                },
+                                {
+                                    "kind": "variablePdaSeedNode",
+                                    "name": "game2",
+                                    "type": {
+                                        "kind": "publicKeyTypeNode"
+                                    }
+                                }
+                            ]
+                        },
+                        "seeds": [
+                            {
+                                "kind": "pdaSeedValueNode",
+                                "name": "profileValidationProfile1",
+                                "value": {
+                                    "kind": "accountValueNode",
+                                    "name": "profileValidationProfile"
+                                }
+                            },
+                            {
+                                "kind": "pdaSeedValueNode",
+                                "name": "game2",
+                                "value": {
+                                    "kind": "accountValueNode",
+                                    "name": "game"
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "fleet",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "starSystem",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "cssStarSystem",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "asteroid",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "regionTracker",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "game",
+                    "isWritable": false,
+                    "isSigner": false
+                }
+            ],
+            "arguments": [
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "discriminator",
+                    "defaultValueStrategy": "omitted",
+                    "type": {
+                        "kind": "fixedSizeTypeNode",
+                        "size": 8,
+                        "type": {
+                            "kind": "bytesTypeNode"
+                        }
+                    },
+                    "defaultValue": {
+                        "kind": "bytesValueNode",
+                        "data": "d03f876cdafc2400",
+                        "encoding": "base16"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "keyIndex",
+                    "type": {
+                        "kind": "numberTypeNode",
+                        "format": "u16",
+                        "endian": "le"
+                    }
+                }
+            ],
+            "discriminators": [
+                {
+                    "kind": "fieldDiscriminatorNode",
+                    "name": "discriminator",
+                    "offset": 0
+                }
+            ]
+        },
+        {
+            "kind": "instructionNode",
+            "name": "placeLocalMarketOrder",
+            "accounts": [
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationSigner",
+                    "isWritable": false,
+                    "isSigner": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationProfile",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationCertificate",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "isOptional": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationProgram",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "publicKeyValueNode",
+                        "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+                    }
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "game",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "character",
+                    "isWritable": true,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "pdaValueNode",
+                        "pda": {
+                            "kind": "pdaNode",
+                            "name": "character",
+                            "seeds": [
+                                {
+                                    "kind": "constantPdaSeedNode",
+                                    "type": {
+                                        "kind": "bytesTypeNode"
+                                    },
+                                    "value": {
+                                        "kind": "bytesValueNode",
+                                        "data": "436861726163746572",
+                                        "encoding": "base16"
+                                    }
+                                },
+                                {
+                                    "kind": "variablePdaSeedNode",
+                                    "name": "profileValidationProfile1",
+                                    "type": {
+                                        "kind": "publicKeyTypeNode"
+                                    }
+                                },
+                                {
+                                    "kind": "variablePdaSeedNode",
+                                    "name": "game2",
+                                    "type": {
+                                        "kind": "publicKeyTypeNode"
+                                    }
+                                }
+                            ]
+                        },
+                        "seeds": [
+                            {
+                                "kind": "pdaSeedValueNode",
+                                "name": "profileValidationProfile1",
+                                "value": {
+                                    "kind": "accountValueNode",
+                                    "name": "profileValidationProfile"
+                                }
+                            },
+                            {
+                                "kind": "pdaSeedValueNode",
+                                "name": "game2",
+                                "value": {
+                                    "kind": "accountValueNode",
+                                    "name": "game"
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "system",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "starbasePlayer",
+                    "isWritable": true,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "pdaValueNode",
+                        "pda": {
+                            "kind": "pdaNode",
+                            "name": "starbasePlayer",
+                            "seeds": [
+                                {
+                                    "kind": "constantPdaSeedNode",
+                                    "type": {
+                                        "kind": "bytesTypeNode"
+                                    },
+                                    "value": {
+                                        "kind": "bytesValueNode",
+                                        "data": "5374617262617365506c61796572",
+                                        "encoding": "base16"
+                                    }
+                                },
+                                {
+                                    "kind": "variablePdaSeedNode",
+                                    "name": "system1",
+                                    "type": {
+                                        "kind": "publicKeyTypeNode"
+                                    }
+                                },
+                                {
+                                    "kind": "variablePdaSeedNode",
+                                    "name": "character2",
+                                    "type": {
+                                        "kind": "publicKeyTypeNode"
+                                    }
+                                }
+                            ]
+                        },
+                        "seeds": [
+                            {
+                                "kind": "pdaSeedValueNode",
+                                "name": "system1",
+                                "value": {
+                                    "kind": "accountValueNode",
+                                    "name": "system"
+                                }
+                            },
+                            {
+                                "kind": "pdaSeedValueNode",
+                                "name": "character2",
+                                "value": {
+                                    "kind": "accountValueNode",
+                                    "name": "character"
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "localMarket",
+                    "isWritable": true,
+                    "isSigner": false
+                }
+            ],
+            "arguments": [
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "discriminator",
+                    "defaultValueStrategy": "omitted",
+                    "type": {
+                        "kind": "fixedSizeTypeNode",
+                        "size": 8,
+                        "type": {
+                            "kind": "bytesTypeNode"
+                        }
+                    },
+                    "defaultValue": {
+                        "kind": "bytesValueNode",
+                        "data": "e35c6d03b07ccbda",
+                        "encoding": "base16"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "keyIndex",
+                    "type": {
+                        "kind": "numberTypeNode",
+                        "format": "u16",
+                        "endian": "le"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "args",
+                    "type": {
+                        "kind": "definedTypeLinkNode",
+                        "name": "processOrderArgs"
+                    }
+                }
+            ],
+            "discriminators": [
+                {
+                    "kind": "fieldDiscriminatorNode",
+                    "name": "discriminator",
+                    "offset": 0
+                }
+            ]
+        },
+        {
+            "kind": "instructionNode",
+            "name": "registerStarbasePlayer",
+            "accounts": [
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "funder",
+                    "isWritable": true,
+                    "isSigner": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "game",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "character",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileFaction",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "system",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "starbasePlayer",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "systemProgram",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "publicKeyValueNode",
+                        "publicKey": "11111111111111111111111111111111"
+                    }
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "factionRelationTracker",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "isOptional": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "factionStanding",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "isOptional": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "factionConfig",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "isOptional": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "factionOwnership",
+                    "isWritable": false,
+                    "isSigner": false
+                }
+            ],
+            "arguments": [
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "discriminator",
+                    "defaultValueStrategy": "omitted",
+                    "type": {
+                        "kind": "fixedSizeTypeNode",
+                        "size": 8,
+                        "type": {
+                            "kind": "bytesTypeNode"
+                        }
+                    },
+                    "defaultValue": {
+                        "kind": "bytesValueNode",
+                        "data": "3c129e13d09353e2",
+                        "encoding": "base16"
+                    }
+                }
+            ],
+            "discriminators": [
+                {
+                    "kind": "fieldDiscriminatorNode",
+                    "name": "discriminator",
+                    "offset": 0
+                }
+            ]
+        },
+        {
+            "kind": "instructionNode",
+            "name": "setKingSystems",
+            "accounts": [
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileSigner",
+                    "isWritable": false,
+                    "isSigner": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileProfile",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileCertificate",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "isOptional": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileProgram",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "publicKeyValueNode",
+                        "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+                    }
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "game",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "rewardRegistry",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "rewardConfig",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "tracker",
+                    "isWritable": true,
+                    "isSigner": false
+                }
+            ],
+            "arguments": [
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "discriminator",
+                    "defaultValueStrategy": "omitted",
+                    "type": {
+                        "kind": "fixedSizeTypeNode",
+                        "size": 8,
+                        "type": {
+                            "kind": "bytesTypeNode"
+                        }
+                    },
+                    "defaultValue": {
+                        "kind": "bytesValueNode",
+                        "data": "ab5854e29f301213",
+                        "encoding": "base16"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "keyIndex",
+                    "type": {
+                        "kind": "numberTypeNode",
+                        "format": "u16",
+                        "endian": "le"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "systems",
+                    "type": {
+                        "kind": "arrayTypeNode",
+                        "item": {
+                            "kind": "tupleTypeNode",
+                            "items": [
+                                {
+                                    "kind": "definedTypeLinkNode",
+                                    "name": "systemId"
+                                },
+                                {
+                                    "kind": "definedTypeLinkNode",
+                                    "name": "minorFactionId"
+                                }
+                            ]
+                        },
+                        "count": {
+                            "kind": "prefixedCountNode",
+                            "prefix": {
+                                "kind": "numberTypeNode",
+                                "format": "u32",
+                                "endian": "le"
+                            }
+                        }
+                    }
+                }
+            ],
+            "discriminators": [
+                {
+                    "kind": "fieldDiscriminatorNode",
+                    "name": "discriminator",
+                    "offset": 0
+                }
+            ]
+        },
+        {
+            "kind": "instructionNode",
+            "name": "settleLoyaltyContribution",
+            "accounts": [
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "game",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profile",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "epoch",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "contribution",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "bank",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "config",
+                    "isWritable": false,
+                    "isSigner": false
+                }
+            ],
+            "arguments": [
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "discriminator",
+                    "defaultValueStrategy": "omitted",
+                    "type": {
+                        "kind": "fixedSizeTypeNode",
+                        "size": 8,
+                        "type": {
+                            "kind": "bytesTypeNode"
+                        }
+                    },
+                    "defaultValue": {
+                        "kind": "bytesValueNode",
+                        "data": "2aa0bed3916e620e",
+                        "encoding": "base16"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "factionId",
+                    "type": {
+                        "kind": "definedTypeLinkNode",
+                        "name": "minorFactionId"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "epochIndex",
+                    "type": {
+                        "kind": "numberTypeNode",
+                        "format": "u64",
+                        "endian": "le"
+                    }
+                }
+            ],
+            "discriminators": [
+                {
+                    "kind": "fieldDiscriminatorNode",
+                    "name": "discriminator",
+                    "offset": 0
+                }
+            ]
+        },
+        {
+            "kind": "instructionNode",
+            "name": "startCraftingProcess",
+            "accounts": [
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationSigner",
+                    "isWritable": false,
+                    "isSigner": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationProfile",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationCertificate",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "isOptional": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileValidationProgram",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "publicKeyValueNode",
+                        "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+                    }
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "character",
+                    "isWritable": true,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "pdaValueNode",
+                        "pda": {
+                            "kind": "pdaNode",
+                            "name": "character",
+                            "seeds": [
+                                {
+                                    "kind": "constantPdaSeedNode",
+                                    "type": {
+                                        "kind": "bytesTypeNode"
+                                    },
+                                    "value": {
+                                        "kind": "bytesValueNode",
+                                        "data": "436861726163746572",
+                                        "encoding": "base16"
+                                    }
+                                },
+                                {
+                                    "kind": "variablePdaSeedNode",
+                                    "name": "profileValidationProfile1",
+                                    "type": {
+                                        "kind": "publicKeyTypeNode"
+                                    }
+                                },
+                                {
+                                    "kind": "variablePdaSeedNode",
+                                    "name": "game2",
+                                    "type": {
+                                        "kind": "publicKeyTypeNode"
+                                    }
+                                }
+                            ]
+                        },
+                        "seeds": [
+                            {
+                                "kind": "pdaSeedValueNode",
+                                "name": "profileValidationProfile1",
+                                "value": {
+                                    "kind": "accountValueNode",
+                                    "name": "profileValidationProfile"
+                                }
+                            },
+                            {
+                                "kind": "pdaSeedValueNode",
+                                "name": "game2",
+                                "value": {
+                                    "kind": "accountValueNode",
+                                    "name": "game"
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "game",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "system",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "starbasePlayer",
+                    "isWritable": true,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "pdaValueNode",
+                        "pda": {
+                            "kind": "pdaNode",
+                            "name": "starbasePlayer",
+                            "seeds": [
+                                {
+                                    "kind": "constantPdaSeedNode",
+                                    "type": {
+                                        "kind": "bytesTypeNode"
+                                    },
+                                    "value": {
+                                        "kind": "bytesValueNode",
+                                        "data": "5374617262617365506c61796572",
+                                        "encoding": "base16"
+                                    }
+                                },
+                                {
+                                    "kind": "variablePdaSeedNode",
+                                    "name": "system1",
+                                    "type": {
+                                        "kind": "publicKeyTypeNode"
+                                    }
+                                },
+                                {
+                                    "kind": "variablePdaSeedNode",
+                                    "name": "character2",
+                                    "type": {
+                                        "kind": "publicKeyTypeNode"
+                                    }
+                                }
+                            ]
+                        },
+                        "seeds": [
+                            {
+                                "kind": "pdaSeedValueNode",
+                                "name": "system1",
+                                "value": {
+                                    "kind": "accountValueNode",
+                                    "name": "system"
+                                }
+                            },
+                            {
+                                "kind": "pdaSeedValueNode",
+                                "name": "character2",
+                                "value": {
+                                    "kind": "accountValueNode",
+                                    "name": "character"
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "recipe",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "craftingProcess",
+                    "isWritable": true,
+                    "isSigner": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "systemProgram",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "publicKeyValueNode",
+                        "publicKey": "11111111111111111111111111111111"
+                    }
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "craftingHabInstance",
+                    "isWritable": true,
+                    "isSigner": false,
+                    "isOptional": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "currencyCache",
+                    "isWritable": true,
+                    "isSigner": false,
+                    "isOptional": true,
+                    "defaultValue": {
+                        "kind": "pdaValueNode",
+                        "pda": {
+                            "kind": "pdaNode",
+                            "name": "currencyCache",
+                            "seeds": [
+                                {
+                                    "kind": "constantPdaSeedNode",
+                                    "type": {
+                                        "kind": "bytesTypeNode"
+                                    },
+                                    "value": {
+                                        "kind": "bytesValueNode",
+                                        "data": "43757272656e6379436f6e666967",
+                                        "encoding": "base16"
+                                    }
+                                },
+                                {
+                                    "kind": "variablePdaSeedNode",
+                                    "name": "game1",
+                                    "type": {
+                                        "kind": "publicKeyTypeNode"
+                                    }
+                                }
+                            ]
+                        },
+                        "seeds": [
+                            {
+                                "kind": "pdaSeedValueNode",
+                                "name": "game1",
+                                "value": {
+                                    "kind": "accountValueNode",
+                                    "name": "game"
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "crewBinding",
+                    "isWritable": true,
+                    "isSigner": false,
+                    "isOptional": true
+                }
+            ],
+            "arguments": [
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "discriminator",
+                    "defaultValueStrategy": "omitted",
+                    "type": {
+                        "kind": "fixedSizeTypeNode",
+                        "size": 8,
+                        "type": {
+                            "kind": "bytesTypeNode"
+                        }
+                    },
+                    "defaultValue": {
+                        "kind": "bytesValueNode",
+                        "data": "406c6d3e09808af6",
+                        "encoding": "base16"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "keyIndex",
+                    "type": {
+                        "kind": "numberTypeNode",
+                        "format": "u16",
+                        "endian": "le"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "quantity",
+                    "type": {
+                        "kind": "numberTypeNode",
+                        "format": "u64",
+                        "endian": "le"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "numCrew",
+                    "type": {
+                        "kind": "numberTypeNode",
+                        "format": "u32",
+                        "endian": "le"
+                    }
+                }
+            ],
+            "discriminators": [
+                {
+                    "kind": "fieldDiscriminatorNode",
+                    "name": "discriminator",
+                    "offset": 0
+                }
+            ]
+        },
+        {
+            "kind": "instructionNode",
+            "name": "updateRegion",
+            "accounts": [
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileSigner",
+                    "isWritable": false,
+                    "isSigner": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileProfile",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileCertificate",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "isOptional": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileProgram",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "publicKeyValueNode",
+                        "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+                    }
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "game",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "regionTracker",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "systemProgram",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "publicKeyValueNode",
+                        "publicKey": "11111111111111111111111111111111"
+                    }
+                }
+            ],
+            "arguments": [
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "discriminator",
+                    "defaultValueStrategy": "omitted",
+                    "type": {
+                        "kind": "fixedSizeTypeNode",
+                        "size": 8,
+                        "type": {
+                            "kind": "bytesTypeNode"
+                        }
+                    },
+                    "defaultValue": {
+                        "kind": "bytesValueNode",
+                        "data": "329a3da683415c14",
+                        "encoding": "base16"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "id",
+                    "type": {
+                        "kind": "definedTypeLinkNode",
+                        "name": "regionId"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "keyIndex",
+                    "type": {
+                        "kind": "numberTypeNode",
+                        "format": "u16",
+                        "endian": "le"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "args",
+                    "type": {
+                        "kind": "definedTypeLinkNode",
+                        "name": "updateRegionArgs"
+                    }
+                }
+            ],
+            "discriminators": [
+                {
+                    "kind": "fieldDiscriminatorNode",
+                    "name": "discriminator",
+                    "offset": 0
+                }
+            ]
+        },
+        {
+            "kind": "instructionNode",
+            "name": "updateStarSystem",
+            "accounts": [
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileSigner",
+                    "isWritable": false,
+                    "isSigner": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileProfile",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileCertificate",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "isOptional": true
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "profileProgram",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "publicKeyValueNode",
+                        "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+                    }
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "game",
+                    "isWritable": false,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "regionTracker",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "system",
+                    "isWritable": true,
+                    "isSigner": false
+                },
+                {
+                    "kind": "instructionAccountNode",
+                    "name": "systemProgram",
+                    "isWritable": false,
+                    "isSigner": false,
+                    "defaultValue": {
+                        "kind": "publicKeyValueNode",
+                        "publicKey": "11111111111111111111111111111111"
+                    }
+                }
+            ],
+            "arguments": [
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "discriminator",
+                    "defaultValueStrategy": "omitted",
+                    "type": {
+                        "kind": "fixedSizeTypeNode",
+                        "size": 8,
+                        "type": {
+                            "kind": "bytesTypeNode"
+                        }
+                    },
+                    "defaultValue": {
+                        "kind": "bytesValueNode",
+                        "data": "98da86a4b4ff6f18",
+                        "encoding": "base16"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "args",
+                    "type": {
+                        "kind": "definedTypeLinkNode",
+                        "name": "updateStarSystemArgs"
+                    }
+                },
+                {
+                    "kind": "instructionArgumentNode",
+                    "name": "keyIndex",
+                    "type": {
+                        "kind": "numberTypeNode",
+                        "format": "u16",
+                        "endian": "le"
+                    }
+                }
+            ],
+            "remainingAccounts": [
+                {
+                    "kind": "instructionRemainingAccountsNode",
+                    "value": {
+                        "kind": "argumentValueNode",
+                        "name": "connectionSystems"
+                    }
+                }
+            ],
+            "discriminators": [
+                {
+                    "kind": "fieldDiscriminatorNode",
+                    "name": "discriminator",
+                    "offset": 0
+                }
+            ]
+        }
+    ]
+}

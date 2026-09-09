@@ -1205,7 +1205,7 @@
       "kind": "accountNode",
       "name": "loyaltyEpoch",
       "docs": [
-        "One faction's daily LP total and reserved ATLAS pool."
+        "One faction's daily LP total, ATLAS entitlement, and legacy prepaid reserve."
       ],
       "data": {
         "kind": "structTypeNode",
@@ -1638,6 +1638,154 @@
       "pda": {
         "kind": "pdaLinkNode",
         "name": "character"
+      },
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "accountNode",
+      "name": "characterSync",
+      "docs": [
+        "Staging account for a bounded Character research-definition sync.",
+        "",
+        "The live Character modifiers remain untouched while this accumulator is",
+        "built. That matters because permissionless fleet settlement and combat may",
+        "legitimately read the Character between chunks. Only a complete accumulator",
+        "is committed to the Character."
+      ],
+      "data": {
+        "kind": "structTypeNode",
+        "fields": [
+          {
+            "kind": "structFieldTypeNode",
+            "name": "discriminator",
+            "defaultValueStrategy": "omitted",
+            "type": {
+              "kind": "fixedSizeTypeNode",
+              "size": 8,
+              "type": {
+                "kind": "bytesTypeNode"
+              }
+            },
+            "defaultValue": {
+              "kind": "bytesValueNode",
+              "data": "f605a57552a66506",
+              "encoding": "base16"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "version",
+            "docs": [
+              "Account layout version. Zero denotes a freshly created account."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "character",
+            "docs": [
+              "Character whose modifiers are being rebuilt."
+            ],
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "gameId",
+            "docs": [
+              "Game whose definitions are authoritative."
+            ],
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "researchSeqId",
+            "docs": [
+              "Research-tree sequence captured for this rebuild."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u32",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "unlockedNodesLen",
+            "docs": [
+              "Number of unlocked nodes captured for this rebuild."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u16",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "nextNodeIndex",
+            "docs": [
+              "Index of the next unlocked node to replay."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u16",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "nextNodeRepeat",
+            "docs": [
+              "Number of levels already replayed for `next_node_index`."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u32",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "bump",
+            "docs": [
+              "PDA bump."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "modifiers",
+            "docs": [
+              "Complete modifier accumulator for nodes before `next_node_index`."
+            ],
+            "type": {
+              "kind": "definedTypeLinkNode",
+              "name": "characterModifier"
+            }
+          }
+        ]
+      },
+      "pda": {
+        "kind": "pdaLinkNode",
+        "name": "characterSync"
       },
       "discriminators": [
         {
@@ -2275,6 +2423,38 @@
               "kind": "numberTypeNode",
               "format": "u64",
               "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "feeRecipient",
+            "docs": [
+              "Original recipe fee destination when governance is not active."
+            ],
+            "type": {
+              "kind": "definedTypeLinkNode",
+              "name": "recipeFeeRecipient"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "feeGovernance",
+            "docs": [
+              "Governance account whose fee routing was snapshotted at start, if any."
+            ],
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "feeSnapshot",
+            "docs": [
+              "Fee routing snapshot captured when the process started."
+            ],
+            "type": {
+              "kind": "definedTypeLinkNode",
+              "name": "governanceFeeSnapshot"
             }
           },
           {
@@ -6295,6 +6475,883 @@
     },
     {
       "kind": "accountNode",
+      "name": "claimState",
+      "data": {
+        "kind": "structTypeNode",
+        "fields": [
+          {
+            "kind": "structFieldTypeNode",
+            "name": "discriminator",
+            "defaultValueStrategy": "omitted",
+            "type": {
+              "kind": "fixedSizeTypeNode",
+              "size": 8,
+              "type": {
+                "kind": "bytesTypeNode"
+              }
+            },
+            "defaultValue": {
+              "kind": "bytesValueNode",
+              "data": "4749135335e4f235",
+              "encoding": "base16"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "version",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "treasury",
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "playerProfile",
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "bump",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "claimedIndex",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u128",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "pendingAtlas",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u64",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "pendingRewardRemainder",
+            "docs": [
+              "Fractional rewards carried in reward-index scale units so repeated checkpoints do not lose",
+              "dust and cannot shift historical rewards onto newly activated power."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u128",
+              "endian": "le"
+            }
+          }
+        ]
+      },
+      "pda": {
+        "kind": "pdaLinkNode",
+        "name": "claimState"
+      },
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "accountNode",
+      "name": "epochVote",
+      "data": {
+        "kind": "structTypeNode",
+        "fields": [
+          {
+            "kind": "structFieldTypeNode",
+            "name": "discriminator",
+            "defaultValueStrategy": "omitted",
+            "type": {
+              "kind": "fixedSizeTypeNode",
+              "size": 8,
+              "type": {
+                "kind": "bytesTypeNode"
+              }
+            },
+            "defaultValue": {
+              "kind": "bytesValueNode",
+              "data": "ce23f988b031618f",
+              "encoding": "base16"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "version",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "governance",
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "playerProfile",
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "voteEpoch",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u64",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "bump",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "votingPower",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u64",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "params",
+            "type": {
+              "kind": "definedTypeLinkNode",
+              "name": "governanceParams"
+            }
+          }
+        ]
+      },
+      "pda": {
+        "kind": "pdaLinkNode",
+        "name": "epochVote"
+      },
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "accountNode",
+      "name": "starbaseDelegation",
+      "data": {
+        "kind": "structTypeNode",
+        "fields": [
+          {
+            "kind": "structFieldTypeNode",
+            "name": "discriminator",
+            "defaultValueStrategy": "omitted",
+            "type": {
+              "kind": "fixedSizeTypeNode",
+              "size": 8,
+              "type": {
+                "kind": "bytesTypeNode"
+              }
+            },
+            "defaultValue": {
+              "kind": "bytesValueNode",
+              "data": "756db30a65cf4138",
+              "encoding": "base16"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "version",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "governance",
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "playerProfile",
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "bump",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "diplomatCrew",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u32",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "activeAmount",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u64",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "pendingAmount",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u64",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "pendingEffectiveRewardEpoch",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u64",
+              "endian": "le"
+            }
+          }
+        ]
+      },
+      "pda": {
+        "kind": "pdaLinkNode",
+        "name": "starbaseDelegation"
+      },
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "accountNode",
+      "name": "starbaseGovernance",
+      "data": {
+        "kind": "structTypeNode",
+        "fields": [
+          {
+            "kind": "structFieldTypeNode",
+            "name": "discriminator",
+            "defaultValueStrategy": "omitted",
+            "type": {
+              "kind": "fixedSizeTypeNode",
+              "size": 8,
+              "type": {
+                "kind": "bytesTypeNode"
+              }
+            },
+            "defaultValue": {
+              "kind": "bytesValueNode",
+              "data": "48ed146f5c83bf97",
+              "encoding": "base16"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "version",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "gameId",
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "system",
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "registry",
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "previousGovernance",
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "successorGovernance",
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "starbaseSeqId",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u64",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "controllerFaction",
+            "docs": [
+              "Faction controlling this immutable starbase generation."
+            ],
+            "type": {
+              "kind": "definedTypeLinkNode",
+              "name": "minorFactionId"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "bump",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "enabled",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "governanceLevel",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "voteEpochDurationSecs",
+            "docs": [
+              "Duration of a fee/reward-policy voting window."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u32",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "rewardEpochDurationSecs",
+            "docs": [
+              "Duration between permissionless reward-index settlements."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u32",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "currentVoteEpoch",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u64",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "currentRewardEpoch",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u64",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "pendingActivationVoteEpoch",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u64",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "maxPvpPerCrew",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u64",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "minQuorumPower",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u64",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "bounds",
+            "type": {
+              "kind": "definedTypeLinkNode",
+              "name": "governanceBounds"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "activeParams",
+            "type": {
+              "kind": "definedTypeLinkNode",
+              "name": "governanceParams"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "pendingParams",
+            "type": {
+              "kind": "definedTypeLinkNode",
+              "name": "governanceParams"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "votePower",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u64",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "activeDelegatedPower",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u64",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "craftingFeeWeightedSum",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u128",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "localMarketFeeWeightedSum",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u128",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "localTreasuryShareWeightedSum",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u128",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "treasuryDistributionWeightedSum",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u128",
+              "endian": "le"
+            }
+          }
+        ]
+      },
+      "pda": {
+        "kind": "pdaLinkNode",
+        "name": "starbaseGovernance"
+      },
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "accountNode",
+      "name": "starbaseGovernanceRegistry",
+      "data": {
+        "kind": "structTypeNode",
+        "fields": [
+          {
+            "kind": "structFieldTypeNode",
+            "name": "discriminator",
+            "defaultValueStrategy": "omitted",
+            "type": {
+              "kind": "fixedSizeTypeNode",
+              "size": 8,
+              "type": {
+                "kind": "bytesTypeNode"
+              }
+            },
+            "defaultValue": {
+              "kind": "bytesValueNode",
+              "data": "11c30deb941016b4",
+              "encoding": "base16"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "version",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "gameId",
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "system",
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "bump",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "currentStarbaseSeqId",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u64",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "currentGovernance",
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "currentTreasury",
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          }
+        ]
+      },
+      "pda": {
+        "kind": "pdaLinkNode",
+        "name": "starbaseGovernanceRegistry"
+      },
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "accountNode",
+      "name": "starbaseTreasury",
+      "data": {
+        "kind": "structTypeNode",
+        "fields": [
+          {
+            "kind": "structFieldTypeNode",
+            "name": "discriminator",
+            "defaultValueStrategy": "omitted",
+            "type": {
+              "kind": "fixedSizeTypeNode",
+              "size": 8,
+              "type": {
+                "kind": "bytesTypeNode"
+              }
+            },
+            "defaultValue": {
+              "kind": "bytesValueNode",
+              "data": "03b8220dc340bb8d",
+              "encoding": "base16"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "version",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "governance",
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "successorTreasury",
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "bump",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "atlasVault",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u64",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "rewardIndex",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u128",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "totalDistributed",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u64",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "undistributedRewards",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u64",
+              "endian": "le"
+            }
+          }
+        ]
+      },
+      "pda": {
+        "kind": "pdaLinkNode",
+        "name": "starbaseTreasury"
+      },
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "accountNode",
+      "name": "voterPower",
+      "data": {
+        "kind": "structTypeNode",
+        "fields": [
+          {
+            "kind": "structFieldTypeNode",
+            "name": "discriminator",
+            "defaultValueStrategy": "omitted",
+            "type": {
+              "kind": "fixedSizeTypeNode",
+              "size": 8,
+              "type": {
+                "kind": "bytesTypeNode"
+              }
+            },
+            "defaultValue": {
+              "kind": "bytesValueNode",
+              "data": "dc8828ea708e5785",
+              "encoding": "base16"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "version",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "gameId",
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "playerProfile",
+            "type": {
+              "kind": "publicKeyTypeNode"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "bump",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u8",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "pvpAmount",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u64",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "activeDelegated",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u64",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "pendingDelegated",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u64",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "pendingEffectiveRewardEpoch",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u64",
+              "endian": "le"
+            }
+          }
+        ]
+      },
+      "pda": {
+        "kind": "pdaLinkNode",
+        "name": "voterPower"
+      },
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "accountNode",
       "name": "fleet",
       "docs": [
         "A `SAGE` fleet."
@@ -10144,7 +11201,8 @@
         "Create an NPC fleet at an arbitrary map location (admin only)",
         "",
         "Logic overview:",
-        "- Check that the profile has MANAGE_FLEET permissions",
+        "- Check that the fleet-owner profile has `MANAGE_FLEET` permissions",
+        "- Require authorization from the Game profile with `MANAGE_COMBAT`",
         "- Look up the ship definition from game state and compute fleet stats",
         "- Create the fleet PDA and set it to Idle state at the given sector",
         "",
@@ -10153,7 +11211,7 @@
         "- Accepts explicit `sector` coordinates — fleet spawns anywhere on the map",
         "- Populates ship stats directly from the on-chain ship definition registry",
         "",
-        "Intended for NPC fleet spawning (nemesis-engine, npc-fleets)."
+        "Intended for privileged NPC/scenario fleet spawning (nemesis-engine, npc-fleets)."
       ],
       "accounts": [
         {
@@ -10187,6 +11245,35 @@
         },
         {
           "kind": "instructionAccountNode",
+          "name": "gameAdminValidationSigner",
+          "isWritable": false,
+          "isSigner": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "gameAdminValidationProfile",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "gameAdminValidationCertificate",
+          "isWritable": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "gameAdminValidationProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
           "name": "profileFaction",
           "isWritable": false,
           "isSigner": false,
@@ -10200,7 +11287,7 @@
           "isWritable": false,
           "isSigner": false,
           "docs": [
-            "The game account"
+            "The game account, bound to the administrative profile above."
           ]
         },
         {
@@ -10308,6 +11395,18 @@
             "format": "u16",
             "endian": "le"
           }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "gameAdminKeyIndex",
+          "docs": [
+            "Index of the signing key in the Game's administrative profile."
+          ],
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
         }
       ],
       "discriminators": [
@@ -10325,8 +11424,9 @@
         "Deposit fuel and/or ammo directly into an NPC fleet (admin only)",
         "",
         "Logic overview:",
-        "- Check that the profile has MANAGE_FLEET_CARGO permissions",
-        "- Validate that the fleet belongs to the admin profile",
+        "- Check that the fleet-owner profile has `MANAGE_FLEET_CARGO` permissions",
+        "- Require authorization from the Game profile with `MANAGE_COMBAT`",
+        "- Validate that the fleet belongs to the owner profile",
         "- Directly increment `fuel_tank` and/or `ammo_bank` on the fleet account",
         "up to the fleet's stat-derived capacity limits",
         "",
@@ -10370,11 +11470,40 @@
         },
         {
           "kind": "instructionAccountNode",
+          "name": "gameAdminValidationSigner",
+          "isWritable": false,
+          "isSigner": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "gameAdminValidationProfile",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "gameAdminValidationCertificate",
+          "isWritable": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "gameAdminValidationProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
           "name": "game",
           "isWritable": false,
           "isSigner": false,
           "docs": [
-            "The game account"
+            "The game account, bound to the administrative profile above."
           ]
         },
         {
@@ -10434,6 +11563,18 @@
           "name": "keyIndex",
           "docs": [
             "Index of the signing key in the player profile"
+          ],
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "gameAdminKeyIndex",
+          "docs": [
+            "Index of the signing key in the Game's administrative profile."
           ],
           "type": {
             "kind": "numberTypeNode",
@@ -10565,6 +11706,191 @@
           "name": "keyIndex",
           "docs": [
             "Index of the signing key in the player profile"
+          ],
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "adminSetNpcFleetId",
+      "docs": [
+        "Backfill `npc_faction_id` + `FactionOwnership` sidecar onto a legacy NPC fleet.",
+        "",
+        "Logic overview:",
+        "- Check that the fleet-owner profile has `MANAGE_FLEET` permission",
+        "- Require authorization from the Game profile with `MANAGE_COMBAT`",
+        "- Reject if the fleet already has a non-zero `npc_faction_id` (idempotent)",
+        "- Stamp `npc_faction_id` on the fleet",
+        "- Create the `FactionOwnership` sidecar",
+        "- Bump the faction's `npc_fleet_count`"
+      ],
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationSigner",
+          "isWritable": false,
+          "isSigner": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProfile",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationCertificate",
+          "isWritable": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "gameAdminValidationSigner",
+          "isWritable": false,
+          "isSigner": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "gameAdminValidationProfile",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "gameAdminValidationCertificate",
+          "isWritable": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "gameAdminValidationProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "game",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The game account, bound to the administrative profile above."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "fleet",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The fleet to backfill"
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "factionOwnership",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The FLEET dynamic-ownership sidecar — created here."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "factionAccount",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The NPC faction's registry account. PDA re-derived from `npc_faction_id` in `process()`."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "systemProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The Solana System program"
+          ],
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "11111111111111111111111111111111"
+          }
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "e59d408fea7c794f",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "npcFactionId",
+          "docs": [
+            "The NPC faction id to assign. Must be > 0."
+          ],
+          "type": {
+            "kind": "definedTypeLinkNode",
+            "name": "minorFactionId"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "docs": [
+            "Index of the signing key in the player profile"
+          ],
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "gameAdminKeyIndex",
+          "docs": [
+            "Index of the signing key in the Game's administrative profile."
           ],
           "type": {
             "kind": "numberTypeNode",
@@ -13335,7 +14661,7 @@
         "- Remove all cancelled order escrowed funds from the maker",
         "- Return the removed cargo or atlas to the starbase player or character vault, respectively",
         "- Remove the makers if they have no open orders",
-        "- Return the owed bytes to the profile for the cancelled orders"
+        "- Settle rent between the resized local market and starbase player accounts"
       ],
       "accounts": [
         {
@@ -13514,6 +14840,73 @@
           "isSigner": false,
           "docs": [
             "The (potentially valid) local market for [`Self::system`]"
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "starbaseGovernance",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "Required, PDA-bound governance sidecar. It may be uninitialized (default fees), but callers",
+            "cannot omit it to bypass an initialized fee policy."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "currencyCache",
+          "isWritable": true,
+          "isSigner": false,
+          "isOptional": true,
+          "docs": [
+            "Currency cache for DAO fee routing. Required when a governed fee produces a DAO share."
+          ],
+          "defaultValue": {
+            "kind": "pdaValueNode",
+            "pda": {
+              "kind": "pdaNode",
+              "name": "currencyCache",
+              "seeds": [
+                {
+                  "kind": "constantPdaSeedNode",
+                  "type": {
+                    "kind": "bytesTypeNode"
+                  },
+                  "value": {
+                    "kind": "bytesValueNode",
+                    "data": "43757272656e6379436f6e666967",
+                    "encoding": "base16"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "game1",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                }
+              ]
+            },
+            "seeds": [
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "game1",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "game"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "starbaseTreasury",
+          "isWritable": true,
+          "isSigner": false,
+          "isOptional": true,
+          "docs": [
+            "Local treasury for local fee routing. Required when a governed fee produces a local share."
           ]
         }
       ],
@@ -14160,6 +15553,158 @@
     },
     {
       "kind": "instructionNode",
+      "name": "claimGovernanceRewards",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationSigner",
+          "isWritable": false,
+          "isSigner": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProfile",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationCertificate",
+          "isWritable": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "game",
+          "isWritable": false,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "character",
+          "isWritable": true,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "pdaValueNode",
+            "pda": {
+              "kind": "pdaNode",
+              "name": "character",
+              "seeds": [
+                {
+                  "kind": "constantPdaSeedNode",
+                  "type": {
+                    "kind": "bytesTypeNode"
+                  },
+                  "value": {
+                    "kind": "bytesValueNode",
+                    "data": "436861726163746572",
+                    "encoding": "base16"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "profileValidationProfile1",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "game2",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                }
+              ]
+            },
+            "seeds": [
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "profileValidationProfile1",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "profileValidationProfile"
+                }
+              },
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "game2",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "game"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "delegation",
+          "isWritable": false,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "treasury",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "claimState",
+          "isWritable": true,
+          "isSigner": false
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "b7694ee214353a06",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
       "name": "claimLoyaltyAtlas",
       "docs": [
         "Move the entire non-expired accumulated bank balance into the owner's in-game Character balance."
@@ -14786,6 +16331,15 @@
       "accounts": [
         {
           "kind": "instructionAccountNode",
+          "name": "funder",
+          "isWritable": true,
+          "isSigner": true,
+          "docs": [
+            "Any signer may perform this cleanup and fund Character rent growth."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
           "name": "profile",
           "isWritable": true,
           "isSigner": false,
@@ -15067,6 +16621,94 @@
           "defaultValue": {
             "kind": "bytesValueNode",
             "data": "74808692cd5c04ca",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "closeStarbaseGovernanceVoteEpoch",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationSigner",
+          "isWritable": false,
+          "isSigner": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProfile",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationCertificate",
+          "isWritable": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "game",
+          "isWritable": false,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "system",
+          "isWritable": false,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "governance",
+          "isWritable": true,
+          "isSigner": false
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "e56db3b323955897",
             "encoding": "base16"
           }
         },
@@ -16014,6 +17656,16 @@
               }
             ]
           }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "starbaseTreasury",
+          "isWritable": true,
+          "isSigner": false,
+          "isOptional": true,
+          "docs": [
+            "Local treasury for governed fee share. Required when the crafting process captured one."
+          ]
         }
       ],
       "arguments": [
@@ -19074,14 +20726,15 @@
         "",
         "The region is created with the specified id, authored risk tier, border, connections,",
         "and research requirements. The provided border is snapped to the region tracker's grid",
-        "(`grid_k`), and adjacency (`neighbors_by_edge`) is rebuilt to reflect shared edges with",
-        "existing regions. Ownership, safety, and effective risk are then derived from core-system",
-        "control and geometric adjacency.",
+        "(`grid_k`), and path adjacency (`neighbors_by_edge`) is rebuilt to reflect shared edges",
+        "with existing regions. Ownership is derived from canonical-King control plus 60% of",
+        "effective core systems. Dynamic safe-zone promotion additionally requires one faction",
+        "to control every authored member system and the surrounding warp-lane `connections`.",
         "",
         "# Fields",
         "* `id` - Unique identifier for the region",
         "* `risk_zone` - The immutable authored/base risk tier",
-        "* `connections` - Optional connections to other regions by ID",
+        "* `connections` - Optional region-level projection of cross-region warp lanes",
         "* `border` - Optional region border coordinates",
         "* `scanning_research_requirements` - Optional technology requirements for scanning",
         "* `mining_research_requirements` - Optional technology requirements for mining",
@@ -19135,6 +20788,12 @@
           "docs": [
             "Region tracker account storing all regions"
           ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "kingTracker",
+          "isWritable": false,
+          "isSigner": false
         },
         {
           "kind": "instructionAccountNode",
@@ -19205,7 +20864,7 @@
           "kind": "instructionArgumentNode",
           "name": "connections",
           "docs": [
-            "IDs of regions connected to this region"
+            "IDs of regions connected by at least one cross-region system warp lane"
           ],
           "type": {
             "kind": "optionTypeNode",
@@ -19750,6 +21409,12 @@
           "docs": [
             "Region tracker containing the region this system belongs to"
           ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "kingTracker",
+          "isWritable": false,
+          "isSigner": false
         },
         {
           "kind": "instructionAccountNode",
@@ -20889,6 +22554,12 @@
         },
         {
           "kind": "instructionAccountNode",
+          "name": "kingTracker",
+          "isWritable": false,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
           "name": "system",
           "isWritable": true,
           "isSigner": false,
@@ -21453,6 +23124,15 @@
       "accounts": [
         {
           "kind": "instructionAccountNode",
+          "name": "funder",
+          "isWritable": true,
+          "isSigner": true,
+          "docs": [
+            "Any signer may perform this cleanup and fund Character rent growth."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
           "name": "profile",
           "isWritable": true,
           "isSigner": false,
@@ -21538,6 +23218,70 @@
           "docs": [
             "The starbase account"
           ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "starbasePlayer",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The starbase player account. The crew this process reserved is returned here — guarded in the",
+            "handler on the starbase generation matching the process, so a process destroyed after",
+            "`DestroyStarbasePlayer` already reset the player does not double-release. No `StarbaseValidation`",
+            "here: after a flip the player may be either pre- or post-reset, and the handler distinguishes."
+          ],
+          "defaultValue": {
+            "kind": "pdaValueNode",
+            "pda": {
+              "kind": "pdaNode",
+              "name": "starbasePlayer",
+              "seeds": [
+                {
+                  "kind": "constantPdaSeedNode",
+                  "type": {
+                    "kind": "bytesTypeNode"
+                  },
+                  "value": {
+                    "kind": "bytesValueNode",
+                    "data": "5374617262617365506c61796572",
+                    "encoding": "base16"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "system1",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "character2",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                }
+              ]
+            },
+            "seeds": [
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "system1",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "system"
+                }
+              },
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "character2",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "character"
+                }
+              }
+            ]
+          }
         },
         {
           "kind": "instructionAccountNode",
@@ -21753,6 +23497,243 @@
             "kind": "bytesValueNode",
             "data": "4d9b2f7feb3d0741",
             "encoding": "base16"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "destroyedToRespawn",
+      "docs": [
+        "Transition fleet from `Destroyed` to `Respawn`",
+        "",
+        "Logic overview:",
+        "- Check that the profile has RESPAWN permissions",
+        "- Check that the fleet belongs to the profile",
+        "- Check that the css_star_system belongs to the game, is a CSS and matches fleet faction",
+        "- Refresh the fleet state then ensure it is destroyed",
+        "- Calculate subwarp time to the css_star_system",
+        "- Set respawn duration as max of subwarp time and respawn time from game settings",
+        "- Check if the fleet was destroyed in a low risk zone",
+        "- Enter respawn state (fleet will respawn at reduced HP)"
+      ],
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationSigner",
+          "isWritable": false,
+          "isSigner": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProfile",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationCertificate",
+          "isWritable": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "character",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The Character account associated with the profile"
+          ],
+          "defaultValue": {
+            "kind": "pdaValueNode",
+            "pda": {
+              "kind": "pdaNode",
+              "name": "character",
+              "seeds": [
+                {
+                  "kind": "constantPdaSeedNode",
+                  "type": {
+                    "kind": "bytesTypeNode"
+                  },
+                  "value": {
+                    "kind": "bytesValueNode",
+                    "data": "436861726163746572",
+                    "encoding": "base16"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "profileValidationProfile1",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "game2",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                }
+              ]
+            },
+            "seeds": [
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "profileValidationProfile1",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "profileValidationProfile"
+                }
+              },
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "game2",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "game"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "fleet",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The `Fleet`(crate.state.Fleet) account"
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "cssStarSystem",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The CSS `StarSystem` account"
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "regionTracker",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "Region tracker account"
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "game",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "The game account"
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "currencyCache",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The currency config cache account — debited the recovery fee",
+            "(summed per-hull `recovery_fee` of the post-normalization composition)."
+          ],
+          "defaultValue": {
+            "kind": "pdaValueNode",
+            "pda": {
+              "kind": "pdaNode",
+              "name": "currencyCache",
+              "seeds": [
+                {
+                  "kind": "constantPdaSeedNode",
+                  "type": {
+                    "kind": "bytesTypeNode"
+                  },
+                  "value": {
+                    "kind": "bytesValueNode",
+                    "data": "43757272656e6379436f6e666967",
+                    "encoding": "base16"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "game1",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                }
+              ]
+            },
+            "seeds": [
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "game1",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "game"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "crewBinding",
+          "isWritable": false,
+          "isSigner": false,
+          "isOptional": true
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "058fc2058156892e",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "docs": [
+            "index of the key in the player profile"
+          ],
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
           }
         }
       ],
@@ -22383,6 +24364,55 @@
         },
         {
           "kind": "instructionAccountNode",
+          "name": "currencyCache",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The currency config cache account — debited the recovery fee when the",
+            "wreck is PLAYER-owned. NPC fleets (faction-ownership sidecar present)",
+            "disband free: their sidecars have no funded character, and a mandatory",
+            "fee would permanently brick permissionless cleanup."
+          ],
+          "defaultValue": {
+            "kind": "pdaValueNode",
+            "pda": {
+              "kind": "pdaNode",
+              "name": "currencyCache",
+              "seeds": [
+                {
+                  "kind": "constantPdaSeedNode",
+                  "type": {
+                    "kind": "bytesTypeNode"
+                  },
+                  "value": {
+                    "kind": "bytesValueNode",
+                    "data": "43757272656e6379436f6e666967",
+                    "encoding": "base16"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "game1",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                }
+              ]
+            },
+            "seeds": [
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "game1",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "game"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
           "name": "fleetFactionOwnership",
           "isWritable": false,
           "isSigner": false,
@@ -22926,6 +24956,53 @@
           "docs": [
             "The game account"
           ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "currencyCache",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The currency config cache account — debited the recovery fee",
+            "(summed per-hull `recovery_fee` of the fleet composition)."
+          ],
+          "defaultValue": {
+            "kind": "pdaValueNode",
+            "pda": {
+              "kind": "pdaNode",
+              "name": "currencyCache",
+              "seeds": [
+                {
+                  "kind": "constantPdaSeedNode",
+                  "type": {
+                    "kind": "bytesTypeNode"
+                  },
+                  "value": {
+                    "kind": "bytesValueNode",
+                    "data": "43757272656e6379436f6e666967",
+                    "encoding": "base16"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "game1",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                }
+              ]
+            },
+            "seeds": [
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "game1",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "game"
+                }
+              }
+            ]
+          }
         }
       ],
       "arguments": [
@@ -25649,10 +27726,11 @@
       "kind": "instructionNode",
       "name": "grantXp",
       "docs": [
-        "Grants `amount` XP in `category` to the character. Privileged",
-        "(`SagePermissions::MANAGE_PROGRESSION`): used to step a character through the",
-        "council-rank paths (e.g. testnet progression / the \"step through\" UI that replaces",
-        "God Mode), rather than earning XP through gameplay.",
+        "Grants `amount` XP in `category` to the character on explicitly allowlisted test",
+        "deployments. Privileged (`SagePermissions::MANAGE_PROGRESSION`): used to step a",
+        "character through the council-rank paths (e.g. testnet progression / the \"step",
+        "through\" UI that replaces God Mode), rather than earning XP through gameplay.",
+        "Other SAGE deployments retain the instruction ABI but reject it at runtime.",
         "",
         "Mirrors how every gameplay XP source awards XP: it calls `collect_xp`, which also",
         "rolls the amount into the `CouncilRank` category automatically, so granting any",
@@ -26086,6 +28164,53 @@
         },
         {
           "kind": "instructionAccountNode",
+          "name": "currencyCache",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The currency config cache account — debited the recovery fee",
+            "(summed per-hull `recovery_fee` of the fleet composition)."
+          ],
+          "defaultValue": {
+            "kind": "pdaValueNode",
+            "pda": {
+              "kind": "pdaNode",
+              "name": "currencyCache",
+              "seeds": [
+                {
+                  "kind": "constantPdaSeedNode",
+                  "type": {
+                    "kind": "bytesTypeNode"
+                  },
+                  "value": {
+                    "kind": "bytesValueNode",
+                    "data": "43757272656e6379436f6e666967",
+                    "encoding": "base16"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "game1",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                }
+              ]
+            },
+            "seeds": [
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "game1",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "game"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
           "name": "crewBinding",
           "isWritable": false,
           "isSigner": false,
@@ -26327,6 +28452,98 @@
           "defaultValue": {
             "kind": "bytesValueNode",
             "data": "8a60cf5f7a9480c1",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "initClaimState",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationSigner",
+          "isWritable": false,
+          "isSigner": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProfile",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationCertificate",
+          "isWritable": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "treasury",
+          "isWritable": false,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "claimState",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "systemProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "11111111111111111111111111111111"
+          }
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "738aa8cdd0464bb5",
             "encoding": "base16"
           }
         },
@@ -27447,6 +29664,556 @@
           "type": {
             "kind": "numberTypeNode",
             "format": "u64",
+            "endian": "le"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "initStarbaseDelegation",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationSigner",
+          "isWritable": false,
+          "isSigner": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProfile",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationCertificate",
+          "isWritable": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "game",
+          "isWritable": false,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "character",
+          "isWritable": true,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "pdaValueNode",
+            "pda": {
+              "kind": "pdaNode",
+              "name": "character",
+              "seeds": [
+                {
+                  "kind": "constantPdaSeedNode",
+                  "type": {
+                    "kind": "bytesTypeNode"
+                  },
+                  "value": {
+                    "kind": "bytesValueNode",
+                    "data": "436861726163746572",
+                    "encoding": "base16"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "profileValidationProfile1",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "game2",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                }
+              ]
+            },
+            "seeds": [
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "profileValidationProfile1",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "profileValidationProfile"
+                }
+              },
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "game2",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "game"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "system",
+          "isWritable": false,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "starbasePlayer",
+          "isWritable": true,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "pdaValueNode",
+            "pda": {
+              "kind": "pdaNode",
+              "name": "starbasePlayer",
+              "seeds": [
+                {
+                  "kind": "constantPdaSeedNode",
+                  "type": {
+                    "kind": "bytesTypeNode"
+                  },
+                  "value": {
+                    "kind": "bytesValueNode",
+                    "data": "5374617262617365506c61796572",
+                    "encoding": "base16"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "system1",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "character2",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                }
+              ]
+            },
+            "seeds": [
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "system1",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "system"
+                }
+              },
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "character2",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "character"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "governance",
+          "isWritable": false,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "treasury",
+          "isWritable": false,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "voterPower",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "delegation",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "claimState",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "ownerFactionAccount",
+          "isWritable": false,
+          "isSigner": false,
+          "isOptional": true,
+          "docs": [
+            "Required only for dynamic controlling factions; validates their active operator profile."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "systemProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "11111111111111111111111111111111"
+          }
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "8d25feb31eedd2c7",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "pendingAmount",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u64",
+            "endian": "le"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "diplomatCrew",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u32",
+            "endian": "le"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "initStarbaseGovernance",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationSigner",
+          "isWritable": false,
+          "isSigner": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProfile",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationCertificate",
+          "isWritable": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "game",
+          "isWritable": false,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "system",
+          "isWritable": false,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "regionTracker",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "Authored region data gates governance in immutable home safe zones. Dynamic safety changes",
+            "do not affect this rule."
+          ],
+          "defaultValue": {
+            "kind": "pdaValueNode",
+            "pda": {
+              "kind": "pdaNode",
+              "name": "regionTracker",
+              "seeds": [
+                {
+                  "kind": "constantPdaSeedNode",
+                  "type": {
+                    "kind": "bytesTypeNode"
+                  },
+                  "value": {
+                    "kind": "bytesValueNode",
+                    "data": "526567696f6e547261636b6572",
+                    "encoding": "base16"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "game1",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                }
+              ]
+            },
+            "seeds": [
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "game1",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "game"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "factionOwnership",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "Required, PDA-bound, maybe-uninitialized ownership sidecar. The resolved controller is",
+            "recorded in this immutable governance generation and gates delegation/voting."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "governanceRegistry",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "previousGovernance",
+          "isWritable": true,
+          "isSigner": false,
+          "isOptional": true,
+          "docs": [
+            "Previous generation accounts are required exactly when the stable registry already points",
+            "at a governance generation. They let initialization atomically archive old claims while",
+            "carrying only the old undistributed pool into this generation."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "previousTreasury",
+          "isWritable": true,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "governance",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "treasury",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "systemProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "11111111111111111111111111111111"
+          }
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "446549516d45621a",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "initVoterPower",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationSigner",
+          "isWritable": false,
+          "isSigner": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProfile",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationCertificate",
+          "isWritable": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "game",
+          "isWritable": false,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "playerProfile",
+          "isWritable": false,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "voterPower",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "systemProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "11111111111111111111111111111111"
+          }
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "17c32cd83052fa57",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
             "endian": "le"
           }
         }
@@ -28842,6 +31609,53 @@
           "docs": [
             "The game account"
           ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "currencyCache",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The currency config cache account — debited the recovery fee",
+            "(summed per-hull `recovery_fee` of the fleet composition)."
+          ],
+          "defaultValue": {
+            "kind": "pdaValueNode",
+            "pda": {
+              "kind": "pdaNode",
+              "name": "currencyCache",
+              "seeds": [
+                {
+                  "kind": "constantPdaSeedNode",
+                  "type": {
+                    "kind": "bytesTypeNode"
+                  },
+                  "value": {
+                    "kind": "bytesValueNode",
+                    "data": "43757272656e6379436f6e666967",
+                    "encoding": "base16"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "game1",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                }
+              ]
+            },
+            "seeds": [
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "game1",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "game"
+                }
+              }
+            ]
+          }
         }
       ],
       "arguments": [
@@ -29486,8 +32300,10 @@
         "- Refresh the fleet state",
         "- If the resulting fleet stated is docked at css_star_system then return",
         "- If not, then ensure the fleet is still respawning",
-        "- Pay the respawn fee",
-        "- Ensure paid respawn time has elapsed and exit respawn"
+        "- Charge the Respawn fee (formerly \"timer-bypass fee\") for the remaining respawn window and dock immediately",
+        "(no cooldown gate: `respawn_time_with_fee` is no longer consulted; the fee",
+        "prices exactly the seconds of the destruction-anchored `respawn.end` window",
+        "that remain, and is zero once the window has elapsed)"
       ],
       "accounts": [
         {
@@ -31301,6 +34117,73 @@
           "docs": [
             "The (potentially valid) local market for [`Self::system`]"
           ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "starbaseGovernance",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "Required, PDA-bound governance sidecar. It may be uninitialized (default fees), but callers",
+            "cannot omit it to bypass an initialized fee policy."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "currencyCache",
+          "isWritable": true,
+          "isSigner": false,
+          "isOptional": true,
+          "docs": [
+            "Currency cache for DAO fee routing. Required when a governed fee produces a DAO share."
+          ],
+          "defaultValue": {
+            "kind": "pdaValueNode",
+            "pda": {
+              "kind": "pdaNode",
+              "name": "currencyCache",
+              "seeds": [
+                {
+                  "kind": "constantPdaSeedNode",
+                  "type": {
+                    "kind": "bytesTypeNode"
+                  },
+                  "value": {
+                    "kind": "bytesValueNode",
+                    "data": "43757272656e6379436f6e666967",
+                    "encoding": "base16"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "game1",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                }
+              ]
+            },
+            "seeds": [
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "game1",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "game"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "starbaseTreasury",
+          "isWritable": true,
+          "isSigner": false,
+          "isOptional": true,
+          "docs": [
+            "Local treasury for local fee routing. Required when a governed fee produces a local share."
+          ]
         }
       ],
       "arguments": [
@@ -32205,8 +35088,22 @@
             "REQUIRED, PDA-bound account that MAY be uninitialized — so a displaced legacy owner can no longer dodge",
             "dynamic ownership by OMITTING it. When initialized, dock admission resolves the owner via the dynamic",
             "controller (witness-checked) instead of the legacy `Starbase.owner` enum, so a captured starbase's dock",
-            "access follows the captor. Uninitialized PDA ⇒ legacy resolution (byte-identical to pre-P5). See",
-            "`resolve_starbase_controller_fail_closed`."
+            "access follows the captor. Uninitialized PDA ⇒ legacy resolution (byte-identical to pre-P5). Level0",
+            "registration uses the stale-sidecar fallback described in process()."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "ownerFactionAccount",
+          "isWritable": false,
+          "isSigner": false,
+          "isOptional": true,
+          "docs": [
+            "OPTIONAL dynamic-operator admission bridge. For a dynamically controlled starbase, supply the resolved",
+            "owner's [`FactionAccount`] to admit that faction's configured `operator_profile`. Omit ⇒ no operator",
+            "admission (the existing own / Allied / standing paths are unchanged). When supplied for a dynamic owner,",
+            "process() re-derives its PDA from (game, resolved owner id) before reading it. This account is deliberately",
+            "appended after the pre-existing required accounts so legacy clients keep their account ordering."
           ]
         }
       ],
@@ -32574,9 +35471,9 @@
         "authorization checks and then permanently removes the region with the specified ID",
         "from the game map.",
         "",
-        "Once a region is removed, any references to it from other game elements (such as",
-        "star systems or other connected regions) will become invalid and should be updated",
-        "separately.",
+        "Once a region is removed, geometric and warp-lane references from other regions are",
+        "cleared. Star systems must still be removed or reassigned before the region can be",
+        "deleted.",
         "",
         "# Fields",
         "* `id` - Unique identifier for the region to remove",
@@ -33367,7 +36264,7 @@
         {
           "kind": "instructionAccountNode",
           "name": "targetFleet",
-          "isWritable": false,
+          "isWritable": true,
           "isSigner": false,
           "isOptional": true,
           "docs": [
@@ -34737,6 +37634,129 @@
     },
     {
       "kind": "instructionNode",
+      "name": "retireStaleStarbaseDelegation",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationSigner",
+          "isWritable": false,
+          "isSigner": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProfile",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationCertificate",
+          "isWritable": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "game",
+          "isWritable": false,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "system",
+          "isWritable": false,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "starbasePlayer",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "The player's account at this starbase. It may already be synchronized to the successor",
+            "generation; diplomat crew are released only while the stale generation's reservation is",
+            "still present."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "governance",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "treasury",
+          "isWritable": false,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "voterPower",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "delegation",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "claimState",
+          "isWritable": true,
+          "isSigner": false
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "cedf5d60a546fd95",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
       "name": "retrieveLoot",
       "docs": [
         "Attack an enemy fleet.",
@@ -35139,8 +38159,9 @@
       "kind": "instructionNode",
       "name": "rollAtlasRewardEpoch",
       "docs": [
-        "Close all three faction epochs, reserve their ATLAS, activate the next config, and create all three",
-        "next epochs atomically. It advances exactly one epoch, even when a keeper is late."
+        "Close all three faction epochs, snapshot their ATLAS entitlements, activate the next config, and",
+        "create all three next epochs atomically. It advances exactly one epoch, even when a keeper is",
+        "late. Treasury solvency is deliberately not a rollover precondition."
       ],
       "accounts": [
         {
@@ -37141,6 +40162,12 @@
           "name": "tracker",
           "isWritable": true,
           "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "regionTracker",
+          "isWritable": true,
+          "isSigner": false
         }
       ],
       "arguments": [
@@ -37369,6 +40396,17 @@
           "name": "config",
           "isWritable": false,
           "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "treasury",
+          "isWritable": true,
+          "isSigner": false,
+          "isOptional": true,
+          "docs": [
+            "Append-last for deployed-client compatibility. Legacy closed epochs were pre-funded and do",
+            "not require this account; claim-funded epochs debit it when the player settles."
+          ]
         }
       ],
       "arguments": [
@@ -37539,6 +40577,100 @@
             "kind": "bytesValueNode",
             "data": "d3f6d928a49b8023",
             "encoding": "base16"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "settleStarbaseGovernanceRewards",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationSigner",
+          "isWritable": false,
+          "isSigner": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProfile",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationCertificate",
+          "isWritable": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "game",
+          "isWritable": false,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "system",
+          "isWritable": false,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "governance",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "treasury",
+          "isWritable": true,
+          "isSigner": false
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "1ec804d46b93d43b",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
           }
         }
       ],
@@ -38267,13 +41399,24 @@
           "isSigner": false,
           "isOptional": true,
           "docs": [
-            "crew: APPEND-LAST optional per-fleet binding (red-team C1/R13). Positional `Option`",
+            "crew: Optional per-fleet binding (red-team C1/R13). Positional `Option`",
             "crew: decode ⇒ a pre-crew client that omits this trailing account decodes it as `None`,",
             "crew: every fold below no-ops to identity, and the instruction is byte-identical to today.",
             "crew: Folds read `crew_binding.summary`; build #18 also AUTO-POURS Crafting XP into it once the",
-            "crew: craft commits — hence `Mut` (the append-last Option still decodes via the program-id",
+            "crew: craft commits — hence `Mut` (the optional account still decodes via the program-id",
             "crew: sentinel, so Mut stays flag-off-safe). Crafting is starbase-side (no fleet account), so the",
-            "crew: resolve below locks on the OWNER profile only — the player picks which fleet's crew staffs it."
+            "crew: resolve below locks on the OWNER profile only — the player picks which fleet's crew staffs it.",
+            "Account order is ABI: do not move this field even as newer trailing options are appended."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "starbaseGovernance",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "Required, PDA-bound governance sidecar. The PDA may be uninitialized (default fees), but it",
+            "cannot be omitted or replaced with the optional-account sentinel to bypass active policy."
           ]
         }
       ],
@@ -39956,6 +43099,268 @@
     },
     {
       "kind": "instructionNode",
+      "name": "submitEpochVote",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationSigner",
+          "isWritable": false,
+          "isSigner": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProfile",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationCertificate",
+          "isWritable": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "game",
+          "isWritable": false,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "character",
+          "isWritable": true,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "pdaValueNode",
+            "pda": {
+              "kind": "pdaNode",
+              "name": "character",
+              "seeds": [
+                {
+                  "kind": "constantPdaSeedNode",
+                  "type": {
+                    "kind": "bytesTypeNode"
+                  },
+                  "value": {
+                    "kind": "bytesValueNode",
+                    "data": "436861726163746572",
+                    "encoding": "base16"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "profileValidationProfile1",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "game2",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                }
+              ]
+            },
+            "seeds": [
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "profileValidationProfile1",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "profileValidationProfile"
+                }
+              },
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "game2",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "game"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "system",
+          "isWritable": false,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "starbasePlayer",
+          "isWritable": false,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "pdaValueNode",
+            "pda": {
+              "kind": "pdaNode",
+              "name": "starbasePlayer",
+              "seeds": [
+                {
+                  "kind": "constantPdaSeedNode",
+                  "type": {
+                    "kind": "bytesTypeNode"
+                  },
+                  "value": {
+                    "kind": "bytesValueNode",
+                    "data": "5374617262617365506c61796572",
+                    "encoding": "base16"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "system1",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "character2",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                }
+              ]
+            },
+            "seeds": [
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "system1",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "system"
+                }
+              },
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "character2",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "character"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "governance",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "treasury",
+          "isWritable": false,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "voterPower",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "delegation",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "claimState",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "epochVote",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "ownerFactionAccount",
+          "isWritable": false,
+          "isSigner": false,
+          "isOptional": true,
+          "docs": [
+            "Required only for dynamic controlling factions; validates their active operator profile."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "systemProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "11111111111111111111111111111111"
+          }
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "1561badf93bdf9f8",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "params",
+          "type": {
+            "kind": "definedTypeLinkNode",
+            "name": "governanceParams"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
       "name": "sweepExpiredCombatRewardLoot",
       "docs": [
         "Return expired, unclaimed reward-issued cargo to the global reward reserve. Ordinary carried-cargo",
@@ -40098,7 +43503,7 @@
       "kind": "instructionNode",
       "name": "sweepLoyaltyEpoch",
       "docs": [
-        "Return unallocated pool dust and unsettled contributions to the same faction treasury after deadline."
+        "Close settlement after the deadline and return any legacy prepaid reserve to its faction treasury."
       ],
       "accounts": [
         {
@@ -40152,6 +43557,112 @@
           "type": {
             "kind": "numberTypeNode",
             "format": "u64",
+            "endian": "le"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "syncCharacter",
+      "docs": [
+        "Advances a stale Character staging account toward the current research and",
+        "XP definitions.",
+        "",
+        "This is permissionless because the transition is deterministic: it only",
+        "rebuilds modifiers from the Character's existing unlocked nodes and the",
+        "authenticated Game definitions. It never unlocks nodes or changes earned or",
+        "spent XP. The live Character is updated only after the staged rebuild is",
+        "complete, so gameplay can never observe partial modifiers."
+      ],
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "funder",
+          "isWritable": true,
+          "isSigner": true,
+          "docs": [
+            "Permissionless cranker. Pays missing Character or staging-account rent;",
+            "existing rent surplus is never refunded to the cranker."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "character",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "Character to advance. Raw validation intentionally avoids the eager,",
+            "unbounded sync performed by `ValidatedCharacter`."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "characterSync",
+          "isWritable": true,
+          "isSigner": false,
+          "docs": [
+            "PDA accumulator for the bounded rebuild. Created on the first call,",
+            "reused by intermediate calls, and closed into the Character on commit."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "game",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "Game whose research and XP definitions are authoritative."
+          ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "systemProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "docs": [
+            "Solana System program used when the staging PDA must be created."
+          ],
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "11111111111111111111111111111111"
+          }
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "1cdc3d263e42d443",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "maxSteps",
+          "docs": [
+            "Maximum unlocked research-node levels to replay in this transaction."
+          ],
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
             "endian": "le"
           }
         }
@@ -44502,13 +48013,14 @@
         "The update can modify any combination of: authored risk tier, border, connections,",
         "research requirements, and XP modifier. Any field not provided will remain unchanged.",
         "When the border changes, it is snapped to the tracker's grid",
-        "(`grid_k`) and geometric adjacency (`neighbors_by_edge`) is rebuilt. Dynamic safety",
-        "and effective risk are derived from that geometric adjacency, not `connections`.",
+        "(`grid_k`) and geometric path adjacency (`neighbors_by_edge`) is rebuilt. Dynamic",
+        "safety and effective risk are derived from warp-lane `connections`, not polygon",
+        "contact.",
         "",
         "# Fields",
         "* `id` - Unique identifier for the region to update",
         "* `risk_zone` - Optional new risk zone",
-        "* `connections` - Optional new connections to other regions by ID",
+        "* `connections` - Optional new region-level projection of cross-region warp lanes",
         "* `border` - Optional new region border coordinates",
         "* `scanning_research_requirements` - Optional new technology requirements for scanning",
         "* `mining_research_requirements` - Optional new technology requirements for mining",
@@ -44564,6 +48076,12 @@
           "docs": [
             "Region tracker account storing all regions"
           ]
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "kingTracker",
+          "isWritable": false,
+          "isSigner": false
         },
         {
           "kind": "instructionAccountNode",
@@ -45056,6 +48574,12 @@
         },
         {
           "kind": "instructionAccountNode",
+          "name": "kingTracker",
+          "isWritable": false,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
           "name": "system",
           "isWritable": true,
           "isSigner": false,
@@ -45278,6 +48802,262 @@
     },
     {
       "kind": "instructionNode",
+      "name": "updateStarbaseDelegation",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationSigner",
+          "isWritable": false,
+          "isSigner": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProfile",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationCertificate",
+          "isWritable": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "game",
+          "isWritable": false,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "character",
+          "isWritable": true,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "pdaValueNode",
+            "pda": {
+              "kind": "pdaNode",
+              "name": "character",
+              "seeds": [
+                {
+                  "kind": "constantPdaSeedNode",
+                  "type": {
+                    "kind": "bytesTypeNode"
+                  },
+                  "value": {
+                    "kind": "bytesValueNode",
+                    "data": "436861726163746572",
+                    "encoding": "base16"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "profileValidationProfile1",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "game2",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                }
+              ]
+            },
+            "seeds": [
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "profileValidationProfile1",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "profileValidationProfile"
+                }
+              },
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "game2",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "game"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "system",
+          "isWritable": false,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "starbasePlayer",
+          "isWritable": true,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "pdaValueNode",
+            "pda": {
+              "kind": "pdaNode",
+              "name": "starbasePlayer",
+              "seeds": [
+                {
+                  "kind": "constantPdaSeedNode",
+                  "type": {
+                    "kind": "bytesTypeNode"
+                  },
+                  "value": {
+                    "kind": "bytesValueNode",
+                    "data": "5374617262617365506c61796572",
+                    "encoding": "base16"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "system1",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                },
+                {
+                  "kind": "variablePdaSeedNode",
+                  "name": "character2",
+                  "type": {
+                    "kind": "publicKeyTypeNode"
+                  }
+                }
+              ]
+            },
+            "seeds": [
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "system1",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "system"
+                }
+              },
+              {
+                "kind": "pdaSeedValueNode",
+                "name": "character2",
+                "value": {
+                  "kind": "accountValueNode",
+                  "name": "character"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "governance",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "treasury",
+          "isWritable": false,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "voterPower",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "delegation",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "claimState",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "ownerFactionAccount",
+          "isWritable": false,
+          "isSigner": false,
+          "isOptional": true,
+          "docs": [
+            "Required only for dynamic controlling factions; validates their active operator profile."
+          ]
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "46074b2f9fa9566b",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "pendingAmount",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u64",
+            "endian": "le"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "diplomatCrew",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u32",
+            "endian": "le"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
       "name": "updateStarbaseTables",
       "docs": [
         "Struct for data input to update the plot, rent rate, and placement fee tables for the `Starbase`"
@@ -45366,6 +49146,97 @@
           "type": {
             "kind": "numberTypeNode",
             "format": "u16",
+            "endian": "le"
+          }
+        }
+      ],
+      "discriminators": [
+        {
+          "kind": "fieldDiscriminatorNode",
+          "name": "discriminator",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "kind": "instructionNode",
+      "name": "updateVoterPower",
+      "accounts": [
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationSigner",
+          "isWritable": false,
+          "isSigner": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProfile",
+          "isWritable": true,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationCertificate",
+          "isWritable": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "profileValidationProgram",
+          "isWritable": false,
+          "isSigner": false,
+          "defaultValue": {
+            "kind": "publicKeyValueNode",
+            "publicKey": "C4PRoFNroxxzdgeCoM31LJjYRg7kT6ymogSTAT99iD1u"
+          }
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "game",
+          "isWritable": false,
+          "isSigner": false
+        },
+        {
+          "kind": "instructionAccountNode",
+          "name": "voterPower",
+          "isWritable": true,
+          "isSigner": false
+        }
+      ],
+      "arguments": [
+        {
+          "kind": "instructionArgumentNode",
+          "name": "discriminator",
+          "defaultValueStrategy": "omitted",
+          "type": {
+            "kind": "fixedSizeTypeNode",
+            "size": 8,
+            "type": {
+              "kind": "bytesTypeNode"
+            }
+          },
+          "defaultValue": {
+            "kind": "bytesValueNode",
+            "data": "677558465316f1c2",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "keyIndex",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u16",
+            "endian": "le"
+          }
+        },
+        {
+          "kind": "instructionArgumentNode",
+          "name": "pvpAmount",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u64",
             "endian": "le"
           }
         }
@@ -50820,7 +54691,16 @@
             "kind": "structFieldTypeNode",
             "name": "lootRate",
             "docs": [
-              "the amount of loot gathered per second"
+              "Unitless salvage multiplier, not a per-second amount. get_loot_rate divides this fleet",
+              "aggregate by combat size; apply_loot_rate caps that rate at the game's max_loot_rate and",
+              "multiplies it into a base roll. Only the rate is capped, never the product. The base roll",
+              "is a zero-floored six-uniform normal approximation (mean 0.5, sigma about 0.15) spanning 0",
+              "to about 1.1363, which exceeds 1.0 roughly once in 10,000 rolls, so once the capped rate",
+              "reaches about 0.88 the product can exceed 1.0 as well. Nothing bounds that fraction; the",
+              "amount actually taken is limited only by the requested amount, the pile itself, and",
+              "remaining pod capacity. While max_loot_rate is at or above FULL_LOOT_SENTINEL, and for",
+              "owner-locked reward loot at any rate, this stat is still computed and passed but does not",
+              "affect the claimed quantity. Authored per ship as 0..3 in the c4-schema ship.rs."
             ],
             "type": {
               "kind": "numberTypeNode",
@@ -53904,6 +57784,201 @@
     },
     {
       "kind": "definedTypeNode",
+      "name": "governanceBounds",
+      "type": {
+        "kind": "structTypeNode",
+        "fields": [
+          {
+            "kind": "structFieldTypeNode",
+            "name": "minCraftingFeeBps",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u16",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "maxCraftingFeeBps",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u16",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "maxLocalMarketFeeBps",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u16",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "minDaoShareBps",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u16",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "maxTreasuryDistributionBps",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u16",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "craftingFeeStepBps",
+            "docs": [
+              "Allowed increment between crafting-fee vote choices."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u16",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "localMarketFeeStepBps",
+            "docs": [
+              "Allowed increment between local-market-fee vote choices."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u16",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "localTreasuryShareStepBps",
+            "docs": [
+              "Allowed increment between local-treasury-share vote choices."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u16",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "treasuryDistributionStepBps",
+            "docs": [
+              "Allowed increment between treasury-distribution vote choices."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u16",
+              "endian": "le"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "kind": "definedTypeNode",
+      "name": "governanceFeeSnapshot",
+      "type": {
+        "kind": "structTypeNode",
+        "fields": [
+          {
+            "kind": "structFieldTypeNode",
+            "name": "craftingFeeBps",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u16",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "localMarketFeeBps",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u16",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "localTreasuryShareBps",
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u16",
+              "endian": "le"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "kind": "definedTypeNode",
+      "name": "governanceParams",
+      "type": {
+        "kind": "structTypeNode",
+        "fields": [
+          {
+            "kind": "structFieldTypeNode",
+            "name": "craftingFeeBps",
+            "docs": [
+              "Multiplier applied to recipe fees. 10_000 means 1.0x."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u16",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "localMarketFeeBps",
+            "docs": [
+              "Local market fee charged on executed ATLAS value."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u16",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "localTreasuryShareBps",
+            "docs": [
+              "Share of governed fees retained by the local starbase treasury."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u16",
+              "endian": "le"
+            }
+          },
+          {
+            "kind": "structFieldTypeNode",
+            "name": "treasuryDistributionBps",
+            "docs": [
+              "Share of the local treasury distributed to active voting power at settlement."
+            ],
+            "type": {
+              "kind": "numberTypeNode",
+              "format": "u16",
+              "endian": "le"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "kind": "definedTypeNode",
       "name": "habBuildingDefinition",
       "type": {
         "kind": "structTypeNode",
@@ -55572,9 +59647,9 @@
           },
           {
             "kind": "structFieldTypeNode",
-            "name": "respawnFee",
+            "name": "recoveryFee",
             "docs": [
-              "Respawn fee, charged in ATLAS",
+              "Recovery fee (canonical terminology; formerly `respawn_fee`), charged in ATLAS",
               "Since ATLAS has 8 decimal places, units are in the smallest value of ATLAS possible."
             ],
             "type": {
@@ -57110,7 +61185,7 @@
             "kind": "structFieldTypeNode",
             "name": "connections",
             "docs": [
-              "Configured logical connections (separate from geometric border adjacency)."
+              "Regions connected by at least one cross-region system warp lane."
             ],
             "type": {
               "kind": "arrayTypeNode",
@@ -61899,7 +65974,7 @@
             "kind": "structFieldTypeNode",
             "name": "connections",
             "docs": [
-              "New set of region IDs connected to this region"
+              "New set of region IDs connected by at least one cross-region system warp lane"
             ],
             "type": {
               "kind": "optionTypeNode",
@@ -63410,7 +67485,7 @@
       "kind": "pdaNode",
       "name": "loyaltyEpoch",
       "docs": [
-        "One faction's daily LP total and reserved ATLAS pool."
+        "One faction's daily LP total, ATLAS entitlement, and legacy prepaid reserve."
       ],
       "seeds": [
         {
@@ -63514,6 +67589,38 @@
         {
           "kind": "variablePdaSeedNode",
           "name": "gameId",
+          "type": {
+            "kind": "publicKeyTypeNode"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "pdaNode",
+      "name": "characterSync",
+      "docs": [
+        "Staging account for a bounded Character research-definition sync.",
+        "",
+        "The live Character modifiers remain untouched while this accumulator is",
+        "built. That matters because permissionless fleet settlement and combat may",
+        "legitimately read the Character between chunks. Only a complete accumulator",
+        "is committed to the Character."
+      ],
+      "seeds": [
+        {
+          "kind": "constantPdaSeedNode",
+          "type": {
+            "kind": "bytesTypeNode"
+          },
+          "value": {
+            "kind": "bytesValueNode",
+            "data": "43686172616374657253796e63",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "variablePdaSeedNode",
+          "name": "character",
           "type": {
             "kind": "publicKeyTypeNode"
           }
@@ -64172,6 +68279,220 @@
           "type": {
             "kind": "definedTypeLinkNode",
             "name": "minorFactionId"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "pdaNode",
+      "name": "claimState",
+      "seeds": [
+        {
+          "kind": "constantPdaSeedNode",
+          "type": {
+            "kind": "bytesTypeNode"
+          },
+          "value": {
+            "kind": "bytesValueNode",
+            "data": "436c61696d5374617465",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "variablePdaSeedNode",
+          "name": "treasury",
+          "type": {
+            "kind": "publicKeyTypeNode"
+          }
+        },
+        {
+          "kind": "variablePdaSeedNode",
+          "name": "playerProfile",
+          "type": {
+            "kind": "publicKeyTypeNode"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "pdaNode",
+      "name": "epochVote",
+      "seeds": [
+        {
+          "kind": "constantPdaSeedNode",
+          "type": {
+            "kind": "bytesTypeNode"
+          },
+          "value": {
+            "kind": "bytesValueNode",
+            "data": "45706f6368566f7465",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "variablePdaSeedNode",
+          "name": "governance",
+          "type": {
+            "kind": "publicKeyTypeNode"
+          }
+        },
+        {
+          "kind": "variablePdaSeedNode",
+          "name": "playerProfile",
+          "type": {
+            "kind": "publicKeyTypeNode"
+          }
+        },
+        {
+          "kind": "variablePdaSeedNode",
+          "name": "voteEpoch",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u64",
+            "endian": "le"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "pdaNode",
+      "name": "starbaseDelegation",
+      "seeds": [
+        {
+          "kind": "constantPdaSeedNode",
+          "type": {
+            "kind": "bytesTypeNode"
+          },
+          "value": {
+            "kind": "bytesValueNode",
+            "data": "537461726261736544656c65676174696f6e",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "variablePdaSeedNode",
+          "name": "governance",
+          "type": {
+            "kind": "publicKeyTypeNode"
+          }
+        },
+        {
+          "kind": "variablePdaSeedNode",
+          "name": "playerProfile",
+          "type": {
+            "kind": "publicKeyTypeNode"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "pdaNode",
+      "name": "starbaseGovernance",
+      "seeds": [
+        {
+          "kind": "constantPdaSeedNode",
+          "type": {
+            "kind": "bytesTypeNode"
+          },
+          "value": {
+            "kind": "bytesValueNode",
+            "data": "5374617262617365476f7665726e616e6365",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "variablePdaSeedNode",
+          "name": "system",
+          "type": {
+            "kind": "publicKeyTypeNode"
+          }
+        },
+        {
+          "kind": "variablePdaSeedNode",
+          "name": "starbaseSeqId",
+          "type": {
+            "kind": "numberTypeNode",
+            "format": "u64",
+            "endian": "le"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "pdaNode",
+      "name": "starbaseGovernanceRegistry",
+      "seeds": [
+        {
+          "kind": "constantPdaSeedNode",
+          "type": {
+            "kind": "bytesTypeNode"
+          },
+          "value": {
+            "kind": "bytesValueNode",
+            "data": "5374617262617365476f7665726e616e63655265676973747279",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "variablePdaSeedNode",
+          "name": "system",
+          "type": {
+            "kind": "publicKeyTypeNode"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "pdaNode",
+      "name": "starbaseTreasury",
+      "seeds": [
+        {
+          "kind": "constantPdaSeedNode",
+          "type": {
+            "kind": "bytesTypeNode"
+          },
+          "value": {
+            "kind": "bytesValueNode",
+            "data": "53746172626173655472656173757279",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "variablePdaSeedNode",
+          "name": "governance",
+          "type": {
+            "kind": "publicKeyTypeNode"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "pdaNode",
+      "name": "voterPower",
+      "seeds": [
+        {
+          "kind": "constantPdaSeedNode",
+          "type": {
+            "kind": "bytesTypeNode"
+          },
+          "value": {
+            "kind": "bytesValueNode",
+            "data": "566f746572506f776572",
+            "encoding": "base16"
+          }
+        },
+        {
+          "kind": "variablePdaSeedNode",
+          "name": "gameId",
+          "type": {
+            "kind": "publicKeyTypeNode"
+          }
+        },
+        {
+          "kind": "variablePdaSeedNode",
+          "name": "playerProfile",
+          "type": {
+            "kind": "publicKeyTypeNode"
           }
         }
       ]
@@ -65510,6 +69831,18 @@
       "docs": [
         "P5b: an NPC faction tried to capture again before its per-faction `last_capture_at +",
         "faction_capture_cooldown_secs` elapsed (the on-chain anti-blitz brake)."
+      ]
+    },
+    {
+      "kind": "errorNode",
+      "name": "characterSyncRequired",
+      "code": 1367933022,
+      "message": "Character research sync required",
+      "docs": [
+        "The Character's pending research-modifier resync exceeds the eager per-instruction bound",
+        "(`MAX_EAGER_SYNC_NODE_LEVELS`). Replaying it inline would exhaust the transaction compute",
+        "budget, bricking every instruction that validates the Character. Run the bounded,",
+        "permissionless `SyncCharacter` instruction until it returns 0 remaining nodes, then retry."
       ]
     }
   ]

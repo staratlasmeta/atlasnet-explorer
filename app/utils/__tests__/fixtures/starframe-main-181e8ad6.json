@@ -1,0 +1,1296 @@
+{
+    "source": "staratlasmeta/programs@181e8ad670d15dae3bf8268586a65dd7353e7dba generated instruction data encoders/decoders",
+    "vectors": [
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "adminCreateFleet",
+            "data": "d0de873b81aef4f749444c20636f6d7061746962696c69747900000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000700070100000000002000010000000000200007000700",
+            "accounts": [
+                "profileValidationSigner",
+                "profileValidationProfile",
+                "profileValidationCertificate",
+                "profileValidationProgram",
+                "gameAdminValidationSigner",
+                "gameAdminValidationProfile",
+                "gameAdminValidationCertificate",
+                "gameAdminValidationProgram",
+                "profileFaction",
+                "game",
+                "fleet",
+                "systemProgram"
+            ],
+            "expected": {
+                "fleetLabel": [
+                    [
+                        73, 68, 76, 32, 99, 111, 109, 112, 97, 116, 105, 98, 105, 108, 105, 116, 121, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0
+                    ]
+                ],
+                "shipId": [7],
+                "shipAmount": 7,
+                "sector": [
+                    {
+                        "$bigint": "9007199254740993"
+                    },
+                    {
+                        "$bigint": "9007199254740993"
+                    }
+                ],
+                "keyIndex": 7,
+                "gameAdminKeyIndex": 7
+            },
+            "legacyAccounts": [
+                "profileValidationSigner",
+                "profileValidationProfile",
+                "profileValidationCertificate",
+                "profileValidationProgram",
+                "profileFaction",
+                "game",
+                "fleet",
+                "systemProgram"
+            ]
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "adminDepositCargoToFleet",
+            "data": "187f4dc48d32d7590100000000002000010000000000200007000700",
+            "accounts": [
+                "profileValidationSigner",
+                "profileValidationProfile",
+                "profileValidationCertificate",
+                "profileValidationProgram",
+                "gameAdminValidationSigner",
+                "gameAdminValidationProfile",
+                "gameAdminValidationCertificate",
+                "gameAdminValidationProgram",
+                "game",
+                "fleet"
+            ],
+            "expected": {
+                "fuelAmount": {
+                    "$bigint": "9007199254740993"
+                },
+                "ammoAmount": {
+                    "$bigint": "9007199254740993"
+                },
+                "keyIndex": 7,
+                "gameAdminKeyIndex": 7
+            },
+            "legacyAccounts": [
+                "profileValidationSigner",
+                "profileValidationProfile",
+                "profileValidationCertificate",
+                "profileValidationProgram",
+                "game",
+                "fleet"
+            ]
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "adminSetNpcFleetId",
+            "data": "e59d408fea7c794f070007000700",
+            "accounts": [
+                "profileValidationSigner",
+                "profileValidationProfile",
+                "profileValidationCertificate",
+                "profileValidationProgram",
+                "gameAdminValidationSigner",
+                "gameAdminValidationProfile",
+                "gameAdminValidationCertificate",
+                "gameAdminValidationProgram",
+                "game",
+                "fleet",
+                "factionOwnership",
+                "factionAccount",
+                "systemProgram"
+            ],
+            "expected": {
+                "npcFactionId": [7],
+                "keyIndex": 7,
+                "gameAdminKeyIndex": 7
+            }
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "cancelLocalMarketOrders",
+            "data": "47e80e07a6f1d8dd0700020000000100000000002000010000000000200001000000000020000100000000002000",
+            "accounts": [
+                "profileValidationSigner",
+                "profileValidationProfile",
+                "profileValidationCertificate",
+                "profileValidationProgram",
+                "game",
+                "character",
+                "system",
+                "starbasePlayer",
+                "localMarket",
+                "starbaseGovernance",
+                "currencyCache",
+                "starbaseTreasury"
+            ],
+            "expected": {
+                "keyIndex": 7,
+                "args": [
+                    {
+                        "orderId": {
+                            "$bigint": "9007199254740993"
+                        },
+                        "price": {
+                            "$bigint": "9007199254740993"
+                        }
+                    },
+                    {
+                        "orderId": {
+                            "$bigint": "9007199254740993"
+                        },
+                        "price": {
+                            "$bigint": "9007199254740993"
+                        }
+                    }
+                ]
+            },
+            "legacyAccounts": [
+                "profileValidationSigner",
+                "profileValidationProfile",
+                "profileValidationCertificate",
+                "profileValidationProgram",
+                "game",
+                "character",
+                "system",
+                "starbasePlayer",
+                "localMarket"
+            ]
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "claimGovernanceRewards",
+            "data": "b7694ee214353a060700",
+            "accounts": [
+                "profileValidationSigner",
+                "profileValidationProfile",
+                "profileValidationCertificate",
+                "profileValidationProgram",
+                "game",
+                "character",
+                "delegation",
+                "treasury",
+                "claimState"
+            ],
+            "expected": {
+                "keyIndex": 7
+            }
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "cleanupInvalidMarket",
+            "data": "ec83bbd473f57d6c0700",
+            "accounts": ["funder", "profile", "character", "game", "system", "localMarket"],
+            "expected": {
+                "keyIndex": 7
+            },
+            "legacyAccounts": ["profile", "character", "game", "system", "localMarket"]
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "closeStarbaseGovernanceVoteEpoch",
+            "data": "e56db3b3239558970700",
+            "accounts": [
+                "profileValidationSigner",
+                "profileValidationProfile",
+                "profileValidationCertificate",
+                "profileValidationProgram",
+                "game",
+                "system",
+                "governance"
+            ],
+            "expected": {
+                "keyIndex": 7
+            }
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "completeCraftingProcess",
+            "data": "1f9c4a3dbf5357cb0700",
+            "accounts": [
+                "profileValidationSigner",
+                "profileValidationProfile",
+                "profileValidationCertificate",
+                "profileValidationProgram",
+                "character",
+                "game",
+                "system",
+                "starbasePlayer",
+                "recipe",
+                "craftingHabInstance",
+                "craftingProcess",
+                "currencyCache",
+                "starbaseTreasury"
+            ],
+            "expected": {
+                "keyIndex": 7
+            },
+            "legacyAccounts": [
+                "profileValidationSigner",
+                "profileValidationProfile",
+                "profileValidationCertificate",
+                "profileValidationProgram",
+                "character",
+                "game",
+                "system",
+                "starbasePlayer",
+                "recipe",
+                "craftingHabInstance",
+                "craftingProcess",
+                "currencyCache"
+            ]
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "createRegion",
+            "data": "6cfcb7292e4d5442070049444c20636f6d7061746962696c697479000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002010200000007000700020000000100000000002000010000000000200001000000000020000100000000002000010200000007000700010200000007000700070000000700",
+            "accounts": [
+                "profileSigner",
+                "profileProfile",
+                "profileCertificate",
+                "profileProgram",
+                "game",
+                "regionTracker",
+                "kingTracker",
+                "systemProgram"
+            ],
+            "expected": {
+                "id": [7],
+                "name": [
+                    [
+                        73, 68, 76, 32, 99, 111, 109, 112, 97, 116, 105, 98, 105, 108, 105, 116, 121, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0
+                    ]
+                ],
+                "riskZone": {
+                    "variant": "highRiskZone"
+                },
+                "connections": [[7], [7]],
+                "border": [
+                    [
+                        {
+                            "$bigint": "9007199254740993"
+                        },
+                        {
+                            "$bigint": "9007199254740993"
+                        }
+                    ],
+                    [
+                        {
+                            "$bigint": "9007199254740993"
+                        },
+                        {
+                            "$bigint": "9007199254740993"
+                        }
+                    ]
+                ],
+                "scanningResearchRequirements": [[7], [7]],
+                "miningResearchRequirements": [[7], [7]],
+                "xpModifier": 7,
+                "keyIndex": 7
+            },
+            "legacyAccounts": [
+                "profileSigner",
+                "profileProfile",
+                "profileCertificate",
+                "profileProgram",
+                "game",
+                "regionTracker",
+                "systemProgram"
+            ]
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "createStarSystem",
+            "data": "5a0444fea1e291c00700010700010000000000004000000000000000400049444c20636f6d7061746962696c697479000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000007000200000007000100000000002000010000000000200001000000000020000100000000002000010000000000200001000000000020000700010000000000200001000000000020000100000000002000010000000000200001000000000020000100000000002000",
+            "accounts": [
+                "profileSigner",
+                "profileProfile",
+                "profileCertificate",
+                "profileProgram",
+                "game",
+                "regionTracker",
+                "kingTracker",
+                "system",
+                "systemProgram"
+            ],
+            "expected": {
+                "systemId": [7],
+                "regionId": [[7], true],
+                "coordinates": [
+                    {
+                        "$bigint": "18014398509481984"
+                    },
+                    {
+                        "$bigint": "18014398509481984"
+                    }
+                ],
+                "name": [
+                    [
+                        73, 68, 76, 32, 99, 111, 109, 112, 97, 116, 105, 98, 105, 108, 105, 116, 121, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0
+                    ]
+                ],
+                "keyIndex": 7,
+                "connections": [
+                    [
+                        [7],
+                        {
+                            "level1": {
+                                "$bigint": "9007199254740993"
+                            },
+                            "level2": {
+                                "$bigint": "9007199254740993"
+                            },
+                            "level3": {
+                                "$bigint": "9007199254740993"
+                            },
+                            "level4": {
+                                "$bigint": "9007199254740993"
+                            },
+                            "level5": {
+                                "$bigint": "9007199254740993"
+                            },
+                            "css": {
+                                "$bigint": "9007199254740993"
+                            }
+                        }
+                    ],
+                    [
+                        [7],
+                        {
+                            "level1": {
+                                "$bigint": "9007199254740993"
+                            },
+                            "level2": {
+                                "$bigint": "9007199254740993"
+                            },
+                            "level3": {
+                                "$bigint": "9007199254740993"
+                            },
+                            "level4": {
+                                "$bigint": "9007199254740993"
+                            },
+                            "level5": {
+                                "$bigint": "9007199254740993"
+                            },
+                            "css": {
+                                "$bigint": "9007199254740993"
+                            }
+                        }
+                    ]
+                ]
+            },
+            "legacyAccounts": [
+                "profileSigner",
+                "profileProfile",
+                "profileCertificate",
+                "profileProgram",
+                "game",
+                "regionTracker",
+                "system",
+                "systemProgram"
+            ]
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "deleteStarSystem",
+            "data": "5d3de52249c2c76607000700",
+            "accounts": [
+                "profileSigner",
+                "profileProfile",
+                "profileCertificate",
+                "profileProgram",
+                "game",
+                "regionTracker",
+                "kingTracker",
+                "system",
+                "systemProgram"
+            ],
+            "expected": {
+                "systemId": [7],
+                "keyIndex": 7
+            },
+            "legacyAccounts": [
+                "profileSigner",
+                "profileProfile",
+                "profileCertificate",
+                "profileProgram",
+                "game",
+                "regionTracker",
+                "system",
+                "systemProgram"
+            ]
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "destroyCraftingProcess",
+            "data": "9156ef102743e2fa",
+            "accounts": [
+                "funder",
+                "profile",
+                "character",
+                "game",
+                "system",
+                "starbasePlayer",
+                "craftingProcess",
+                "recipe",
+                "craftingHabInstance"
+            ],
+            "expected": {},
+            "legacyAccounts": [
+                "profile",
+                "character",
+                "game",
+                "system",
+                "craftingProcess",
+                "recipe",
+                "craftingHabInstance"
+            ]
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "destroyedToRespawn",
+            "data": "058fc2058156892e0700",
+            "accounts": [
+                "profileValidationSigner",
+                "profileValidationProfile",
+                "profileValidationCertificate",
+                "profileValidationProgram",
+                "character",
+                "fleet",
+                "cssStarSystem",
+                "regionTracker",
+                "game",
+                "currencyCache",
+                "crewBinding"
+            ],
+            "expected": {
+                "keyIndex": 7
+            }
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "disbandDestroyedFleet",
+            "data": "1e66821b3d884c91",
+            "accounts": [
+                "funder",
+                "fleet",
+                "profile",
+                "character",
+                "cssStarSystem",
+                "cssStarbasePlayer",
+                "game",
+                "currencyCache",
+                "fleetFactionOwnership",
+                "ownerFactionAccount"
+            ],
+            "expected": {},
+            "legacyAccounts": [
+                "funder",
+                "fleet",
+                "profile",
+                "character",
+                "cssStarSystem",
+                "cssStarbasePlayer",
+                "game",
+                "fleetFactionOwnership",
+                "ownerFactionAccount"
+            ]
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "dockedToRespawn",
+            "data": "7b2acc69c0a8f87b0700",
+            "accounts": [
+                "profileValidationSigner",
+                "profileValidationProfile",
+                "profileValidationCertificate",
+                "profileValidationProgram",
+                "character",
+                "fleet",
+                "systemAndStarbasePlayerSystem",
+                "systemAndStarbasePlayerStarbasePlayer",
+                "cssStarSystem",
+                "regionTracker",
+                "game",
+                "currencyCache"
+            ],
+            "expected": {
+                "keyIndex": 7
+            },
+            "legacyAccounts": [
+                "profileValidationSigner",
+                "profileValidationProfile",
+                "profileValidationCertificate",
+                "profileValidationProgram",
+                "character",
+                "fleet",
+                "systemAndStarbasePlayerSystem",
+                "systemAndStarbasePlayerStarbasePlayer",
+                "cssStarSystem",
+                "regionTracker",
+                "game"
+            ]
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "idleToRespawn",
+            "data": "ebcfc8aea1745ba80700",
+            "accounts": [
+                "profileValidationSigner",
+                "profileValidationProfile",
+                "profileValidationCertificate",
+                "profileValidationProgram",
+                "character",
+                "fleet",
+                "cssStarSystem",
+                "regionTracker",
+                "game",
+                "currencyCache",
+                "crewBinding"
+            ],
+            "expected": {
+                "keyIndex": 7
+            },
+            "legacyAccounts": [
+                "profileValidationSigner",
+                "profileValidationProfile",
+                "profileValidationCertificate",
+                "profileValidationProgram",
+                "character",
+                "fleet",
+                "cssStarSystem",
+                "regionTracker",
+                "game",
+                "crewBinding"
+            ]
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "initClaimState",
+            "data": "738aa8cdd0464bb50700",
+            "accounts": [
+                "profileValidationSigner",
+                "profileValidationProfile",
+                "profileValidationCertificate",
+                "profileValidationProgram",
+                "treasury",
+                "claimState",
+                "systemProgram"
+            ],
+            "expected": {
+                "keyIndex": 7
+            }
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "initStarbaseDelegation",
+            "data": "8d25feb31eedd2c70700010000000000200007000000",
+            "accounts": [
+                "profileValidationSigner",
+                "profileValidationProfile",
+                "profileValidationCertificate",
+                "profileValidationProgram",
+                "game",
+                "character",
+                "system",
+                "starbasePlayer",
+                "governance",
+                "treasury",
+                "voterPower",
+                "delegation",
+                "claimState",
+                "ownerFactionAccount",
+                "systemProgram"
+            ],
+            "expected": {
+                "keyIndex": 7,
+                "pendingAmount": {
+                    "$bigint": "9007199254740993"
+                },
+                "diplomatCrew": 7
+            }
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "initStarbaseGovernance",
+            "data": "446549516d45621a0700",
+            "accounts": [
+                "profileValidationSigner",
+                "profileValidationProfile",
+                "profileValidationCertificate",
+                "profileValidationProgram",
+                "game",
+                "system",
+                "regionTracker",
+                "factionOwnership",
+                "governanceRegistry",
+                "previousGovernance",
+                "previousTreasury",
+                "governance",
+                "treasury",
+                "systemProgram"
+            ],
+            "expected": {
+                "keyIndex": 7
+            }
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "initVoterPower",
+            "data": "17c32cd83052fa570700",
+            "accounts": [
+                "profileValidationSigner",
+                "profileValidationProfile",
+                "profileValidationCertificate",
+                "profileValidationProgram",
+                "game",
+                "playerProfile",
+                "voterPower",
+                "systemProgram"
+            ],
+            "expected": {
+                "keyIndex": 7
+            }
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "mineAsteroidToRespawn",
+            "data": "d03f876cdafc24000700",
+            "accounts": [
+                "profileValidationSigner",
+                "profileValidationProfile",
+                "profileValidationCertificate",
+                "profileValidationProgram",
+                "character",
+                "fleet",
+                "starSystem",
+                "cssStarSystem",
+                "asteroid",
+                "regionTracker",
+                "game",
+                "currencyCache"
+            ],
+            "expected": {
+                "keyIndex": 7
+            },
+            "legacyAccounts": [
+                "profileValidationSigner",
+                "profileValidationProfile",
+                "profileValidationCertificate",
+                "profileValidationProgram",
+                "character",
+                "fleet",
+                "starSystem",
+                "cssStarSystem",
+                "asteroid",
+                "regionTracker",
+                "game"
+            ]
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "placeLocalMarketOrder",
+            "data": "e35c6d03b07ccbda0700010100000000002000010000000000200001",
+            "accounts": [
+                "profileValidationSigner",
+                "profileValidationProfile",
+                "profileValidationCertificate",
+                "profileValidationProgram",
+                "game",
+                "character",
+                "system",
+                "starbasePlayer",
+                "localMarket",
+                "starbaseGovernance",
+                "currencyCache",
+                "starbaseTreasury"
+            ],
+            "expected": {
+                "keyIndex": 7,
+                "args": {
+                    "side": {
+                        "variant": "ask"
+                    },
+                    "price": {
+                        "$bigint": "9007199254740993"
+                    },
+                    "quantity": {
+                        "$bigint": "9007199254740993"
+                    },
+                    "fillOrKill": true
+                }
+            },
+            "legacyAccounts": [
+                "profileValidationSigner",
+                "profileValidationProfile",
+                "profileValidationCertificate",
+                "profileValidationProgram",
+                "game",
+                "character",
+                "system",
+                "starbasePlayer",
+                "localMarket"
+            ]
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "registerStarbasePlayer",
+            "data": "3c129e13d09353e2",
+            "accounts": [
+                "funder",
+                "game",
+                "character",
+                "profileFaction",
+                "system",
+                "starbasePlayer",
+                "systemProgram",
+                "factionRelationTracker",
+                "factionStanding",
+                "factionConfig",
+                "factionOwnership",
+                "ownerFactionAccount"
+            ],
+            "expected": {},
+            "legacyAccounts": [
+                "funder",
+                "game",
+                "character",
+                "profileFaction",
+                "system",
+                "starbasePlayer",
+                "systemProgram",
+                "factionRelationTracker",
+                "factionStanding",
+                "factionConfig",
+                "factionOwnership"
+            ]
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "retireStaleStarbaseDelegation",
+            "data": "cedf5d60a546fd950700",
+            "accounts": [
+                "profileValidationSigner",
+                "profileValidationProfile",
+                "profileValidationCertificate",
+                "profileValidationProgram",
+                "game",
+                "system",
+                "starbasePlayer",
+                "governance",
+                "treasury",
+                "voterPower",
+                "delegation",
+                "claimState"
+            ],
+            "expected": {
+                "keyIndex": 7
+            }
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "setKingSystems",
+            "data": "ab5854e29f3012130700020000000700070007000700",
+            "accounts": [
+                "profileSigner",
+                "profileProfile",
+                "profileCertificate",
+                "profileProgram",
+                "game",
+                "rewardRegistry",
+                "rewardConfig",
+                "tracker",
+                "regionTracker"
+            ],
+            "expected": {
+                "keyIndex": 7,
+                "systems": [
+                    [[7], [7]],
+                    [[7], [7]]
+                ]
+            },
+            "legacyAccounts": [
+                "profileSigner",
+                "profileProfile",
+                "profileCertificate",
+                "profileProgram",
+                "game",
+                "rewardRegistry",
+                "rewardConfig",
+                "tracker"
+            ]
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "settleLoyaltyContribution",
+            "data": "2aa0bed3916e620e07000100000000002000",
+            "accounts": ["game", "profile", "epoch", "contribution", "bank", "config", "treasury"],
+            "expected": {
+                "factionId": [7],
+                "epochIndex": {
+                    "$bigint": "9007199254740993"
+                }
+            },
+            "legacyAccounts": ["game", "profile", "epoch", "contribution", "bank", "config"]
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "settleStarbaseGovernanceRewards",
+            "data": "1ec804d46b93d43b0700",
+            "accounts": [
+                "profileValidationSigner",
+                "profileValidationProfile",
+                "profileValidationCertificate",
+                "profileValidationProgram",
+                "game",
+                "system",
+                "governance",
+                "treasury"
+            ],
+            "expected": {
+                "keyIndex": 7
+            }
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "startCraftingProcess",
+            "data": "406c6d3e09808af60700010000000000200007000000",
+            "accounts": [
+                "profileValidationSigner",
+                "profileValidationProfile",
+                "profileValidationCertificate",
+                "profileValidationProgram",
+                "character",
+                "game",
+                "system",
+                "starbasePlayer",
+                "recipe",
+                "craftingProcess",
+                "systemProgram",
+                "craftingHabInstance",
+                "currencyCache",
+                "crewBinding",
+                "starbaseGovernance"
+            ],
+            "expected": {
+                "keyIndex": 7,
+                "quantity": {
+                    "$bigint": "9007199254740993"
+                },
+                "numCrew": 7
+            },
+            "legacyAccounts": [
+                "profileValidationSigner",
+                "profileValidationProfile",
+                "profileValidationCertificate",
+                "profileValidationProgram",
+                "character",
+                "game",
+                "system",
+                "starbasePlayer",
+                "recipe",
+                "craftingProcess",
+                "systemProgram",
+                "craftingHabInstance",
+                "currencyCache",
+                "crewBinding"
+            ]
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "submitEpochVote",
+            "data": "1561badf93bdf9f807000700070007000700",
+            "accounts": [
+                "profileValidationSigner",
+                "profileValidationProfile",
+                "profileValidationCertificate",
+                "profileValidationProgram",
+                "game",
+                "character",
+                "system",
+                "starbasePlayer",
+                "governance",
+                "treasury",
+                "voterPower",
+                "delegation",
+                "claimState",
+                "epochVote",
+                "ownerFactionAccount",
+                "systemProgram"
+            ],
+            "expected": {
+                "keyIndex": 7,
+                "params": {
+                    "craftingFeeBps": 7,
+                    "localMarketFeeBps": 7,
+                    "localTreasuryShareBps": 7,
+                    "treasuryDistributionBps": 7
+                }
+            }
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "syncCharacter",
+            "data": "1cdc3d263e42d4430700",
+            "accounts": ["funder", "character", "characterSync", "game", "systemProgram"],
+            "expected": {
+                "maxSteps": 7
+            }
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "updateRegion",
+            "data": "329a3da683415c14070007000149444c20636f6d7061746962696c69747900000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000102010200000007000700010200000000000000000040000000000000004000000000000000400000000000000040000102000000070007000102000000070007000107000000",
+            "accounts": [
+                "profileSigner",
+                "profileProfile",
+                "profileCertificate",
+                "profileProgram",
+                "game",
+                "regionTracker",
+                "kingTracker",
+                "systemProgram"
+            ],
+            "expected": {
+                "id": [7],
+                "keyIndex": 7,
+                "args": {
+                    "name": [
+                        [
+                            73, 68, 76, 32, 99, 111, 109, 112, 97, 116, 105, 98, 105, 108, 105, 116, 121, 0, 0, 0, 0, 0,
+                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        ]
+                    ],
+                    "riskZone": {
+                        "variant": "highRiskZone"
+                    },
+                    "connections": [[7], [7]],
+                    "border": [
+                        [
+                            {
+                                "$bigint": "18014398509481984"
+                            },
+                            {
+                                "$bigint": "18014398509481984"
+                            }
+                        ],
+                        [
+                            {
+                                "$bigint": "18014398509481984"
+                            },
+                            {
+                                "$bigint": "18014398509481984"
+                            }
+                        ]
+                    ],
+                    "scanningResearchRequirements": [[7], [7]],
+                    "miningResearchRequirements": [[7], [7]],
+                    "xpModifier": 7
+                }
+            },
+            "legacyAccounts": [
+                "profileSigner",
+                "profileProfile",
+                "profileCertificate",
+                "profileProgram",
+                "game",
+                "regionTracker",
+                "systemProgram"
+            ]
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "updateShipDefinition",
+            "data": "3fe6ea6aefb3c6e90700070049444c20636f6d7061746962696c69747900000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000101010101010101010101010101010101010101010101010101010101010101070040000000400000004000004000070010000000100000000700000000400000004000000100000000002000010000000000200001000000000020000010000000100000001000001000000007000000070000000700000010000000100000001000000010000000100000001000000010000000100000000700070007000000070000000700000007000000070000000700000007000000070000000700000007000000070000000700000007000000070000000700000007000000070000000700000007000000070000000700000007000000070000000700000007000000070000000700000007000000070000000700000007000000070000000700000007000700070007000100000000002000070000000700000007000000f9ffffff070000000700000007000000010200000007000700010200000007000100000000002000070001000000000020000101",
+            "accounts": [
+                "profileSigner",
+                "profileProfile",
+                "profileCertificate",
+                "profileProgram",
+                "game",
+                "systemProgram",
+                "mint"
+            ],
+            "expected": {
+                "keyIndex": 7,
+                "ship": {
+                    "id": [7],
+                    "name": [
+                        [
+                            73, 68, 76, 32, 99, 111, 109, 112, 97, 116, 105, 98, 105, 108, 105, 116, 121, 0, 0, 0, 0, 0,
+                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        ]
+                    ],
+                    "mint": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                    "sizeClass": {
+                        "variant": "titan"
+                    },
+                    "stats": {
+                        "movementStats": {
+                            "subwarpSpeed": 16384,
+                            "warpSpeed": 16384,
+                            "warpLaneSpeed": 16384,
+                            "maxWarpDistance": 64,
+                            "warpCoolDown": 7,
+                            "subwarpFuelConsumptionRate": 16,
+                            "warpFuelConsumptionRate": 16,
+                            "planetExitFuelAmount": 7,
+                            "warpXpRate": 16384,
+                            "subwarpXpRate": 16384
+                        },
+                        "cargoStats": {
+                            "cargoCapacity": {
+                                "$bigint": "9007199254740993"
+                            },
+                            "fuelCapacity": {
+                                "$bigint": "9007199254740993"
+                            },
+                            "ammoCapacity": {
+                                "$bigint": "9007199254740993"
+                            },
+                            "ammoConsumptionRate": 4096,
+                            "foodConsumptionRate": 4096,
+                            "miningRate": 4096,
+                            "loadRate": 16
+                        },
+                        "combatStats": {
+                            "ap": 7,
+                            "hp": 7,
+                            "sp": 7,
+                            "ammoConsumptionRate": 16,
+                            "apRegenRate": 16,
+                            "shieldRechargeRate": 16,
+                            "repairRate": 16,
+                            "repairAbility": 16,
+                            "repairEfficiency": 16,
+                            "repairCost": 16,
+                            "lootRate": 16,
+                            "shieldBreakDelay": 7,
+                            "warpSpoolTime": 7,
+                            "damageKinetic": 7,
+                            "damageKineticVariance": 7,
+                            "damageEnergy": 7,
+                            "damageEnergyVariance": 7,
+                            "damageEmp": 7,
+                            "damageEmpVariance": 7,
+                            "damageSuperchill": 7,
+                            "damageSuperchillVariance": 7,
+                            "damageShockwave": 7,
+                            "damageShockwaveVariance": 7,
+                            "damageGraygoo": 7,
+                            "damageGraygooVariance": 7,
+                            "damageHeat": 7,
+                            "damageHeatVariance": 7,
+                            "damageBomb": 7,
+                            "damageBombVariance": 7,
+                            "counterDecoy": 7,
+                            "counterEnergyCapacitor": 7,
+                            "counterFireSuppressor": 7,
+                            "counterFlare": 7,
+                            "counterHealingNanobots": 7,
+                            "counterMine": 7,
+                            "counterNegativeRemPlating": 7,
+                            "counterWarmingPlates": 7,
+                            "counterFaradayShielding": 7,
+                            "stealthPower": 7,
+                            "hitChance": 7,
+                            "aimAbility": 7,
+                            "critChance": 7,
+                            "critMultiplier": 7,
+                            "fuelConsumptionRate": 7,
+                            "missileDamage": 7,
+                            "missileFireRate": 7
+                        },
+                        "miscStats": {
+                            "requiredCrew": 7,
+                            "passengerCapacity": 7,
+                            "respawnTimeWithoutFee": 7,
+                            "respawnTimeWithFee": 7,
+                            "recoveryFee": {
+                                "$bigint": "9007199254740993"
+                            },
+                            "scanCoolDown": 7,
+                            "scanPower": 7,
+                            "scanCost": 7,
+                            "scanBonus": -7,
+                            "lpValue": 7,
+                            "medallionValue": 7,
+                            "xpValue": 7
+                        }
+                    }
+                },
+                "requirements": {
+                    "researchRequirements": [7, 7],
+                    "componentRequirements": [
+                        [
+                            7,
+                            {
+                                "$bigint": "9007199254740993"
+                            }
+                        ],
+                        [
+                            7,
+                            {
+                                "$bigint": "9007199254740993"
+                            }
+                        ]
+                    ]
+                },
+                "clearExisting": true
+            }
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "updateStarSystem",
+            "data": "98da86a4b4ff6f1801000000000000400000000000000040000149444c20636f6d7061746962696c697479000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001010700010102000000070001000000000020000100000000002000010000000000200001000000000020000100000000002000010000000000200007000100000000002000010000000000200001000000000020000100000000002000010000000000200001000000000020000700",
+            "accounts": [
+                "profileSigner",
+                "profileProfile",
+                "profileCertificate",
+                "profileProgram",
+                "game",
+                "regionTracker",
+                "kingTracker",
+                "system",
+                "systemProgram"
+            ],
+            "expected": {
+                "args": {
+                    "coordinates": [
+                        {
+                            "$bigint": "18014398509481984"
+                        },
+                        {
+                            "$bigint": "18014398509481984"
+                        }
+                    ],
+                    "name": [
+                        [
+                            73, 68, 76, 32, 99, 111, 109, 112, 97, 116, 105, 98, 105, 108, 105, 116, 121, 0, 0, 0, 0, 0,
+                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        ]
+                    ],
+                    "regionId": [[7], true],
+                    "connections": [
+                        [
+                            [7],
+                            {
+                                "level1": {
+                                    "$bigint": "9007199254740993"
+                                },
+                                "level2": {
+                                    "$bigint": "9007199254740993"
+                                },
+                                "level3": {
+                                    "$bigint": "9007199254740993"
+                                },
+                                "level4": {
+                                    "$bigint": "9007199254740993"
+                                },
+                                "level5": {
+                                    "$bigint": "9007199254740993"
+                                },
+                                "css": {
+                                    "$bigint": "9007199254740993"
+                                }
+                            }
+                        ],
+                        [
+                            [7],
+                            {
+                                "level1": {
+                                    "$bigint": "9007199254740993"
+                                },
+                                "level2": {
+                                    "$bigint": "9007199254740993"
+                                },
+                                "level3": {
+                                    "$bigint": "9007199254740993"
+                                },
+                                "level4": {
+                                    "$bigint": "9007199254740993"
+                                },
+                                "level5": {
+                                    "$bigint": "9007199254740993"
+                                },
+                                "css": {
+                                    "$bigint": "9007199254740993"
+                                }
+                            }
+                        ]
+                    ]
+                },
+                "keyIndex": 7
+            },
+            "legacyAccounts": [
+                "profileSigner",
+                "profileProfile",
+                "profileCertificate",
+                "profileProgram",
+                "game",
+                "regionTracker",
+                "system",
+                "systemProgram"
+            ]
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "updateStarbaseDelegation",
+            "data": "46074b2f9fa9566b0700010000000000200007000000",
+            "accounts": [
+                "profileValidationSigner",
+                "profileValidationProfile",
+                "profileValidationCertificate",
+                "profileValidationProgram",
+                "game",
+                "character",
+                "system",
+                "starbasePlayer",
+                "governance",
+                "treasury",
+                "voterPower",
+                "delegation",
+                "claimState",
+                "ownerFactionAccount"
+            ],
+            "expected": {
+                "keyIndex": 7,
+                "pendingAmount": {
+                    "$bigint": "9007199254740993"
+                },
+                "diplomatCrew": 7
+            }
+        },
+        {
+            "programId": "C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF",
+            "name": "updateVoterPower",
+            "data": "677558465316f1c207000100000000002000",
+            "accounts": [
+                "profileValidationSigner",
+                "profileValidationProfile",
+                "profileValidationCertificate",
+                "profileValidationProgram",
+                "game",
+                "voterPower"
+            ],
+            "expected": {
+                "keyIndex": 7,
+                "pvpAmount": {
+                    "$bigint": "9007199254740993"
+                }
+            }
+        }
+    ]
+}

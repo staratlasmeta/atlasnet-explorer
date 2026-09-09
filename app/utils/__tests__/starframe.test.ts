@@ -1,6 +1,8 @@
 import { PublicKey, TransactionInstruction } from '@solana/web3.js';
 import { decodeStarFrameInstruction } from '@utils/starframe';
 
+import sdkFixtures from './fixtures/starframe-main-181e8ad6.json';
+
 const SAGE_PROGRAM_ID = new PublicKey('C4SAgeKLgb3pTLWhVr6NRwWyYFuTR7ZeSXFrzoLwfMzF');
 const PROFILE_FACTION_PROGRAM_ID = new PublicKey('C4FACQA1PpNRKrjQ2862ABNR42DTz7EzGj1uhTNFASwP');
 
@@ -25,6 +27,103 @@ function makeInstruction({
 }
 
 describe('StarFrame instruction decoder', () => {
+    // Frozen bytes come from programs' generated SDK, not an encoder implemented
+    // by this test or by Explorer. Include nonzero values and integers above 2^53.
+    test.each(sdkFixtures.vectors)('decodes current SDK payload and account order: $name', fixture => {
+        const decoded = decodeStarFrameInstruction(
+            makeInstruction({
+                accountCount: fixture.accounts.length,
+                data: fixture.data,
+                programId: SAGE_PROGRAM_ID,
+            })
+        );
+
+        expect(decoded?.status).toBe('decoded');
+        expect(decoded?.instruction?.name).toBe(fixture.name);
+        expect(decoded?.instruction?.accounts?.map(account => account.name)).toEqual(fixture.accounts);
+        expect(decoded?.layoutWarning).toBeUndefined();
+        const expected = JSON.parse(JSON.stringify(fixture.expected), (_key, value) =>
+            value && typeof value === 'object' && '$bigint' in value ? BigInt(value.$bigint) : value
+        );
+        expect(Object.fromEntries(decoded?.arguments.map(argument => [argument.name, argument.value]) ?? [])).toEqual(
+            expected
+        );
+    });
+
+    test.each(sdkFixtures.vectors.filter(fixture => fixture.legacyAccounts))(
+        'preserves the known previous account layout: $name',
+        fixture => {
+            const isAdmin = fixture.name === 'adminCreateFleet' || fixture.name === 'adminDepositCargoToFleet';
+            const decoded = decodeStarFrameInstruction(
+                makeInstruction({
+                    accountCount: fixture.legacyAccounts?.length,
+                    data: isAdmin ? fixture.data.slice(0, -4) : fixture.data,
+                    programId: SAGE_PROGRAM_ID,
+                })
+            );
+
+            expect(decoded?.status).toBe('decoded');
+            expect(decoded?.instruction?.accounts?.map(account => account.name)).toEqual(fixture.legacyAccounts);
+            expect(decoded?.layoutWarning).toContain('previous instruction layout');
+            expect(decoded?.arguments.some(argument => argument.name === 'gameAdminKeyIndex')).toBe(false);
+        }
+    );
+
+    test.each(['adminCreateFleet', 'adminDepositCargoToFleet'])(
+        'does not reinterpret truncated current %s arguments as legacy',
+        name => {
+            const fixture = sdkFixtures.vectors.find(vector => vector.name === name)!;
+            const decoded = decodeStarFrameInstruction(
+                makeInstruction({
+                    accountCount: fixture.accounts.length,
+                    data: fixture.data.slice(0, -4),
+                    programId: SAGE_PROGRAM_ID,
+                })
+            );
+
+            expect(decoded?.status).toBe('error');
+            expect(decoded?.layoutWarning).toBeUndefined();
+        }
+    );
+
+    test('does not guess account names for an unrecognized historical layout', () => {
+        const fixture = sdkFixtures.vectors.find(vector => vector.name === 'adminCreateFleet')!;
+        const decoded = decodeStarFrameInstruction(
+            makeInstruction({ accountCount: 9, data: fixture.data, programId: SAGE_PROGRAM_ID })
+        );
+
+        expect(decoded?.status).toBe('error');
+        expect(decoded?.instruction?.accounts).toEqual([]);
+        expect(decoded?.arguments).toEqual([]);
+    });
+
+    test.each(['00', ''])('requires a complete payload for the previous admin layout (%s)', suffix => {
+        const fixture = sdkFixtures.vectors.find(vector => vector.name === 'adminDepositCargoToFleet')!;
+        const data = suffix ? fixture.data.slice(0, -4) + suffix : fixture.data.slice(0, -6);
+        const decoded = decodeStarFrameInstruction(
+            makeInstruction({ accountCount: fixture.legacyAccounts?.length, data, programId: SAGE_PROGRAM_ID })
+        );
+
+        expect(decoded?.status).toBe('error');
+        expect(decoded?.instruction?.accounts).toEqual([]);
+        expect(decoded?.arguments).toEqual([]);
+        expect(decoded?.layoutWarning).toBeUndefined();
+    });
+
+    test('recognizes the parallel SAGE program identity from programs main', () => {
+        const fixture = sdkFixtures.vectors.find(vector => vector.name === 'submitEpochVote')!;
+        const decoded = decodeStarFrameInstruction(
+            makeInstruction({
+                accountCount: fixture.accounts.length,
+                data: fixture.data,
+                programId: new PublicKey('4LSpiEtN5EwXkL79KbrtwZj4C4TnEWEjaPDTDCDQG7M1'),
+            })
+        );
+
+        expect(decoded?.status).toBe('decoded');
+        expect(decoded?.instruction?.name).toBe('submitEpochVote');
+    });
+
     test('decodes StarFrame instruction arguments from bundled Codama IDLs', () => {
         const decoded = decodeStarFrameInstruction(
             makeInstruction({
