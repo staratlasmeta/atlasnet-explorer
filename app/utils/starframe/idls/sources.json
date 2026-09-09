@@ -1,0 +1,22 @@
+{
+    "repository": "https://github.com/staratlasmeta/programs",
+    "commit": "181e8ad670d15dae3bf8268586a65dd7353e7dba",
+    "files": {
+        "sage.json": {
+            "path": "clients/packages/sage/idl.json",
+            "sha256": "01b651d79375fc80a546f39b40ee7cff84de583d30199ef3f5b323d66ae8840d"
+        },
+        "player-profile.json": {
+            "path": "clients/packages/player-profile/idl.json",
+            "sha256": "26113ad900b7ac8fbc3cd77c10e27a76e9d46b2dc406d5bf53ec743589c668f7"
+        },
+        "profile-faction.json": {
+            "path": "clients/packages/profile-faction/idl.json",
+            "sha256": "2335166ad17aa438acb54fe683359709087448bae5c5ebf2f8eea5ec413fce95"
+        },
+        "profile-subscription.json": {
+            "path": "clients/packages/profile-subscription/idl.json",
+            "sha256": "1c04ab613995254ee8c9fff40decea3984b389a987308c7e2aa39a142fb71bef"
+        }
+    }
+}

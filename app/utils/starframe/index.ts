@@ -4,6 +4,7 @@ import playerProfileIdl from './idls/player-profile.json';
 import profileFactionIdl from './idls/profile-faction.json';
 import profileSubscriptionIdl from './idls/profile-subscription.json';
 import sageIdl from './idls/sage.json';
+import sageLegacyInstructions from './idls/sage-legacy-instructions.json';
 
 type CodamaNode = {
     kind: string;
@@ -85,6 +86,7 @@ export type StarFrameDecodedInstruction =
           program: StarFrameProgramDefinition;
           instruction: StarFrameInstructionNode;
           arguments: StarFrameDecodedArgument[];
+          layoutWarning?: string;
       }
     | {
           status: 'error';
@@ -92,6 +94,7 @@ export type StarFrameDecodedInstruction =
           instruction?: StarFrameInstructionNode;
           arguments: StarFrameDecodedArgument[];
           error: string;
+          layoutWarning?: string;
       };
 
 export type StarFrameDecodedAccount =
@@ -121,6 +124,14 @@ export const STARFRAME_PROGRAMS = STARFRAME_IDLS.map(({ idl, displayName }) =>
 
 const STARFRAME_PROGRAMS_BY_ID = new Map(STARFRAME_PROGRAMS.map(program => [program.publicKey, program]));
 const STARFRAME_PROGRAMS_BY_NAME = new Map(STARFRAME_PROGRAMS.map(program => [program.name, program]));
+// programs/sage/src/lib.rs: PHASE3_PROGRAM_ID uses the same SAGE instruction ABI.
+STARFRAME_PROGRAMS_BY_ID.set('4LSpiEtN5EwXkL79KbrtwZj4C4TnEWEjaPDTDCDQG7M1', STARFRAME_PROGRAMS[0]);
+const SAGE_LEGACY_INSTRUCTIONS = new Map(
+    (sageLegacyInstructions.instructions as StarFrameInstructionNode[]).map(instruction => [
+        instruction.name,
+        instruction,
+    ])
+);
 
 export function getStarFrameProgram(programId: string): StarFrameProgramDefinition | undefined {
     return STARFRAME_PROGRAMS_BY_ID.get(programId);
@@ -134,7 +145,7 @@ export function decodeStarFrameInstruction(ix: TransactionInstruction): StarFram
 
     const data = Buffer.from(ix.data);
     const discriminator = data.slice(0, 8).toString('hex');
-    const instruction = program.instructionByDiscriminator.get(discriminator);
+    let instruction = program.instructionByDiscriminator.get(discriminator);
     if (!instruction) {
         return {
             arguments: [],
@@ -142,6 +153,29 @@ export function decodeStarFrameInstruction(ix: TransactionInstruction): StarFram
             program,
             status: 'error',
         };
+    }
+
+    // These upgrades inserted accounts (and, for the admin instructions, arguments)
+    // without changing discriminators. Retain the previously bundled layout only
+    // for its exact account count; never retry a malformed current payload as legacy.
+    let layoutWarning: string | undefined;
+    const legacyInstruction =
+        program.name === 'sageStarFrame' ? SAGE_LEGACY_INSTRUCTIONS.get(instruction.name) : undefined;
+    if (legacyInstruction && ix.keys.length < (instruction.accounts?.length ?? 0)) {
+        if (ix.keys.length === legacyInstruction.accounts?.length) {
+            instruction = legacyInstruction;
+            layoutWarning = 'Decoded using the previous instruction layout (matched by account count and payload).';
+        } else {
+            return {
+                arguments: [],
+                error: `Unrecognized account layout for ${program.displayName}:${instruction.name}: received ${ix.keys.length} accounts`,
+                // Account positions are not known; render numbered raw accounts and
+                // do not use a guessed Game/profile address for enrichment.
+                instruction: { ...instruction, accounts: [] },
+                program,
+                status: 'error',
+            };
+        }
     }
 
     const decodedArguments: StarFrameDecodedArgument[] = [];
@@ -169,14 +203,15 @@ export function decodeStarFrameInstruction(ix: TransactionInstruction): StarFram
         return {
             arguments: decodedArguments,
             instruction,
+            layoutWarning,
             program,
             status: 'decoded',
         };
     } catch (error) {
         return {
-            arguments: decodedArguments,
+            arguments: layoutWarning ? [] : decodedArguments,
             error: error instanceof Error ? error.message : String(error),
-            instruction,
+            instruction: layoutWarning ? { ...instruction, accounts: [] } : instruction,
             program,
             status: 'error',
         };

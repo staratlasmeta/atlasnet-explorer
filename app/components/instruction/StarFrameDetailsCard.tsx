@@ -112,6 +112,13 @@ function StarFrameDetails({
                     <Address pubkey={ix.programId} alignRight link raw overrideText={programName} />
                 </td>
             </tr>
+            {decodedInstruction.layoutWarning && (
+                <tr>
+                    <td colSpan={3} className="text-warning">
+                        {decodedInstruction.layoutWarning}
+                    </td>
+                </tr>
+            )}
             <tr className="table-sep">
                 <td>Account Name</td>
                 <td className="text-lg-end" colSpan={2}>
