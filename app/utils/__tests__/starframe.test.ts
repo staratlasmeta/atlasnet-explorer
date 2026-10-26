@@ -29,7 +29,7 @@ function makeInstruction({
 describe('StarFrame instruction decoder', () => {
     // Frozen bytes come from programs' generated SDK, not an encoder implemented
     // by this test or by Explorer. Include nonzero values and integers above 2^53.
-    test.each(sdkFixtures.vectors)('decodes current SDK payload and account order: $name', fixture => {
+    test.each(sdkFixtures.vectors)('decodes pinned 181e8ad6 SDK payload and account order: $name', fixture => {
         const decoded = decodeStarFrameInstruction(
             makeInstruction({
                 accountCount: fixture.accounts.length,
@@ -41,7 +41,20 @@ describe('StarFrame instruction decoder', () => {
         expect(decoded?.status).toBe('decoded');
         expect(decoded?.instruction?.name).toBe(fixture.name);
         expect(decoded?.instruction?.accounts?.map(account => account.name)).toEqual(fixture.accounts);
-        expect(decoded?.layoutWarning).toBeUndefined();
+        const nowHistorical = [
+            'cancelLocalMarketOrders',
+            'completeCraftingProcess',
+            'deleteStarSystem',
+            'initStarbaseDelegation',
+            'initStarbaseGovernance',
+            'placeLocalMarketOrder',
+            'startCraftingProcess',
+        ].includes(fixture.name);
+        if (nowHistorical) {
+            expect(decoded?.layoutWarning).toContain('previous instruction layout');
+        } else {
+            expect(decoded?.layoutWarning).toBeUndefined();
+        }
         const expected = JSON.parse(JSON.stringify(fixture.expected), (_key, value) =>
             value && typeof value === 'object' && '$bigint' in value ? BigInt(value.$bigint) : value
         );

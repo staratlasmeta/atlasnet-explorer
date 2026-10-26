@@ -5,6 +5,7 @@ import profileFactionIdl from './idls/profile-faction.json';
 import profileSubscriptionIdl from './idls/profile-subscription.json';
 import sageIdl from './idls/sage.json';
 import sageLegacyInstructions from './idls/sage-legacy-instructions.json';
+import sageLegacyInstructions181e8ad6 from './idls/sage-legacy-instructions-181e8ad6.json';
 
 type CodamaNode = {
     kind: string;
@@ -124,14 +125,18 @@ export const STARFRAME_PROGRAMS = STARFRAME_IDLS.map(({ idl, displayName }) =>
 
 const STARFRAME_PROGRAMS_BY_ID = new Map(STARFRAME_PROGRAMS.map(program => [program.publicKey, program]));
 const STARFRAME_PROGRAMS_BY_NAME = new Map(STARFRAME_PROGRAMS.map(program => [program.name, program]));
-// programs/sage/src/lib.rs: PHASE3_PROGRAM_ID uses the same SAGE instruction ABI.
+// programs/sage/src/lib.rs: the parallel and HYE instances share the SAGE instruction ABI.
 STARFRAME_PROGRAMS_BY_ID.set('4LSpiEtN5EwXkL79KbrtwZj4C4TnEWEjaPDTDCDQG7M1', STARFRAME_PROGRAMS[0]);
-const SAGE_LEGACY_INSTRUCTIONS = new Map(
-    (sageLegacyInstructions.instructions as StarFrameInstructionNode[]).map(instruction => [
-        instruction.name,
-        instruction,
-    ])
-);
+STARFRAME_PROGRAMS_BY_ID.set('HYEWZXXzMyrnN89ASYPVHHdFdgvrgV8diFLv6P2wEwFN', STARFRAME_PROGRAMS[0]);
+const SAGE_LEGACY_INSTRUCTIONS = new Map<string, StarFrameInstructionNode[]>();
+for (const instruction of [
+    ...sageLegacyInstructions.instructions,
+    ...sageLegacyInstructions181e8ad6.instructions,
+] as StarFrameInstructionNode[]) {
+    const layouts = SAGE_LEGACY_INSTRUCTIONS.get(instruction.name) ?? [];
+    layouts.push(instruction);
+    SAGE_LEGACY_INSTRUCTIONS.set(instruction.name, layouts);
+}
 
 export function getStarFrameProgram(programId: string): StarFrameProgramDefinition | undefined {
     return STARFRAME_PROGRAMS_BY_ID.get(programId);
@@ -156,14 +161,15 @@ export function decodeStarFrameInstruction(ix: TransactionInstruction): StarFram
     }
 
     // These upgrades inserted accounts (and, for the admin instructions, arguments)
-    // without changing discriminators. Retain the previously bundled layout only
+    // without changing discriminators. Retain each previously bundled layout only
     // for its exact account count; never retry a malformed current payload as legacy.
     let layoutWarning: string | undefined;
-    const legacyInstruction =
+    const legacyInstructions =
         program.name === 'sageStarFrame' ? SAGE_LEGACY_INSTRUCTIONS.get(instruction.name) : undefined;
-    if (legacyInstruction && ix.keys.length < (instruction.accounts?.length ?? 0)) {
-        if (ix.keys.length === legacyInstruction.accounts?.length) {
-            instruction = legacyInstruction;
+    if (legacyInstructions && ix.keys.length < (instruction.accounts?.length ?? 0)) {
+        const matchingLayouts = legacyInstructions.filter(layout => ix.keys.length === layout.accounts?.length);
+        if (matchingLayouts.length === 1) {
+            instruction = matchingLayouts[0];
             layoutWarning = 'Decoded using the previous instruction layout (matched by account count and payload).';
         } else {
             return {
