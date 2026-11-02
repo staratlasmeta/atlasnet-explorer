@@ -1,10 +1,10 @@
 {
     "repository": "https://github.com/staratlasmeta/programs",
-    "commit": "181e8ad670d15dae3bf8268586a65dd7353e7dba",
+    "commit": "70cb8d6906a2ec11088cd5afbe118a96d3d285da",
     "files": {
         "sage.json": {
             "path": "clients/packages/sage/idl.json",
-            "sha256": "01b651d79375fc80a546f39b40ee7cff84de583d30199ef3f5b323d66ae8840d"
+            "sha256": "d29e6e2e2141f1cd1003f58078015c1606ab9c26a0c12086d0a29cfadc226fbc"
         },
         "player-profile.json": {
             "path": "clients/packages/player-profile/idl.json",
