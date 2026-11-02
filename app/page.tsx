@@ -7,6 +7,7 @@ import { Slot } from '@components/common/Slot';
 import { TableCardBody } from '@components/common/TableCardBody';
 import { TimestampToggle } from '@components/common/TimestampToggle';
 import { LiveTransactionStatsCard } from '@components/LiveTransactionStatsCard';
+import { PopularPrograms } from '@components/PopularPrograms';
 import { StatsNotReady } from '@components/StatsNotReady';
 import { useVoteAccounts } from '@providers/accounts/vote-accounts';
 import { useCluster } from '@providers/cluster';
@@ -23,6 +24,7 @@ import { abbreviatedNumber, lamportsToSol, slotsToHumanString } from '@/app/util
     <StatsProvider>
       <SupplyProvider>
         <div className="container mt-4">
+          <PopularPrograms />
           <StakingComponent/>
           <div className="row d-flex">
             <div className="col-md-6 d-flex">
